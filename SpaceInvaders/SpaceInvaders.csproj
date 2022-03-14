@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\invadier1.png" />
+    <None Remove="Images\invadier2.png" />
+    <None Remove="Images\invadier3.png" />
+    <None Remove="Images\spaceShip.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\invadier1.png" />
+    <Resource Include="Images\invadier2.png" />
+    <Resource Include="Images\invadier3.png" />
+    <Resource Include="Images\spaceShip.png" />
+  </ItemGroup>
+
+</Project>
