@@ -40,7 +40,7 @@ namespace SpaceInvaders.ViewModel
         // Pontszam lekerdezese
         public Int32 GameScore { get { return _model.Score; } }
         // hajo helyzetenek lekerdezese lekerdezese
-        public Int32 YPos { get { return _model.YPos; } }
+        public Int32 XPos { get { return _model.XPos; } }
         #endregion
 
         #region Events
@@ -71,7 +71,7 @@ namespace SpaceInvaders.ViewModel
         {
             OnPropertyChanged("GameLives");
             OnPropertyChanged("GameScore");
-            OnPropertyChanged("YPos");
+            OnPropertyChanged("XPos");
         }
 
 

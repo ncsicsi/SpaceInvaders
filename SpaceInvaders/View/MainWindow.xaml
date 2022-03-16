@@ -26,7 +26,7 @@
             </StatusBarItem>
         </StatusBar>
         <Canvas Name="GameCanvas" Background="Black" Grid.Row="1" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp">
-            <Rectangle Name="spaceShip" Width="104" Height="63" Canvas.Top="{Binding YPos}" Canvas.Left="298">
+            <Rectangle Name="spaceShip" Width="104" Height="63" Canvas.Top="375" Canvas.Left="{Binding XPos}">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="/SpaceInvaders;component/images/spaceShip.png"/>
                 </Rectangle.Fill>

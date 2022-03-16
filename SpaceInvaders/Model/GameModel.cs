@@ -26,7 +26,7 @@ namespace SpaceInvaders.Model
         private int _invadiersSpeed;
         private int _invdiersCount;
         private Enemy[,] _enemys = new Enemy[5,10];
-        private int _shipYPos;
+        private int _shipXPos;
         private bool _goLeft;
         private bool _goRight;
         private static System.Timers.Timer _timer;
@@ -43,7 +43,7 @@ namespace SpaceInvaders.Model
         //jatek vege lekerdezese
         public Boolean IsGameOver { get { return (_lives == 0); } }
         //hajo y pos lekerdezese vege lekerdezese
-        public int YPos { get { return _shipYPos ;} }
+        public int XPos { get { return _shipXPos ;} }
         // irany beallitasa
         public void GoLeft(bool goLeft) { _goLeft = goLeft;  }
         public void GoRight(bool goRight) { _goRight = goRight;  }
@@ -64,7 +64,7 @@ namespace SpaceInvaders.Model
             _score = 0; 
             _lives = 2; 
             _invadiersSpeed = 10;
-            _shipYPos = 375;
+            _shipXPos = 298;
             _timer = new System.Timers.Timer(20);
             _timer.Elapsed += _timer_Elapsed;
             
@@ -93,7 +93,7 @@ namespace SpaceInvaders.Model
         private void OnGameOver()
         {
             if (GameOver != null)
-                GameOver(this, new GameEventArgs(_score, _lives, _shipYPos));
+                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos));
         }
 
         private void ReSetEnemyTable()
