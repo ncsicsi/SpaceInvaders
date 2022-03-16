@@ -53,6 +53,9 @@ namespace SpaceInvaders
             // nézet létrehozása
             _view = new MainWindow();
             _view.DataContext = _viewModel;
+
+            _view.KeyIsDown_Event += new EventHandler(View_KeyIsDown);
+
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing); // eseménykezelés a bezáráshoz
             _view.Show();
         }
@@ -69,6 +72,12 @@ namespace SpaceInvaders
             {
                 e.Cancel = true; // töröljük a bezárást
             }
+        }
+
+        // Játékból való kilépés eseménykezelője.
+        private void View_KeyIsDown(object sender, System.EventArgs e)
+        {
+            _viewModel.View_KeyIsDown(e); // ablak bezárása
         }
 
         #endregion

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpaceInvaders"
         mc:Ignorable="d"
-        Title="Space Invaders" Height="500" Width="700">
+        Title="Space Invaders" Height="500" Width="700" >
     <Grid Name="mainGrid" Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -16,7 +16,7 @@
                 <TextBlock Text="SCORE " Foreground="White" FontSize="14" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding GameScore}" Foreground="White" FontSize="14" />
+                <TextBlock Text="{Binding GameScore}" Foreground="White" FontSize="14"/>
             </StatusBarItem>
             <StatusBarItem Foreground="White" FontSize="14" HorizontalAlignment="Right">
                 <TextBlock Text="LIVES " />
@@ -25,9 +25,9 @@
                 <TextBlock Text="{Binding GameLives}" Foreground="White" FontSize="14" HorizontalAlignment="Left"/>
             </StatusBarItem>
         </StatusBar>
-        <Canvas Name="GameCanvas" Background="Black" Grid.Row="1" Focusable="True">
+        <Canvas Name="GameCanvas" Background="Black" Grid.Row="1" Focusable="True" KeyDown="KeyIsDown">
             <Rectangle Name="spaceShip" Width="104" Height="63" Canvas.Top="{Binding YPos}" Canvas.Left="298">
-                 <Rectangle.Fill>
+                <Rectangle.Fill>
                     <ImageBrush ImageSource="/SpaceInvaders;component/images/spaceShip.png"/>
                 </Rectangle.Fill>
             </Rectangle>

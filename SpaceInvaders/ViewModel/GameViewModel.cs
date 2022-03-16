@@ -25,6 +25,7 @@ namespace SpaceInvaders.ViewModel
         #region fields
         private GameModel _model;
         DispatcherTimer _timer = new DispatcherTimer();
+        Canvas GameCanvas;
         #endregion
 
         #region Properties
@@ -57,11 +58,12 @@ namespace SpaceInvaders.ViewModel
         public GameViewModel(GameModel model)
         {
             _model = model;
-            //_timer.Tick += GameAdvancment;
+            _timer.Tick += GameTimeEvent;
             _timer.Interval = TimeSpan.FromMilliseconds(20);
             _timer.Start();
 
-
+            Canvas GameCanvas = new Canvas();
+            GameCanvas.Focus();
 
 
             SetUpTable();
@@ -73,14 +75,21 @@ namespace SpaceInvaders.ViewModel
         private void SetUpTable()
         {
             OnPropertyChanged("GameLives");
-            OnPropertyChanged("GameScore");      
+            OnPropertyChanged("GameScore");
+            OnPropertyChanged("YPos");
         }
+
 
         #endregion
 
         #region Game event handler
 
         /// Játék végének eseménykezelője.
+        private void GameTimeEvent(object sender, EventArgs e)
+        {
+
+        }
+
         private void Model_GameOver(object sender, GameEventArgs e)
         {
 
@@ -90,6 +99,13 @@ namespace SpaceInvaders.ViewModel
         /// Játék előrehaladásának eseménykezelője.
         private void Model_GameAdvanced(object sender, GameEventArgs e)
         {
+
+        }
+
+        public void View_KeyIsDown(System.EventArgs e)
+        { 
+            //Valami itt
+            int a = 2;
 
         }
 

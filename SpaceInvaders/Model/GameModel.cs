@@ -28,6 +28,8 @@ namespace SpaceInvaders.Model
         private int _invdiersCount;
         private Enemy[][] _enemys;
         private int _shipYPos;
+        private bool _goLeft;
+        private bool _goRight;
 
         #endregion
 

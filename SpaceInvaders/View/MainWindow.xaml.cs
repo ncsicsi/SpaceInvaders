@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
+
 namespace SpaceInvaders.View
 {
     /// <summary>
@@ -21,20 +22,21 @@ namespace SpaceInvaders.View
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        /// Játékból való kilépés eseménye.
+        public event EventHandler KeyIsDown_Event;
+
         public MainWindow()
         {
             InitializeComponent();
-            Canvas GameCanvas= new Canvas();
             GameCanvas.Focus();
+
         }
 
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Left)
-            {
-
-            }
-
+            if (KeyIsDown_Event != null)
+                KeyIsDown_Event(this,e);
         }
     }
 }
