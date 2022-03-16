@@ -9,7 +9,6 @@ namespace SpaceInvaders.Model
     internal class GameModel
     {
         #region Enemy 
-
         public struct Enemy
         {
             bool _alive;
@@ -17,19 +16,22 @@ namespace SpaceInvaders.Model
             int _y;
             int _type;   // 1-3 tipus
             public void Alive(bool alive) { _alive = alive; }
+            public void Type(int type) { _type = type; }
         }
         #endregion
-
 
         #region Fields
         private int _score;
         private int _lives;
         private int _invadiersSpeed;
         private int _invdiersCount;
-        private Enemy[][] _enemys;
+        private Enemy[,] _enemys = new Enemy[5,10];
         private int _shipYPos;
         private bool _goLeft;
         private bool _goRight;
+        private static System.Timers.Timer _timer;
+        private int _windowWidth;
+        private int _windowHeight;
 
         #endregion
 
@@ -42,7 +44,7 @@ namespace SpaceInvaders.Model
         public Boolean IsGameOver { get { return (_lives == 0); } }
         //hajo y pos lekerdezese vege lekerdezese
         public int YPos { get { return _shipYPos ;} }
-        // irany lekerdezese, beallitasa
+        // irany beallitasa
         public void GoLeft(bool goLeft) { _goLeft = goLeft;  }
         public void GoRight(bool goRight) { _goRight = goRight;  }
 
@@ -51,7 +53,6 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel()
         {
-            //_enemys = new Enemy[5,11];
             ReSetEnemyTable();
             
         }
@@ -64,7 +65,14 @@ namespace SpaceInvaders.Model
             _lives = 2; 
             _invadiersSpeed = 10;
             _shipYPos = 375;
+            _timer = new System.Timers.Timer(20);
+            _timer.Elapsed += _timer_Elapsed;
             
+        }
+
+        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -90,16 +98,52 @@ namespace SpaceInvaders.Model
 
         private void ReSetEnemyTable()
         {
-            for(int i = 0; i < 11; i++)
+            for(int i = 0; i < 5; i++)
             {
-                if (i == 0)
+                switch (i)
                 {
-                    for(int j = 0; j < 5; j++)
-                    {
-                        //_enemys[i,j] = _enemys[i,j];
-                         
-                    }
+                    case 0:
+                        for (int j = 0; j < 10; j++) // 1. Sor
+                        {
+                            _enemys[i, j].Alive(true);
+                            _enemys[i, j].Type(1);
+
+                        }
+                        break;
+                        case 1:
+                        for (int j = 0; j < 10; j++) // 2. Sor
+                        {
+                            _enemys[i, j].Alive(true);
+                            _enemys[i, j].Type(2);
+
+                        }
+                        break;
+                    case 2:
+                        for (int j = 0; j < 10; j++) // 3. Sor
+                        {
+                            _enemys[i, j].Alive(true);
+                            _enemys[i, j].Type(2);
+
+                        }
+                        break;
+                    case 3:
+                        for (int j = 0; j < 10; j++) // 4. Sor
+                        {
+                            _enemys[i, j].Alive(true);
+                            _enemys[i, j].Type(3);
+
+                        }
+                        break;
+                    case 4:
+                        for (int j = 0; j < 10; j++) // 5. Sor
+                        {
+                            _enemys[i, j].Alive(true);
+                            _enemys[i, j].Type(3);
+
+                        }
+                        break;
                 }
+
             }
 
         }

@@ -24,7 +24,6 @@ namespace SpaceInvaders.ViewModel
     {
         #region fields
         private GameModel _model;
-        DispatcherTimer _timer = new DispatcherTimer();
         #endregion
 
         #region Properties
@@ -57,9 +56,6 @@ namespace SpaceInvaders.ViewModel
         public GameViewModel(GameModel model)
         {
             _model = model;
-            _timer.Tick += GameTimeEvent;
-            _timer.Interval = TimeSpan.FromMilliseconds(20);
-            _timer.Start();
 
             Canvas GameCanvas = new Canvas();
             GameCanvas.Focus();
