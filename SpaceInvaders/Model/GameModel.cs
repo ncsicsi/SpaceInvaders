@@ -30,8 +30,10 @@ namespace SpaceInvaders.Model
         private bool _goLeft;
         private bool _goRight;
         private static System.Timers.Timer _timer;
-        private int _windowWidth;
-        private int _windowHeight;
+        private static int _windowWidth = 500;
+        private static int _windowHeight = 700;
+        private static int _shipWidth = 104;
+        private static int _shipHeight = 63;
 
         #endregion
 
@@ -67,12 +69,20 @@ namespace SpaceInvaders.Model
             _shipXPos = 298;
             _timer = new System.Timers.Timer(20);
             _timer.Elapsed += _timer_Elapsed;
+            _timer.Start();
             
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (_goLeft && _shipXPos > 15)
+            {
+                _shipXPos -= 10;
+            }
+            else if (_goRight && _shipXPos < 581)
+            {
+                _shipXPos += 10;
+            }
         }
 
         #endregion
