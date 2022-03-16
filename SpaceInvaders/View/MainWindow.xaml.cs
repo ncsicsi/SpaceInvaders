@@ -24,7 +24,8 @@ namespace SpaceInvaders.View
     {
 
         /// Játékból való kilépés eseménye.
-        public event EventHandler KeyIsDown_Event;
+        public event KeyEventHandler KeyIsDown_Event;
+        public event KeyEventHandler KeyIsUp_Event;
 
         public MainWindow()
         {
@@ -37,6 +38,12 @@ namespace SpaceInvaders.View
         {
             if (KeyIsDown_Event != null)
                 KeyIsDown_Event(this,e);
+        }
+
+        private void KeyIsUp(object sender, KeyEventArgs e)
+        {
+            if (KeyIsUp_Event != null)
+                KeyIsUp_Event(this, e);
         }
     }
 }

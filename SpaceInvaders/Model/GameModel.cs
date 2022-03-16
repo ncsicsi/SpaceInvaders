@@ -42,6 +42,10 @@ namespace SpaceInvaders.Model
         public Boolean IsGameOver { get { return (_lives == 0); } }
         //hajo y pos lekerdezese vege lekerdezese
         public int YPos { get { return _shipYPos ;} }
+        // irany lekerdezese, beallitasa
+        public void GoLeft(bool goLeft) { _goLeft = goLeft;  }
+        public void GoRight(bool goRight) { _goRight = goRight;  }
+
         #endregion
 
         #region Constructor

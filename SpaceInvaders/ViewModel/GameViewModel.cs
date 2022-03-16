@@ -25,7 +25,6 @@ namespace SpaceInvaders.ViewModel
         #region fields
         private GameModel _model;
         DispatcherTimer _timer = new DispatcherTimer();
-        Canvas GameCanvas;
         #endregion
 
         #region Properties
@@ -101,12 +100,35 @@ namespace SpaceInvaders.ViewModel
         {
 
         }
-
-        public void View_KeyIsDown(System.EventArgs e)
-        { 
-            //Valami itt
-            int a = 2;
-
+        // billentyuzet lenyomasa esemeny
+        public void View_KeyIsDown(KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Left:
+                    _model.GoLeft(true);
+                    break;
+                case Key.Right:
+                    _model.GoRight(true);
+                    break;
+                case Key.Enter:
+                    break;
+            }
+        }
+        //billentyuzet felengedese esemeny
+        public void View_KeyIsUp(KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Left:
+                    _model.GoLeft(false);
+                    break;
+                case Key.Right:
+                    _model.GoRight(false);
+                    break;
+                case Key.Enter:
+                    break;
+            }
         }
 
         /// Játékból való kilépés eseménykiváltása.

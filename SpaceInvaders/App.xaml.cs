@@ -12,6 +12,17 @@ using SpaceInvaders;
 using SpaceInvaders.Model;
 using SpaceInvaders.ViewModel;
 using SpaceInvaders.View;
+using System.Text;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+
 
 namespace SpaceInvaders
 {
@@ -54,7 +65,8 @@ namespace SpaceInvaders
             _view = new MainWindow();
             _view.DataContext = _viewModel;
 
-            _view.KeyIsDown_Event += new EventHandler(View_KeyIsDown);
+            _view.KeyIsDown_Event += new KeyEventHandler(View_KeyIsDown);
+            _view.KeyIsUp_Event += new KeyEventHandler(View_KeyIsUp);
 
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing); // eseménykezelés a bezáráshoz
             _view.Show();
@@ -74,10 +86,16 @@ namespace SpaceInvaders
             }
         }
 
-        // Játékból való kilépés eseménykezelője.
-        private void View_KeyIsDown(object sender, System.EventArgs e)
+        // Gomb lenyomasanak esemenye
+        private void View_KeyIsDown(object sender, KeyEventArgs e)
         {
             _viewModel.View_KeyIsDown(e); // ablak bezárása
+            
+        }
+        //gomb felengedsenek esemenye
+        private void View_KeyIsUp(object sender, KeyEventArgs e)
+        {
+            _viewModel.View_KeyIsUp(e); // ablak bezárása
         }
 
         #endregion
