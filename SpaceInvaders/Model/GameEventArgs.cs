@@ -23,7 +23,6 @@ namespace SpaceInvaders.Model
         {
             _score = score;
             _lives = lives;
-            _lives = lives;
             _xPos = xPos;
         }
         #endregion

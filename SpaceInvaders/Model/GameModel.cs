@@ -25,7 +25,7 @@ namespace SpaceInvaders.Model
         private int _lives;
         private int _invadiersSpeed;
         private int _invdiersCount;
-        private Enemy[,] _enemys = new Enemy[5,10];
+        private Enemy[,] _enemys = new Enemy[5, 10];
         private int _shipXPos;
         private bool _goLeft;
         private bool _goRight;
@@ -45,10 +45,10 @@ namespace SpaceInvaders.Model
         //jatek vege lekerdezese
         public Boolean IsGameOver { get { return (_lives == 0); } }
         //hajo y pos lekerdezese vege lekerdezese
-        public int XPos { get { return _shipXPos ;} }
+        public int XPos { get { return _shipXPos; } }
         // irany beallitasa
-        public void GoLeft(bool goLeft) { _goLeft = goLeft;  }
-        public void GoRight(bool goRight) { _goRight = goRight;  }
+        public void GoLeft(bool goLeft) { _goLeft = goLeft; }
+        public void GoRight(bool goRight) { _goRight = goRight; }
 
         #endregion
 
@@ -56,33 +56,36 @@ namespace SpaceInvaders.Model
         public GameModel()
         {
             ReSetEnemyTable();
-            
+
         }
         #endregion
 
         #region Public Methods
         public void NewGame()
         {
-            _score = 0; 
-            _lives = 2; 
+            _score = 0;
+            _lives = 2;
             _invadiersSpeed = 10;
             _shipXPos = 298;
-            _timer = new System.Timers.Timer(20);
+            _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
             _timer.Start();
-            
+
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_goLeft && _shipXPos > 15)
+            if (_goLeft && _shipXPos > 10)
             {
-                _shipXPos -= 10;
+                _shipXPos -= 5;
             }
-            else if (_goRight && _shipXPos < 581)
+            else if (_goRight && _shipXPos < 576)
             {
-                _shipXPos += 10;
+                _shipXPos += 5;
             }
+            OnGameAdvanced();
         }
 
         #endregion
@@ -99,16 +102,10 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Private Methods
-        //jatek vege
-        private void OnGameOver()
-        {
-            if (GameOver != null)
-                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos));
-        }
 
         private void ReSetEnemyTable()
         {
-            for(int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 switch (i)
                 {
@@ -120,7 +117,7 @@ namespace SpaceInvaders.Model
 
                         }
                         break;
-                        case 1:
+                    case 1:
                         for (int j = 0; j < 10; j++) // 2. Sor
                         {
                             _enemys[i, j].Alive(true);
@@ -156,6 +153,19 @@ namespace SpaceInvaders.Model
 
             }
 
+        }
+        //elorehaladasa a jateknak es frissites
+        private void OnGameAdvanced()
+        {
+            if (GameAdvanced != null)
+                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos));
+        }
+
+        //jatek vege
+        private void OnGameOver()
+        {
+            if (GameOver != null)
+                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos));
         }
 
         #endregion

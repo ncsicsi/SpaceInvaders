@@ -56,6 +56,7 @@ namespace SpaceInvaders.ViewModel
         public GameViewModel(GameModel model)
         {
             _model = model;
+            _model.GameAdvanced += new EventHandler<GameEventArgs>(Model_GameAdvanced);
 
             Canvas GameCanvas = new Canvas();
             GameCanvas.Focus();
@@ -91,10 +92,13 @@ namespace SpaceInvaders.ViewModel
         }
 
 
+
         /// Játék előrehaladásának eseménykezelője.
         private void Model_GameAdvanced(object sender, GameEventArgs e)
         {
-
+            OnPropertyChanged("GameLives");
+            OnPropertyChanged("GameScore");
+            OnPropertyChanged("XPos");
         }
         // billentyuzet lenyomasa esemeny
         public void View_KeyIsDown(KeyEventArgs e)
