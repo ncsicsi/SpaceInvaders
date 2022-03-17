@@ -59,7 +59,7 @@ namespace SpaceInvaders
 
             //nzetmodel letrehozasa
             _viewModel = new GameViewModel(_model);
-
+            _viewModel.GameAdvancment += new EventHandler(View_GameAdvancmet);
 
             // nézet létrehozása
             _view = new MainWindow();
@@ -85,17 +85,22 @@ namespace SpaceInvaders
                 e.Cancel = true; // töröljük a bezárást
             }
         }
+        /// Nézet bezárásának eseménykezelője.
+        private void View_GameAdvancmet(object sender, EventArgs e)
+        {
+            //_view.View_GameAdvancmet(e); 
+        }
 
         // Gomb lenyomasanak esemenye
         private void View_KeyIsDown(object sender, KeyEventArgs e)
         {
-            _viewModel.View_KeyIsDown(e); // ablak bezárása
+            _viewModel.View_KeyIsDown(e); 
             
         }
         //gomb felengedsenek esemenye
         private void View_KeyIsUp(object sender, KeyEventArgs e)
         {
-            _viewModel.View_KeyIsUp(e); // ablak bezárása
+            _viewModel.View_KeyIsUp(e);
         }
 
         #endregion

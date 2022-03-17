@@ -66,10 +66,18 @@ namespace SpaceInvaders.View
             }
         }
 
+        // ido elorehaladtanak esemeny
+        public void View_GameAdvancmet(EventArgs e)
+        {
+            //enemy bullet
+            //bullet move
+            //enemy move
+        }
+
         private void makeEnemies(int enemiCount)
         {
             int enemyRow = 0;
-            int left = 600;
+            int left = 560;
             enemyImages = 0;
             for (int i =0; i< enemiCount; i++)
             {
@@ -87,19 +95,19 @@ namespace SpaceInvaders.View
                 {
                     case 10:
                         enemyRow++;
-                        left = 600;
+                        left = 560;
                         break;
                     case 20:
                         enemyRow++;
-                        left = 600;
+                        left = 560;
                         break;
                     case 30:
                         enemyRow++;
-                        left = 600;
+                        left = 560;
                         break;
                     case 40:
                         enemyRow++;
-                        left = 600;
+                        left = 560;
                         break;
                 }
 
