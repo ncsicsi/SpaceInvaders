@@ -44,6 +44,21 @@ namespace SpaceInvaders.View
         {
             if (KeyIsUp_Event != null)
                 KeyIsUp_Event(this, e);
+            if(e.Key == Key.Space)
+            {
+                Rectangle newBullet = new Rectangle
+                {
+                    Tag = "bullet",
+                    Height = 20,
+                    Width = 5,
+                    Fill = Brushes.Yellow,
+                    Stroke = Brushes.Red
+
+                };
+                Canvas.SetTop(newBullet, Canvas.GetTop(spaceShip) - newBullet.Height);
+                Canvas.SetLeft(newBullet, Canvas.GetLeft(spaceShip)+spaceShip.Width / 2-2);
+                GameCanvas.Children.Add(newBullet); 
+            }
         }
     }
 }
