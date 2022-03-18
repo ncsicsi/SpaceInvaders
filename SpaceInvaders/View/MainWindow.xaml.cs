@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using SpaceInvaders.Model;
+
 
 
 namespace SpaceInvaders.View
@@ -43,13 +45,7 @@ namespace SpaceInvaders.View
         {
             if (KeyIsDown_Event != null)
                 KeyIsDown_Event(this,e);
-        }
-
-        private void KeyIsUp(object sender, KeyEventArgs e)
-        {
-            if (KeyIsUp_Event != null)
-                KeyIsUp_Event(this, e);
-            if(e.Key == Key.Space)
+            if (e.Key == Key.Space)
             {
                 Rectangle newBullet = new Rectangle
                 {
@@ -61,18 +57,24 @@ namespace SpaceInvaders.View
 
                 };
                 Canvas.SetTop(newBullet, Canvas.GetTop(spaceShip) - newBullet.Height);
-                Canvas.SetLeft(newBullet, Canvas.GetLeft(spaceShip)+spaceShip.Width / 2-2);
-                GameCanvas.Children.Add(newBullet); 
+                Canvas.SetLeft(newBullet, Canvas.GetLeft(spaceShip) + spaceShip.Width / 2 - 2);
+                GameCanvas.Children.Add(newBullet);
             }
         }
 
+        private void KeyIsUp(object sender, KeyEventArgs e)
+        {
+            if (KeyIsUp_Event != null)
+                KeyIsUp_Event(this, e);
+        }
+
         // ido elorehaladtanak esemeny
-        public void View_GameAdvancmet(EventArgs e)
+        /*public void View_GameAdvancmet(GameEventArgs e)
         {
             //enemy bullet
             //bullet move
             //enemy move
-        }
+        } */
 
         private void makeEnemies(int enemiCount)
         {
@@ -127,7 +129,7 @@ namespace SpaceInvaders.View
                 else if(enemyImages < 21)
                 {
                     enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
-                }
+                } 
                 else if(enemyImages < 31)
                 {
                     enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));

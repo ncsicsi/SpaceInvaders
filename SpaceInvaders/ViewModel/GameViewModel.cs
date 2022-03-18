@@ -51,7 +51,7 @@ namespace SpaceInvaders.ViewModel
         /// Játékból való kilépés eseménye.
         public event EventHandler ExitGame;
 
-        public event EventHandler GameAdvancment;
+        public event EventHandler<GameEventArgs> GameAdvancment;
         #endregion
 
         #region Constructor
@@ -60,12 +60,10 @@ namespace SpaceInvaders.ViewModel
             _model = model;
             _model.GameAdvanced += new EventHandler<GameEventArgs>(Model_GameAdvanced);
 
-            Canvas GameCanvas = new Canvas();
-            GameCanvas.Focus();
+
 
 
             SetUpTable();
-            //GameCanvas.Focus();
         }
         #endregion
 
@@ -115,7 +113,8 @@ namespace SpaceInvaders.ViewModel
                 case Key.Right:
                     _model.GoRight(true);
                     break;
-                case Key.Enter:
+                case Key.Space:
+                    _model.Bullet(true);
                     break;
             }
         }
@@ -130,7 +129,7 @@ namespace SpaceInvaders.ViewModel
                 case Key.Right:
                     _model.GoRight(false);
                     break;
-                case Key.Enter:
+                case Key.Space:
                     break;
             }
         }

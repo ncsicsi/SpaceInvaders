@@ -16,7 +16,14 @@ namespace SpaceInvaders.Model
             int _y;
             int _type;   // 1-3 tipus
             public void Alive(bool alive) { _alive = alive; }
+            public bool Alive() { return _alive; }
             public void Type(int type) { _type = type; }
+            public int Type() { return _type; }
+
+            public void X(int x) { _x=x; }
+            public void Y(int y) { _y = y; }
+            public int X() {   return _x;  }
+            public int Y() {  return _y;  }
         }
         #endregion
 
@@ -24,11 +31,15 @@ namespace SpaceInvaders.Model
         private int _score;
         private int _lives;
         private int _invadiersSpeed;
-        private int _invdiersCount;
+        private int _enemysCount;
         private Enemy[,] _enemys = new Enemy[5, 10];
         private int _shipXPos;
         private bool _goLeft;
         private bool _goRight;
+        private bool _bullet;
+        private int _bulletX;
+        private int _bulletY;
+        private bool _bulletAlive;
         private static System.Timers.Timer _timer;
         private static int _windowWidth = 500;
         private static int _windowHeight = 700;
@@ -49,6 +60,10 @@ namespace SpaceInvaders.Model
         // irany beallitasa
         public void GoLeft(bool goLeft) { _goLeft = goLeft; }
         public void GoRight(bool goRight) { _goRight = goRight; }
+        //bullet
+        public void Bullet(bool bullet) { _bullet = bullet; }
+        public int BulletX { get { return _bulletX; } }
+        public int BulletY { get { return _bulletY; } }
 
         #endregion
 
@@ -56,7 +71,7 @@ namespace SpaceInvaders.Model
         public GameModel()
         {
             ReSetEnemyTable();
-
+            
         }
         #endregion
 
@@ -67,12 +82,16 @@ namespace SpaceInvaders.Model
             _lives = 2;
             _invadiersSpeed = 10;
             _shipXPos = 298;
+            _bullet = false;
+            _bulletAlive = false;
+            _bullet = false;
+            _enemysCount = 50;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
             _timer.Start();
-
+            
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -84,6 +103,43 @@ namespace SpaceInvaders.Model
             else if (_goRight && _shipXPos < 576)
             {
                 _shipXPos += 5;
+            }
+            if(_bullet == true)
+            {
+                _bullet = false;
+                _bulletX = _shipXPos;
+                _bulletY = 550;_bulletAlive = true;
+            }
+            if (_bulletAlive)
+            {
+                _bulletY -= 10;
+                if(_bulletY == 0)
+                {
+                    _bulletAlive = false;
+                }
+                for (int i=0; i < 5; i++)
+                {
+                    for (int j=0; j<10; j++)
+                    {
+                        if(_enemys[i,j].Alive() == true && _enemys[i, j].X() <= _bulletX && _enemys[i, j].X() +45 >= _bulletX && _enemys[i, j].Y() == _bulletY)
+                        {
+                            _bulletAlive = false;
+                            _enemys[i, j].Alive(false);
+                            switch (_enemys[i, j].Type())
+                            {
+                                case 1:
+                                    _score += 15;
+                                    break;
+                                case 2:
+                                    _score += 10;
+                                    break;
+                                case 3:
+                                    _score += 5;
+                                    break;
+                            }
+                        }
+                    }
+                }
             }
             OnGameAdvanced();
         }
@@ -114,7 +170,8 @@ namespace SpaceInvaders.Model
                         {
                             _enemys[i, j].Alive(true);
                             _enemys[i, j].Type(1);
-
+                            _enemys[i, j].Y(i*55 + 10);
+                            _enemys[i, j].X(560-55*j);
                         }
                         break;
                     case 1:
@@ -122,7 +179,8 @@ namespace SpaceInvaders.Model
                         {
                             _enemys[i, j].Alive(true);
                             _enemys[i, j].Type(2);
-
+                            _enemys[i, j].Y(i * 55 + 10);
+                            _enemys[i, j].X(560 - 55 * j);
                         }
                         break;
                     case 2:
@@ -130,7 +188,8 @@ namespace SpaceInvaders.Model
                         {
                             _enemys[i, j].Alive(true);
                             _enemys[i, j].Type(2);
-
+                            _enemys[i, j].Y(i * 55 + 10);
+                            _enemys[i, j].X(560 - 55 * j);
                         }
                         break;
                     case 3:
@@ -138,7 +197,8 @@ namespace SpaceInvaders.Model
                         {
                             _enemys[i, j].Alive(true);
                             _enemys[i, j].Type(3);
-
+                            _enemys[i, j].Y(i * 55 + 10);
+                            _enemys[i, j].X(560 - 55 * j);
                         }
                         break;
                     case 4:
@@ -146,7 +206,8 @@ namespace SpaceInvaders.Model
                         {
                             _enemys[i, j].Alive(true);
                             _enemys[i, j].Type(3);
-
+                            _enemys[i, j].Y(i * 55 + 10);
+                            _enemys[i, j].X(560 - 55 * j);
                         }
                         break;
                 }
