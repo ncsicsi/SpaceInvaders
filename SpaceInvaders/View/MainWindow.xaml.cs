@@ -59,6 +59,8 @@ namespace SpaceInvaders.View
                 Canvas.SetTop(newBullet, Canvas.GetTop(spaceShip) - newBullet.Height);
                 Canvas.SetLeft(newBullet, Canvas.GetLeft(spaceShip) + spaceShip.Width / 2 - 2);
                 GameCanvas.Children.Add(newBullet);
+
+                
             }
         }
 
@@ -69,12 +71,13 @@ namespace SpaceInvaders.View
         }
 
         // ido elorehaladtanak esemeny
-        /*public void View_GameAdvancmet(GameEventArgs e)
+        public void View_GameAdvanced(GameEventArgs e)
         {
             //enemy bullet
             //bullet move
+            int a = 0;
             //enemy move
-        } */
+        } 
 
         private void makeEnemies(int enemiCount)
         {

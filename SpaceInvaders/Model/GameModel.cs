@@ -8,7 +8,7 @@ namespace SpaceInvaders.Model
 {
     internal class GameModel
     {
-        #region Enemy 
+        #region public Structs 
         public struct Enemy
         {
             bool _alive;
@@ -25,6 +25,18 @@ namespace SpaceInvaders.Model
             public int X() {   return _x;  }
             public int Y() {  return _y;  }
         }
+
+
+        public struct Bullet
+        {
+            private int _bulletX;
+            private int _bulletY;
+            //private bool _bullet;
+            private bool _bulletAlive;
+            public int X { get { return _bulletX; } set { _bulletX = value; } }
+            public int Y { get { return _bulletY; } set { _bulletY = value; } }
+            public bool Alive { get { return _bulletAlive; } set { _bulletAlive = value; } }
+        }
         #endregion
 
         #region Fields
@@ -33,18 +45,17 @@ namespace SpaceInvaders.Model
         private int _invadiersSpeed;
         private int _enemysCount;
         private Enemy[,] _enemys = new Enemy[5, 10];
+        private Bullet[]  _bullets= new Bullet[15];
         private int _shipXPos;
         private bool _goLeft;
         private bool _goRight;
         private bool _bullet;
-        private int _bulletX;
-        private int _bulletY;
-        private bool _bulletAlive;
         private static System.Timers.Timer _timer;
         private static int _windowWidth = 500;
         private static int _windowHeight = 700;
         private static int _shipWidth = 104;
         private static int _shipHeight = 63;
+        private int _bulletCount;
 
         #endregion
 
@@ -61,9 +72,10 @@ namespace SpaceInvaders.Model
         public void GoLeft(bool goLeft) { _goLeft = goLeft; }
         public void GoRight(bool goRight) { _goRight = goRight; }
         //bullet
-        public void Bullet(bool bullet) { _bullet = bullet; }
-        public int BulletX { get { return _bulletX; } }
+        public void BulletOn(bool bullet) { _bullet = bullet; }
+        /*public int BulletX { get { return _bulletX; } }
         public int BulletY { get { return _bulletY; } }
+        */
 
         #endregion
 
@@ -83,8 +95,9 @@ namespace SpaceInvaders.Model
             _invadiersSpeed = 10;
             _shipXPos = 298;
             _bullet = false;
-            _bulletAlive = false;
-            _bullet = false;
+            _bulletCount = 0;
+
+            //_bulletAlive = false;
             _enemysCount = 50;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
@@ -107,40 +120,53 @@ namespace SpaceInvaders.Model
             if(_bullet == true)
             {
                 _bullet = false;
-                _bulletX = _shipXPos;
-                _bulletY = 550;_bulletAlive = true;
-            }
-            if (_bulletAlive)
-            {
-                _bulletY -= 10;
-                if(_bulletY == 0)
+                _bullets[_bulletCount].X = _shipXPos;
+                _bullets[_bulletCount].Y = 550;
+                _bullets[_bulletCount].Alive = true;
+                if (_bulletCount < 15)
                 {
-                    _bulletAlive = false;
+                    _bulletCount++;
                 }
-                for (int i=0; i < 5; i++)
+                else
                 {
-                    for (int j=0; j<10; j++)
+                    _bulletCount = 0;
+                }
+            }
+            for(int i = 0; i < 15; i++)
+            {
+                if (_bullets[i].Alive)
+                {
+                    _bullets[i].Y -= 20;
+                    if (_bullets[i].Y == 0)
                     {
-                        if(_enemys[i,j].Alive() == true && _enemys[i, j].X() <= _bulletX && _enemys[i, j].X() +45 >= _bulletX && _enemys[i, j].Y() == _bulletY)
+                        _bullets[i].Alive = false;
+                    }
+                    for (int j = 0; j < 5; j++)
+                    {
+                        for (int z = 0; z < 10; z++)
                         {
-                            _bulletAlive = false;
-                            _enemys[i, j].Alive(false);
-                            switch (_enemys[i, j].Type())
+                            if (_enemys[j, z].Alive() == true && _enemys[j, z].X() <= _bullets[i].X && _enemys[j, z].X() + 45 >= _bullets[i].X && _enemys[j, z].Y() == _bullets[i].Y)
                             {
-                                case 1:
-                                    _score += 15;
-                                    break;
-                                case 2:
-                                    _score += 10;
-                                    break;
-                                case 3:
-                                    _score += 5;
-                                    break;
+                                _bullets[i].Alive = false;
+                                _enemys[j, z].Alive(false);
+                                switch (_enemys[j, z].Type())
+                                {
+                                    case 1:
+                                        _score += 15;
+                                        break;
+                                    case 2:
+                                        _score += 10;
+                                        break;
+                                    case 3:
+                                        _score += 5;
+                                        break;
+                                }
                             }
                         }
                     }
                 }
             }
+            
             OnGameAdvanced();
         }
 

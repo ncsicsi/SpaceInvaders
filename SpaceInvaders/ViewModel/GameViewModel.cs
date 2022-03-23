@@ -51,7 +51,7 @@ namespace SpaceInvaders.ViewModel
         /// Játékból való kilépés eseménye.
         public event EventHandler ExitGame;
 
-        public event EventHandler<GameEventArgs> GameAdvancment;
+        public event EventHandler<GameEventArgs> GameAdvanced;
         #endregion
 
         #region Constructor
@@ -99,8 +99,8 @@ namespace SpaceInvaders.ViewModel
             OnPropertyChanged("GameLives");
             OnPropertyChanged("GameScore");
             OnPropertyChanged("XPos");
-            if (GameAdvancment != null)
-                GameAdvancment(this, e);
+            if (GameAdvanced != null)
+                GameAdvanced(this, e);
         }
         // billentyuzet lenyomasa esemeny
         public void View_KeyIsDown(KeyEventArgs e)

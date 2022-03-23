@@ -59,7 +59,7 @@ namespace SpaceInvaders
 
             //nzetmodel letrehozasa
             _viewModel = new GameViewModel(_model);
-            _viewModel.GameAdvancment += new EventHandler<GameEventArgs>(View_GameAdvancmet);
+            _viewModel.GameAdvanced += new EventHandler<GameEventArgs>(View_GameAdvanced);
 
             // nézet létrehozása
             _view = new MainWindow();
@@ -86,9 +86,9 @@ namespace SpaceInvaders
             }
         }
         /// Nézet bezárásának eseménykezelője.
-        private void View_GameAdvancmet(object sender, GameEventArgs e)
+        private void View_GameAdvanced(object sender, GameEventArgs e)
         {
-            //_view.View_GameAdvancmet(e); 
+            //_view.View_GameAdvanced(e); 
         }
 
         // Gomb lenyomasanak esemenye

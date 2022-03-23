@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpaceInvaders.Model
 {
-    internal class GameEventArgs : EventArgs
+    public class GameEventArgs : EventArgs
     {
         //játék vége eseményhez
         private int _score;
