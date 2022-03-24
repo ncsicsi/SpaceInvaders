@@ -122,6 +122,26 @@ namespace SpaceInvaders.Model
             _timer.Start();
             
         }
+        public void NewRound()
+        {
+            ReSetEnemyTable();
+            _shipXPos = 298;
+            _bullet = false;
+            _bulletCount = 0;
+            _enemysCount = 50;
+            _enemySpeed = 2;
+            _direction = direction.RIGHT;
+            _timer = new System.Timers.Timer(10);
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+            _timer.Start();
+        }
+        public void stopTimer()
+        {
+            _timer.Stop();
+
+        }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -134,25 +154,11 @@ namespace SpaceInvaders.Model
                 _shipXPos += 5;
             }
             EnemyMove();
-            if (_bullet == true)
-            {
-                _bullet = false;
-                _bullets[_bulletCount].X = _shipXPos+50;
-                _bullets[_bulletCount].Y = 550;
-                _bullets[_bulletCount].Alive = true;
-                if (_bulletCount < 14)
-                {
-                    _bulletCount++;
-                }
-                else
-                {
-                    _bulletCount = 0;
-                }
-            }
-            for(int i = 0; i < 15; i++)
+            for (int i = 0; i < 15; i++)
             {
                 if (_bullets[i].Alive)
                 {
+                    _bullets[i].IsNewBullet = false;
                     _bullets[i].Y -= 15;
                     if (_bullets[i].Y == 0)
                     {
@@ -162,7 +168,7 @@ namespace SpaceInvaders.Model
                     {
                         for (int z = 0; z < 10; z++)
                         {
-                            if (_enemys[j, z].Alive() == true && _enemys[j, z].X() <= _bullets[i].X && _enemys[j, z].X() + 45 >= _bullets[i].X && _enemys[j, z].Y() >= _bullets[i].Y-45 && _enemys[j, z].Y() <= _bullets[i].Y)
+                            if (_enemys[j, z].Alive() == true && _enemys[j, z].X() <= _bullets[i].X && _enemys[j, z].X() + 45 >= _bullets[i].X && _enemys[j, z].Y() >= _bullets[i].Y - 45 && _enemys[j, z].Y() <= _bullets[i].Y)
                             {
                                 _bullets[i].Alive = false;
                                 _enemys[j, z].Alive(false);
@@ -182,6 +188,22 @@ namespace SpaceInvaders.Model
                             }
                         }
                     }
+                }
+            }
+            if (_bullet == true)
+            {
+                _bullet = false;
+                _bullets[_bulletCount].X = _shipXPos+50;
+                _bullets[_bulletCount].Y = 550;
+                _bullets[_bulletCount].Alive = true;
+                _bullets[_bulletCount].IsNewBullet= true;
+                if (_bulletCount < 14)
+                {
+                    _bulletCount++;
+                }
+                else
+                {
+                    _bulletCount = 0;
                 }
             }
             if (GameOverIs())

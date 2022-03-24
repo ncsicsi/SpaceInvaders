@@ -85,7 +85,9 @@ namespace SpaceInvaders
 
             if (MessageBox.Show("Biztos, hogy ki akar lépni?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
+                //_model.stopTimer();
                 e.Cancel = true; // töröljük a bezárást
+                
             }
         }
         /// Nézet bezárásának eseménykezelője.
@@ -126,6 +128,7 @@ namespace SpaceInvaders
         // Játékból való kilépés eseménykezelője.
         private void ViewModel_ExitGame(object sender, System.EventArgs e)
         {
+            
             _view.Close(); // ablak bezárása
         }
 
@@ -144,7 +147,7 @@ namespace SpaceInvaders
                     MessageBoxButton.OK,
                     MessageBoxImage.Asterisk);
                 
-                _model.NewGame();
+                _model.NewRound();
                 _view.NewGame();
             }
             else

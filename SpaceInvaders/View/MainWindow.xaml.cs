@@ -54,7 +54,7 @@ namespace SpaceInvaders.View
         {
             RemoveBullets();
             RemoveEnemys();
-            int a =  0;
+            int a = 0;
         }
 
 
@@ -65,18 +65,18 @@ namespace SpaceInvaders.View
                 this.Dispatcher.Invoke((Action)(() =>
                 {
                     GameCanvas.Children.Remove(_bulletsRectangles[i]);
-                } ));
+                }));
             }
         }
         private void RemoveEnemys()
         {
-            for (int i = 0; i <5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
-                        GameCanvas.Children.Remove(_enemysRectangles[i,j]);
+                        GameCanvas.Children.Remove(_enemysRectangles[i, j]);
                     }));
                 }
             }
@@ -109,16 +109,19 @@ namespace SpaceInvaders.View
         {
             for (int i = 0; i < 15; i++)
             {
-                _bulletsRectangles[i] = new Rectangle
+                this.Dispatcher.Invoke((Action)(() =>
                 {
-                    Tag = "bullet",
-                    Height = 20,
-                    Width = 5,
-                    Fill = Brushes.Black,
-                    Stroke = Brushes.Black
+                    _bulletsRectangles[i] = new Rectangle
+                    {
+                        Tag = "bullet",
+                        Height = 20,
+                        Width = 5,
+                        Fill = Brushes.Black,
+                        Stroke = Brushes.Black
 
-                };
-                GameCanvas.Children.Add(_bulletsRectangles[i]);
+                    };
+                    GameCanvas.Children.Add(_bulletsRectangles[i]);
+                }));
             }
         }
         public void BulletsUpdate(Bullet[] bullets)
@@ -187,37 +190,40 @@ namespace SpaceInvaders.View
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    ImageBrush enemySkin = new ImageBrush();
-                    _enemysRectangles[i, j] = new Rectangle
+                    this.Dispatcher.Invoke((Action)(() =>
                     {
-                        Tag = "enemy",
-                        Height = 45,
-                        Width = 45,
-                        Fill = enemySkin
-                    };
-                    Canvas.SetTop(_enemysRectangles[i, j], enemies[i, j].Y());
-                    Canvas.SetLeft(_enemysRectangles[i, j], enemies[i, j].X());
-                    GameCanvas.Children.Add(_enemysRectangles[i, j]);
-                    if (i == 0)
-                    {
-                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier1.png"));
-                    }
-                    else if (i == 1)
-                    {
-                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
-                    }
-                    else if (i == 2)
-                    {
-                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
-                    }
-                    else if (i == 3)
-                    {
-                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier3.png"));
-                    }
-                    else if (i == 4)
-                    {
-                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier3.png"));
-                    }
+                        ImageBrush enemySkin = new ImageBrush();
+                        _enemysRectangles[i, j] = new Rectangle
+                        {
+                            Tag = "enemy",
+                            Height = 45,
+                            Width = 45,
+                            Fill = enemySkin
+                        };
+                        Canvas.SetTop(_enemysRectangles[i, j], enemies[i, j].Y());
+                        Canvas.SetLeft(_enemysRectangles[i, j], enemies[i, j].X());
+                        GameCanvas.Children.Add(_enemysRectangles[i, j]);
+                        if (i == 0)
+                        {
+                            enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier1.png"));
+                        }
+                        else if (i == 1)
+                        {
+                            enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
+                        }
+                        else if (i == 2)
+                        {
+                            enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
+                        }
+                        else if (i == 3)
+                        {
+                            enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier3.png"));
+                        }
+                        else if (i == 4)
+                        {
+                            enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier3.png"));
+                        }
+                    }));
                 }
             }
         }
