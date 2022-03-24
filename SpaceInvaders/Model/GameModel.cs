@@ -137,7 +137,7 @@ namespace SpaceInvaders.Model
             {
                 if (_bullets[i].Alive)
                 {
-                    _bullets[i].Y -= 20;
+                    _bullets[i].Y -= 15;
                     if (_bullets[i].Y == 0)
                     {
                         _bullets[i].Alive = false;
@@ -146,7 +146,7 @@ namespace SpaceInvaders.Model
                     {
                         for (int z = 0; z < 10; z++)
                         {
-                            if (_enemys[j, z].Alive() == true && _enemys[j, z].X() <= _bullets[i].X && _enemys[j, z].X() + 45 >= _bullets[i].X && _enemys[j, z].Y() == _bullets[i].Y)
+                            if (_enemys[j, z].Alive() == true && _enemys[j, z].X() <= _bullets[i].X && _enemys[j, z].X() + 45 >= _bullets[i].X && _enemys[j, z].Y() >= _bullets[i].Y-45 && _enemys[j, z].Y() <= _bullets[i].Y)
                             {
                                 _bullets[i].Alive = false;
                                 _enemys[j, z].Alive(false);
