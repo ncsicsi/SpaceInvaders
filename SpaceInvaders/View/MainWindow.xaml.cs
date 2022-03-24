@@ -48,13 +48,12 @@ namespace SpaceInvaders.View
 
         public void NewGame()
         {
-            BulletsRectangleCreated();
+            //BulletsRectangleCreated();
         }
         public void GameOver()
         {
             RemoveBullets();
             RemoveEnemys();
-            int a = 0;
         }
 
 
@@ -128,7 +127,22 @@ namespace SpaceInvaders.View
         {
             for (int i = 0; i < bullets.Length; i++)
             {
-                if (bullets[i].Alive)
+                if (bullets[i].Alive && bullets[i].IsNewBullet)
+                {
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        _bulletsRectangles[i] = new Rectangle
+                        {
+                            Tag = "bullet",
+                            Height = 20,
+                            Width = 5,
+                            Fill = Brushes.Black,
+                            Stroke = Brushes.Black
+
+                        };
+                        GameCanvas.Children.Add(_bulletsRectangles[i]);
+                    }));
+                }else if(bullets[i].Alive && !bullets[i].IsNewBullet)
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
@@ -142,8 +156,9 @@ namespace SpaceInvaders.View
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
-                        _bulletsRectangles[i].Fill = Brushes.Black;
-                        _bulletsRectangles[i].Stroke = Brushes.Black;
+                        //_bulletsRectangles[i].Fill = Brushes.Black;
+                        //_bulletsRectangles[i].Stroke = Brushes.Black;
+                        GameCanvas.Children.Remove(_bulletsRectangles[i]);
                     }));
                 }
 
