@@ -74,7 +74,7 @@ namespace SpaceInvaders.Model
         private int _enemyButtomYPos;
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
-        private (int, int) _mostButtomtEnemySerial;
+        private (int, int) _mostButtomEnemySerial;
         public enum direction {RIGHT, LEFT, DOWN};
         private direction _direction;
         
@@ -255,7 +255,7 @@ namespace SpaceInvaders.Model
                 _enemys[4,i].IsMostDown = true;
             }
             _enemyButtomYPos = _enemys[4, 0].Y() + _enemySize;
-            _mostButtomtEnemySerial = (4, 0);
+            _mostButtomEnemySerial = (4, 0);
             _mostRightEnemySerial = (0,0);
             _mostLeftEnemySerial = (0, 9);
             OnGameCreated();
@@ -318,6 +318,18 @@ namespace SpaceInvaders.Model
                                         _score += 5;
                                         break;
                                 }
+                                if (_enemys[j, z].IsMostDown)
+                                {
+                                    NewMostDown();
+                                }
+                                if (_enemys[j, z].IsMostRight)
+                                {
+                                    NewMostRight();
+                                }
+                                if (_enemys[j, z].IsMostLeft)
+                                {
+                                    NewMostLeft();
+                                }
                             }
                         }
                     }
@@ -349,7 +361,7 @@ namespace SpaceInvaders.Model
                 MoveDown();
                 _direction = direction.RIGHT;
             }
-            _enemyButtomYPos = MostLeftDown();
+            _enemyButtomYPos = MostLeftDown()+_enemySize;
         }
 
         private int MostRightCoord()
@@ -405,7 +417,7 @@ namespace SpaceInvaders.Model
             }
             return (y);*/
             int x; int y;
-            (x,y) = _mostButtomtEnemySerial;
+            (x,y) = _mostButtomEnemySerial;
             int max = _enemys[x, y].Y()+_enemySize;
             return (max);
         }
@@ -464,6 +476,7 @@ namespace SpaceInvaders.Model
                 }
             }
             _enemys[maxI,maxJ].IsMostDown = true;
+            _mostRightEnemySerial = (maxI,maxJ);
         }
         private void NewMostLeft()
         {
@@ -483,6 +496,7 @@ namespace SpaceInvaders.Model
                 }
             }
             _enemys[minI, minJ].IsMostLeft = true;
+            _mostLeftEnemySerial = (minI, minJ);
         }
         private void NewMostDown()
         {
@@ -502,6 +516,7 @@ namespace SpaceInvaders.Model
                 }
             }
             _enemys[maxI, maxJ].IsMostDown = true;
+            _mostButtomEnemySerial = (maxI, maxJ);
         }
 
         private bool GameOverIs()
