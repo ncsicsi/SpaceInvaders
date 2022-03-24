@@ -38,7 +38,7 @@ namespace SpaceInvaders.View
         {
             InitializeComponent();
             GameCanvas.Focus();
-            BulletsRectangleCreated();
+            NewGame();
 
 
 
@@ -46,26 +46,47 @@ namespace SpaceInvaders.View
         }
         #endregion
 
+        public void NewGame()
+        {
+            BulletsRectangleCreated();
+        }
+        public void GameOver()
+        {
+            RemoveBullets();
+            RemoveEnemys();
+            int a =  0;
+        }
+
+
+        private void RemoveBullets()
+        {
+            for (int i = 0; i < _bulletsRectangles.Length; i++)
+            {
+                this.Dispatcher.Invoke((Action)(() =>
+                {
+                    GameCanvas.Children.Remove(_bulletsRectangles[i]);
+                } ));
+            }
+        }
+        private void RemoveEnemys()
+        {
+            for (int i = 0; i <5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        GameCanvas.Children.Remove(_enemysRectangles[i,j]);
+                    }));
+                }
+            }
+        }
+
         #region private methods
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
             if (KeyIsDown_Event != null)
                 KeyIsDown_Event(this, e);
-            /*if (e.Key == Key.Space)
-            {
-                Rectangle newBullet = new Rectangle
-                {
-                    Tag = "bullet",
-                    Height = 20,
-                    Width = 5,
-                    Fill = Brushes.Yellow,
-                    Stroke = Brushes.Red
-
-                };
-                Canvas.SetTop(newBullet, Canvas.GetTop(spaceShip) - newBullet.Height);
-                Canvas.SetLeft(newBullet, Canvas.GetLeft(spaceShip) + spaceShip.Width / 2 - 2);
-                GameCanvas.Children.Add(newBullet);               
-            }*/
         }
 
         private void KeyIsUp(object sender, KeyEventArgs e)
