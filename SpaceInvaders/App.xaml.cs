@@ -55,7 +55,8 @@ namespace SpaceInvaders
         {
             //model letrehozasa
             _model = new GameModel();
-            
+            _model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
+
 
             //nzetmodel letrehozasa
             _viewModel = new GameViewModel(_model);
@@ -134,9 +135,23 @@ namespace SpaceInvaders
         #region Model Event Handler
 
         //jatekvege esemeny
-        private void Model_GameOver(object sender, GameEventArgs e)
+        private void Model_GameOver(object sender, GameOverEventArgs e)
         {
-            //_model.NewGame();
+            if (e.Win)
+            {
+                MessageBox.Show("Új kor kovetkezik", "Game End",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
+                _view.GameOver();
+                _model.NewGame();
+                //_view.newGame();
+            }
+            else
+            {
+                MessageBox.Show("GameOver", "Game End",
+                MessageBoxButton.OK,
+                MessageBoxImage.Asterisk);
+            }
         }
 
         #endregion

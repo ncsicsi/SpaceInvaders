@@ -37,35 +37,39 @@ namespace SpaceInvaders.View
         public MainWindow()
         {
             InitializeComponent();
-            GameCanvas.Focus();
-            BulletsRectangleCreated();
-
-
-
-
         }
         #endregion
 
+        #region Public methods
+        public void newGame()
+        {
+            GameCanvas.Focus();
+            BulletsRectangleCreated();
+        }
+        public void GameOver()
+        {
+            RemoveBullets();
+        }
+
+        #endregion
+
+
         #region private methods
+        private void RemoveBullets()
+        {
+            for (int i=0; i<15 ; i++)
+            {
+                /*this.Dispatcher.Invoke((Action)(() =>
+                {
+                    GameCanvas.Children.Remove(_bulletsRectangles[i]);
+                }));*/
+            }
+        }
+
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
             if (KeyIsDown_Event != null)
                 KeyIsDown_Event(this,e);
-            /*if (e.Key == Key.Space)
-            {
-                Rectangle newBullet = new Rectangle
-                {
-                    Tag = "bullet",
-                    Height = 20,
-                    Width = 5,
-                    Fill = Brushes.Yellow,
-                    Stroke = Brushes.Red
-
-                };
-                Canvas.SetTop(newBullet, Canvas.GetTop(spaceShip) - newBullet.Height);
-                Canvas.SetLeft(newBullet, Canvas.GetLeft(spaceShip) + spaceShip.Width / 2 - 2);
-                GameCanvas.Children.Add(newBullet);               
-            }*/
         }
 
         private void KeyIsUp(object sender, KeyEventArgs e)
@@ -100,7 +104,7 @@ namespace SpaceInvaders.View
                     GameCanvas.Children.Add(_bulletsRectangles[i]);
             }
         }
-        public void BulletsUpdate(Bullet[] bullets)
+        private void BulletsUpdate(Bullet[] bullets)
         {
             for(int i = 0; i < bullets.Length; i++)
             {
@@ -120,6 +124,7 @@ namespace SpaceInvaders.View
                     {
                         _bulletsRectangles[i].Fill = Brushes.Black;
                         _bulletsRectangles[i].Stroke = Brushes.Black;
+                        
                     }));
                 }
 
@@ -144,8 +149,10 @@ namespace SpaceInvaders.View
                     {
                         this.Dispatcher.Invoke((Action)(() =>
                         {
-                            _enemysRectangles[i,j].Fill = Brushes.Black;
-                            
+                            //_enemysRectangles[i,j].Fill = Brushes.Black;
+                            GameCanvas.Children.Remove(_enemysRectangles[i, j]);
+
+
                         }));
                     }
                 }

@@ -67,7 +67,7 @@ namespace SpaceInvaders.Model
         private static int _shipHeight = 63;
         private int _bulletCount;
         private int _enemySpeed;
-        private int _enemyDirection;    // 0 ha jobbra, 1 balra, 2 lefele
+        private bool _win;
         public enum direction {RIGHT, LEFT, DOWN};
         private direction _direction;
         
@@ -115,7 +115,6 @@ namespace SpaceInvaders.Model
             _enemysCount = 50;
             _enemySpeed = 1;
             _direction= direction.RIGHT;
-            _enemyDirection = 0;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
@@ -187,7 +186,7 @@ namespace SpaceInvaders.Model
             }
             if (GameOverIs())
             {
-                OnGameOver();
+                 OnGameOver(_win);
             }
             OnGameAdvanced();
         }
@@ -199,7 +198,7 @@ namespace SpaceInvaders.Model
         /// Játék létrehozásának eseménye.
         public event EventHandler<EnemyEventArgs> GameCreated;
         // Játék végének eseménye.
-        public event EventHandler<GameEventArgs> GameOver;
+        public event EventHandler<GameOverEventArgs> GameOver;
         //Jatek előrehaladáskor frissitesi esemeny
         public event EventHandler<GameEventArgs> GameAdvanced;
         //Enemy tabla letrehozasanak esemenye, hogy lekuldjuk a viewba
@@ -271,20 +270,11 @@ namespace SpaceInvaders.Model
             OnGameCreated();
 
         }
-        private bool GameOverIs()
-        {
-            if (_lives == 0) return true;
-            if (_enemysCount == 0) return true;
 
-            return false;
-        }
 
+        //enemy move methods
         private void EnemyMove()
         {
-            int s;
-            int s2 = 0;
-            bool asd = false;
-
             if(_direction == direction.RIGHT && MostRightCoord() < 625 )
             {
                 MoveRight();
@@ -306,69 +296,6 @@ namespace SpaceInvaders.Model
                 MoveDown();
                 _direction = direction.RIGHT;
             }
-
-            /*for (int i=0; i<5; i++)
-            {
-                for (int j=0; j<10; j++)
-                {
-
-
-
-
-                    switch (_direction)
-                    {
-                        
-                        case direction.RIGHT:
-                            if (_enemys[4, 0].X() < 625)
-                            {
-                                s = _enemys[i, j].X();
-                                _enemys[i, j].X(s + _enemySpeed);
-                            }
-                            else{
-                                _direction = direction.LEFT;
-                            }
-                            break;
-                        case direction.LEFT:
-                            if (_enemys[4, 9].X() > 15)
-                            {
-                                s = _enemys[i, j].X();
-                                _enemys[i, j].X(s - _enemySpeed);
-                            }
-                            else {
-                                _direction = direction.DOWN;
-                                asd = true;
-                            }
-                            break;
-                        case direction.DOWN:
-                            
-                            s = _enemys[i, j].Y();
-                            _enemys[i, j].Y(s + 45);
-
-                            //_direction = direction.RIGHT;
-                            asd = false;
-                            break;
-                    }
-        }
-    }
-            if (_direction == direction.DOWN && asd == false)
-            {
-                _direction = direction.RIGHT;
-            }
-            
-            */
-            /*if(_enemyDirection == 2)    //lefele
-            {
-                _enemyDirection = 0;
-            }
-            else if (_enemyDirection == 1)
-            {
-                _enemyDirection = 2;
-            }
-            else if (_enemyDirection == 0)
-            {
-                _enemyDirection = 1;
-            }*/
-
         }
 
         private int MostRightCoord()
@@ -443,9 +370,21 @@ namespace SpaceInvaders.Model
                 }
             }
         }
-        
 
 
+        private bool GameOverIs()
+        {
+            if (_lives == 0) {
+                _win = false;
+                return true;
+            }
+            if (_enemysCount == 0)
+            {
+                _win= true;
+                return true;
+            }
+            return false;
+        }
 
 
         //elorehaladasa a jateknak es frissites
@@ -463,10 +402,11 @@ namespace SpaceInvaders.Model
         }
 
         //jatek vege
-        private void OnGameOver()
+        private void OnGameOver(bool win)
         {
+            _timer.Stop();
             if (GameOver != null)
-                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys));
+                GameOver(this, new GameOverEventArgs(win));
         }
 
         #endregion

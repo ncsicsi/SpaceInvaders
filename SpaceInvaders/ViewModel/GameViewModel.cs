@@ -53,6 +53,7 @@ namespace SpaceInvaders.ViewModel
 
         public event EventHandler<GameEventArgs> GameAdvanced;
         public event EventHandler<EnemyEventArgs> GameCreated;
+        public event EventHandler<EnemyEventArgs> GameOver;
         #endregion
 
         #region Constructor
@@ -61,6 +62,7 @@ namespace SpaceInvaders.ViewModel
             _model = model;
             _model.GameAdvanced += new EventHandler<GameEventArgs>(Model_GameAdvanced);
             _model.GameCreated += new EventHandler<EnemyEventArgs>(Model_GameCreated);
+            //_model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
 
             SetUpTable();
         }
@@ -87,7 +89,7 @@ namespace SpaceInvaders.ViewModel
 
         private void Model_GameOver(object sender, GameEventArgs e)
         {
-
+            int a = 1;
         }
 
 
