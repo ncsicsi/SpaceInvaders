@@ -52,6 +52,7 @@ namespace SpaceInvaders.ViewModel
         public event EventHandler ExitGame;
 
         public event EventHandler<GameEventArgs> GameAdvanced;
+        public event EventHandler<EnemyEventArgs> GameCreated;
         #endregion
 
         #region Constructor
@@ -59,9 +60,7 @@ namespace SpaceInvaders.ViewModel
         {
             _model = model;
             _model.GameAdvanced += new EventHandler<GameEventArgs>(Model_GameAdvanced);
-
-
-
+            _model.GameCreated += new EventHandler<EnemyEventArgs>(Model_GameCreated);
 
             SetUpTable();
         }
@@ -101,6 +100,12 @@ namespace SpaceInvaders.ViewModel
             OnPropertyChanged("XPos");
             if (GameAdvanced != null)
                 GameAdvanced(this, e);
+        } 
+        private void Model_GameCreated(object sender, EnemyEventArgs e)
+        {
+            if (GameCreated != null)
+                GameCreated(this, e);
+            
         }
         // billentyuzet lenyomasa esemeny
         public void View_KeyIsDown(KeyEventArgs e)
@@ -114,7 +119,7 @@ namespace SpaceInvaders.ViewModel
                     _model.GoRight(true);
                     break;
                 case Key.Space:
-                    _model.Bullet(true);
+                    _model.BulletOn(true);
                     break;
             }
         }

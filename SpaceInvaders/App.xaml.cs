@@ -55,11 +55,12 @@ namespace SpaceInvaders
         {
             //model letrehozasa
             _model = new GameModel();
-            _model.NewGame();
+            
 
             //nzetmodel letrehozasa
             _viewModel = new GameViewModel(_model);
             _viewModel.GameAdvanced += new EventHandler<GameEventArgs>(View_GameAdvanced);
+            _viewModel.GameCreated += new EventHandler<EnemyEventArgs>(View_GameCreated);
 
             // nézet létrehozása
             _view = new MainWindow();
@@ -67,6 +68,7 @@ namespace SpaceInvaders
 
             _view.KeyIsDown_Event += new KeyEventHandler(View_KeyIsDown);
             _view.KeyIsUp_Event += new KeyEventHandler(View_KeyIsUp);
+            _model.NewGame();
 
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing); // eseménykezelés a bezáráshoz
             _view.Show();
@@ -89,6 +91,10 @@ namespace SpaceInvaders
         private void View_GameAdvanced(object sender, GameEventArgs e)
         {
             //_view.View_GameAdvanced(e); 
+        }
+        private void View_GameCreated(object sender, EnemyEventArgs e)
+        {
+            _view.View_GameCreated(e); 
         }
 
         // Gomb lenyomasanak esemenye

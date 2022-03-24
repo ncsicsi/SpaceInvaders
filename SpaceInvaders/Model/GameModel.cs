@@ -8,6 +8,7 @@ namespace SpaceInvaders.Model
 {
     internal class GameModel
     {
+        /*
         #region public Structs 
         public struct Enemy
         {
@@ -38,13 +39,15 @@ namespace SpaceInvaders.Model
             public bool Alive { get { return _bulletAlive; } set { _bulletAlive = value; } }
         }
         #endregion
+        */
 
         #region Fields
         private int _score;
         private int _lives;
         private int _invadiersSpeed;
         private int _enemysCount;
-        private Enemy[,] _enemys = new Enemy[5, 10];
+        //private Enemy[,] _enemys = new Enemy[5, 10];
+        private EnemyStruct[,] _enemys = new EnemyStruct[5, 10];
         private Bullet[]  _bullets= new Bullet[15];
         private int _shipXPos;
         private bool _goLeft;
@@ -73,6 +76,7 @@ namespace SpaceInvaders.Model
         public void GoRight(bool goRight) { _goRight = goRight; }
         //bullet
         public void BulletOn(bool bullet) { _bullet = bullet; }
+        //public EnemyStruct[,] Enemys { get { return _enemys; } set { _enemys = value; } }
         /*public int BulletX { get { return _bulletX; } }
         public int BulletY { get { return _bulletY; } }
         */
@@ -82,22 +86,23 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel()
         {
-            ReSetEnemyTable();
-            
+
+            ReSetBulletTable();
+
+
         }
         #endregion
 
         #region Public Methods
         public void NewGame()
         {
+            ReSetEnemyTable();
             _score = 0;
             _lives = 2;
             _invadiersSpeed = 10;
             _shipXPos = 298;
             _bullet = false;
             _bulletCount = 0;
-
-            //_bulletAlive = false;
             _enemysCount = 50;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
@@ -175,21 +180,90 @@ namespace SpaceInvaders.Model
         #region Events
 
         /// Játék létrehozásának eseménye.
-        public event EventHandler<GameEventArgs> GameCreated;
+        //public event EventHandler<GameEventArgs> GameCreated;
         // Játék végének eseménye.
         public event EventHandler<GameEventArgs> GameOver;
         //Jatek előrehaladáskor frissitesi esemeny
         public event EventHandler<GameEventArgs> GameAdvanced;
+        //Enemy tabla letrehozasanak esemenye, hogy lekuldjuk a viewba
+        public event EventHandler<EnemyEventArgs> GameCreated;
 
         #endregion
 
         #region Private Methods
 
+        private void ReSetBulletTable()
+        {
+            for(int i = 0; i < 15; i++)
+            {
+                _bullets[_bulletCount].Alive = false;
+            }
+        }
+
+
         private void ReSetEnemyTable()
         {
-            for (int i = 0; i < 5; i++)
+            int enemyColumn = 0;
+            int left = 560;
+            for (int i = 0; i < _enemys.Length; i++)
             {
                 switch (i)
+                {
+                    case 10:
+                        enemyColumn=0;
+                        left = 560;
+                        break;
+                    case 20:
+                        enemyColumn=0;
+                        left = 560;
+                        break;
+                    case 30:
+                        enemyColumn=0;
+                        left = 560;
+                        break;
+                    case 40:
+                        enemyColumn=0;
+                        left = 560;
+                        break;
+                }
+                if (i < 11)
+                {
+                    _enemys[0, enemyColumn].Alive(true);
+                    _enemys[0, enemyColumn].Type(1);
+                    _enemys[0, enemyColumn].Y(10);
+                    _enemys[0, enemyColumn].X(left);
+                }
+                else if (i < 21)
+                {
+                    _enemys[0, enemyColumn].Alive(true);
+                    _enemys[0, enemyColumn].Type(2);
+                    _enemys[0, enemyColumn].Y(55+10);
+                    _enemys[0, enemyColumn].X(left);
+                }
+                else if (i < 31)
+                {
+                    _enemys[0, enemyColumn].Alive(true);
+                    _enemys[0, enemyColumn].Type(2);
+                    _enemys[0, enemyColumn].Y(2*55 + 10);
+                    _enemys[0, enemyColumn].X(left);
+                }
+                else if (i < 41)
+                {
+                    _enemys[0, enemyColumn].Alive(true);
+                    _enemys[0, enemyColumn].Type(3);
+                    _enemys[0, enemyColumn].Y(3 * 55 + 10);
+                    _enemys[0, enemyColumn].X(left);
+                }
+                else if (i < 51)
+                {
+                    _enemys[0, enemyColumn].Alive(true);
+                    _enemys[0, enemyColumn].Type(3);
+                    _enemys[0, enemyColumn].Y(4 * 55 + 10);
+                    _enemys[0, enemyColumn].X(left);
+                }
+                enemyColumn++;
+                left -= 55;
+                /*switch (i)
                 {
                     case 0:
                         for (int j = 0; j < 10; j++) // 1. Sor
@@ -236,9 +310,10 @@ namespace SpaceInvaders.Model
                             _enemys[i, j].X(560 - 55 * j);
                         }
                         break;
-                }
+                }*/
 
             }
+            OnGameCreated();
 
         }
         //elorehaladasa a jateknak es frissites
@@ -246,6 +321,13 @@ namespace SpaceInvaders.Model
         {
             if (GameAdvanced != null)
                 GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos));
+        }
+        //enemy tabla letrehozasanak esemenye
+        private void OnGameCreated()
+        {
+            if (GameCreated != null)
+                GameCreated(this, new EnemyEventArgs(_enemys));
+            
         }
 
         //jatek vege

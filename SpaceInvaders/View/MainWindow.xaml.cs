@@ -24,7 +24,8 @@ namespace SpaceInvaders.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        int enemyImages;
+        Rectangle[,] _enemysInView = new Rectangle[5,10];   //enemy teglalapok, amik megjelennek
+
 
         /// Játékból való kilépés eseménye.
         public event KeyEventHandler KeyIsDown_Event;
@@ -35,7 +36,8 @@ namespace SpaceInvaders.View
         {
             InitializeComponent();
             GameCanvas.Focus();
-            makeEnemies(50);
+            //makeEnemies(50);
+            
 
         }
         #endregion
@@ -77,10 +79,52 @@ namespace SpaceInvaders.View
             //bullet move
             int a = 0;
             //enemy move
+        }
+        public void View_GameCreated(EnemyEventArgs e)
+        {
+            makeEnemies(50, e.Enemys);
         } 
 
-        private void makeEnemies(int enemiCount)
+        private void makeEnemies(int enemiCount, EnemyStruct[,] enemies)
         {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    ImageBrush enemySkin = new ImageBrush();
+                    _enemysInView[i, j] = new Rectangle
+                    {
+                        Tag = "enemy",
+                        Height = 45,
+                        Width = 45,
+                        Fill = enemySkin
+                    };
+                    Canvas.SetTop(_enemysInView[i, j], enemies[i,j].Y());
+                    Canvas.SetLeft(_enemysInView[i, j], enemies[i,j].X());
+                    GameCanvas.Children.Add(_enemysInView[i, j]);
+                    if (i == 0)
+                    {
+                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier1.png"));
+                    }
+                    else if( i == 1)
+                    {
+                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
+                    }
+                    else if (i == 2)
+                    {
+                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
+                    }
+                    else if (i == 3)
+                    {
+                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier3.png"));
+                    }
+                    else if (i == 4)
+                    {
+                        enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier3.png"));
+                    }
+                }
+            }
+            /*
             int enemyRow = 0;
             int left = 560;
             enemyImages = 0;
@@ -146,7 +190,7 @@ namespace SpaceInvaders.View
                     enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier3.png"));
                 }
 
-            }
+            }*/
         }
         #endregion
     }
