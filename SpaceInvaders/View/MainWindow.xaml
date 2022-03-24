@@ -6,6 +6,12 @@
         xmlns:local="clr-namespace:SpaceInvaders"
         mc:Ignorable="d"
         Title="Space Invaders" Height="700" Width="700" >
+    <Window.Resources>
+        <Style x:Key="EnemyRectangleStyle" TargetType="{x:Type Rectangle}">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Width" Value="45"/>
+        </Style>
+    </Window.Resources>
     <Grid Name="mainGrid" Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -26,6 +32,9 @@
             </StatusBarItem>
         </StatusBar>
         <Canvas Name="GameCanvas" Background="Black" Grid.Row="1" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp">
+            <!--<Rectangle Name="enemy" Style="{DynamicResource EnemyRectangleStyle}" Canvas.Left="{Binding Enemys[0].X}"/>-->
+                
+            
             <Rectangle Name="spaceShip" Width="104" Height="63" Canvas.Top="570" Canvas.Left="{Binding XPos}">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="/SpaceInvaders;component/images/spaceShip.png"/>

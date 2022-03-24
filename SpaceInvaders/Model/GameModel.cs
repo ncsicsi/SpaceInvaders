@@ -121,10 +121,10 @@ namespace SpaceInvaders.Model
             if(_bullet == true)
             {
                 _bullet = false;
-                _bullets[_bulletCount].X = _shipXPos;
+                _bullets[_bulletCount].X = _shipXPos+50;
                 _bullets[_bulletCount].Y = 550;
                 _bullets[_bulletCount].Alive = true;
-                if (_bulletCount < 15)
+                if (_bulletCount < 14)
                 {
                     _bulletCount++;
                 }
@@ -263,11 +263,18 @@ namespace SpaceInvaders.Model
             OnGameCreated();
 
         }
+
+        private void EnemyMove()
+        {
+
+        }
+
+
         //elorehaladasa a jateknak es frissites
         private void OnGameAdvanced()
         {
             if (GameAdvanced != null)
-                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets));
+                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys));
         }
         //enemy tabla letrehozasanak esemenye
         private void OnGameCreated()
@@ -281,7 +288,7 @@ namespace SpaceInvaders.Model
         private void OnGameOver()
         {
             if (GameOver != null)
-                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets));
+                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys));
         }
 
         #endregion

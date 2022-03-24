@@ -78,13 +78,11 @@ namespace SpaceInvaders.View
         public void View_GameAdvanced(GameEventArgs e)
         {
             //enemy bullet
-            //bullet move
-            
 
-            //BulletsUpdate(e.Bullets);
-            
-            
+            //bullet move
+            BulletsUpdate(e.Bullets);
             //enemy move
+            EnemysUpdate(e.Enemies);
         }
         private void BulletsRectangleCreated()
         {
@@ -108,20 +106,51 @@ namespace SpaceInvaders.View
             {
                 if (bullets[i].Alive)
                 {
-                    //_bulletsRectangles[i].Fill = Brushes.Yellow;
-                    //_bulletsRectangles[i].Stroke = Brushes.Red;
-                    Canvas.SetTop(_bulletsRectangles[i], bullets[i].Y);
-                    Canvas.SetLeft(_bulletsRectangles[i],bullets[i].X);
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        _bulletsRectangles[i].Fill = Brushes.Yellow;
+                        _bulletsRectangles[i].Stroke = Brushes.Red;
+                        Canvas.SetTop(_bulletsRectangles[i], bullets[i].Y);
+                        Canvas.SetLeft(_bulletsRectangles[i], bullets[i].X);
+                    }));
                 }
                 else
                 {
-/*
-                    _bulletsRectangles[i].Fill = Brushes.Black;
-                    _bulletsRectangles[i].Stroke = Brushes.Black;*/
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        _bulletsRectangles[i].Fill = Brushes.Black;
+                        _bulletsRectangles[i].Stroke = Brushes.Black;
+                    }));
                 }
 
             }
         }
+
+        private void EnemysUpdate(EnemyStruct[,] enemies)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    if (enemies[i,j].Alive())
+                    {
+                        this.Dispatcher.Invoke((Action)(() =>
+                        {
+                            Canvas.SetTop(_enemysRectangles[i,j], enemies[i,j].Y());
+                            Canvas.SetLeft(_enemysRectangles[i, j], enemies[i,j].X());
+                        }));
+                    }
+                    else
+                    {
+                        this.Dispatcher.Invoke((Action)(() =>
+                        {
+                            _enemysRectangles[i,j].Fill = Brushes.Black;
+                        }));
+                    }
+                }
+            }
+        }
+        
 
         public void View_GameCreated(EnemyEventArgs e)
         {
