@@ -14,6 +14,7 @@ namespace SpaceInvaders.Model
         int _type;   // 1-3 tipus
         bool _isMostLeft;
         bool _isMostRight;
+        bool _isMostDown;
 
         public void Alive(bool alive) { _alive = alive; }
         public bool Alive() { return _alive; }
@@ -27,6 +28,7 @@ namespace SpaceInvaders.Model
         public int Y() { return _y; }
         public bool IsMostLeft { get { return _isMostLeft; } set { _isMostLeft = value; } }
         public bool IsMostRight { get { return _isMostRight; } set { _isMostRight = value; } }
+        public bool IsMostDown { get { return _isMostDown; } set { _isMostDown = value; } }
 
 
     }
