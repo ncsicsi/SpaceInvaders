@@ -90,7 +90,7 @@ namespace SpaceInvaders
         /// Nézet bezárásának eseménykezelője.
         private void View_GameAdvanced(object sender, GameEventArgs e)
         {
-            //_view.View_GameAdvanced(e); 
+            _view.View_GameAdvanced(e); 
         }
         private void View_GameCreated(object sender, EnemyEventArgs e)
         {

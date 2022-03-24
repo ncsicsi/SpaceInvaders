@@ -46,7 +46,6 @@ namespace SpaceInvaders.Model
         private int _lives;
         private int _invadiersSpeed;
         private int _enemysCount;
-        //private Enemy[,] _enemys = new Enemy[5, 10];
         private EnemyStruct[,] _enemys = new EnemyStruct[5, 10];
         private Bullet[]  _bullets= new Bullet[15];
         private int _shipXPos;
@@ -76,10 +75,7 @@ namespace SpaceInvaders.Model
         public void GoRight(bool goRight) { _goRight = goRight; }
         //bullet
         public void BulletOn(bool bullet) { _bullet = bullet; }
-        //public EnemyStruct[,] Enemys { get { return _enemys; } set { _enemys = value; } }
-        /*public int BulletX { get { return _bulletX; } }
-        public int BulletY { get { return _bulletY; } }
-        */
+
 
         #endregion
 
@@ -180,13 +176,13 @@ namespace SpaceInvaders.Model
         #region Events
 
         /// Játék létrehozásának eseménye.
-        //public event EventHandler<GameEventArgs> GameCreated;
+        public event EventHandler<EnemyEventArgs> GameCreated;
         // Játék végének eseménye.
         public event EventHandler<GameEventArgs> GameOver;
         //Jatek előrehaladáskor frissitesi esemeny
         public event EventHandler<GameEventArgs> GameAdvanced;
         //Enemy tabla letrehozasanak esemenye, hogy lekuldjuk a viewba
-        public event EventHandler<EnemyEventArgs> GameCreated;
+        
 
         #endregion
 
@@ -226,92 +222,43 @@ namespace SpaceInvaders.Model
                         left = 560;
                         break;
                 }
-                if (i < 11)
+                if (i < 10)
                 {
                     _enemys[0, enemyColumn].Alive(true);
                     _enemys[0, enemyColumn].Type(1);
                     _enemys[0, enemyColumn].Y(10);
                     _enemys[0, enemyColumn].X(left);
                 }
-                else if (i < 21)
+                else if (i < 20)
                 {
-                    _enemys[0, enemyColumn].Alive(true);
-                    _enemys[0, enemyColumn].Type(2);
-                    _enemys[0, enemyColumn].Y(55+10);
-                    _enemys[0, enemyColumn].X(left);
+                    _enemys[1, enemyColumn].Alive(true);
+                    _enemys[1, enemyColumn].Type(2);
+                    _enemys[1, enemyColumn].Y(65);
+                    _enemys[1, enemyColumn].X(left);
                 }
-                else if (i < 31)
+                else if (i < 30)
                 {
-                    _enemys[0, enemyColumn].Alive(true);
-                    _enemys[0, enemyColumn].Type(2);
-                    _enemys[0, enemyColumn].Y(2*55 + 10);
-                    _enemys[0, enemyColumn].X(left);
+                    _enemys[2, enemyColumn].Alive(true);
+                    _enemys[2, enemyColumn].Type(2);
+                    _enemys[2, enemyColumn].Y(2*55 + 10);
+                    _enemys[2, enemyColumn].X(left);
                 }
-                else if (i < 41)
+                else if (i < 40)
                 {
-                    _enemys[0, enemyColumn].Alive(true);
-                    _enemys[0, enemyColumn].Type(3);
-                    _enemys[0, enemyColumn].Y(3 * 55 + 10);
-                    _enemys[0, enemyColumn].X(left);
+                    _enemys[3, enemyColumn].Alive(true);
+                    _enemys[3, enemyColumn].Type(3);
+                    _enemys[3, enemyColumn].Y(3 * 55 + 10);
+                    _enemys[3, enemyColumn].X(left);
                 }
-                else if (i < 51)
+                else if (i < 50)
                 {
-                    _enemys[0, enemyColumn].Alive(true);
-                    _enemys[0, enemyColumn].Type(3);
-                    _enemys[0, enemyColumn].Y(4 * 55 + 10);
-                    _enemys[0, enemyColumn].X(left);
+                    _enemys[4, enemyColumn].Alive(true);
+                    _enemys[4, enemyColumn].Type(3);
+                    _enemys[4, enemyColumn].Y(4 * 55 + 10);
+                    _enemys[4, enemyColumn].X(left);
                 }
                 enemyColumn++;
                 left -= 55;
-                /*switch (i)
-                {
-                    case 0:
-                        for (int j = 0; j < 10; j++) // 1. Sor
-                        {
-                            _enemys[i, j].Alive(true);
-                            _enemys[i, j].Type(1);
-                            _enemys[i, j].Y(i*55 + 10);
-                            _enemys[i, j].X(560-55*j);
-                        }
-                        break;
-                    case 1:
-                        for (int j = 0; j < 10; j++) // 2. Sor
-                        {
-                            _enemys[i, j].Alive(true);
-                            _enemys[i, j].Type(2);
-                            _enemys[i, j].Y(i * 55 + 10);
-                            _enemys[i, j].X(560 - 55 * j);
-                        }
-                        break;
-                    case 2:
-                        for (int j = 0; j < 10; j++) // 3. Sor
-                        {
-                            _enemys[i, j].Alive(true);
-                            _enemys[i, j].Type(2);
-                            _enemys[i, j].Y(i * 55 + 10);
-                            _enemys[i, j].X(560 - 55 * j);
-                        }
-                        break;
-                    case 3:
-                        for (int j = 0; j < 10; j++) // 4. Sor
-                        {
-                            _enemys[i, j].Alive(true);
-                            _enemys[i, j].Type(3);
-                            _enemys[i, j].Y(i * 55 + 10);
-                            _enemys[i, j].X(560 - 55 * j);
-                        }
-                        break;
-                    case 4:
-                        for (int j = 0; j < 10; j++) // 5. Sor
-                        {
-                            _enemys[i, j].Alive(true);
-                            _enemys[i, j].Type(3);
-                            _enemys[i, j].Y(i * 55 + 10);
-                            _enemys[i, j].X(560 - 55 * j);
-                        }
-                        break;
-                }*/
-
             }
             OnGameCreated();
 
@@ -320,7 +267,7 @@ namespace SpaceInvaders.Model
         private void OnGameAdvanced()
         {
             if (GameAdvanced != null)
-                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos));
+                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets));
         }
         //enemy tabla letrehozasanak esemenye
         private void OnGameCreated()
@@ -334,7 +281,7 @@ namespace SpaceInvaders.Model
         private void OnGameOver()
         {
             if (GameOver != null)
-                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos));
+                GameOver(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets));
         }
 
         #endregion
