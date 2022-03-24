@@ -142,7 +142,7 @@ namespace SpaceInvaders
                 MessageBox.Show("Új kor kovetkezik", "Game End",
                     MessageBoxButton.OK,
                     MessageBoxImage.Asterisk);
-                _view.GameOver();
+                //_view.GameOver();
                 _model.NewGame();
                 //_view.newGame();
             }

@@ -24,7 +24,7 @@ namespace SpaceInvaders.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        Rectangle[,] _enemysRectangles = new Rectangle[5,10];   //enemy teglalapok, amik megjelennek
+        Rectangle[,] _enemysRectangles = new Rectangle[5, 10];   //enemy teglalapok, amik megjelennek
         Rectangle[] _bulletsRectangles = new Rectangle[15];   //lovedek teglalapok
         private int time = 0;
 
@@ -37,39 +37,35 @@ namespace SpaceInvaders.View
         public MainWindow()
         {
             InitializeComponent();
-        }
-        #endregion
-
-        #region Public methods
-        public void newGame()
-        {
             GameCanvas.Focus();
             BulletsRectangleCreated();
-        }
-        public void GameOver()
-        {
-            RemoveBullets();
-        }
 
+
+
+
+        }
         #endregion
 
-
         #region private methods
-        private void RemoveBullets()
-        {
-            for (int i=0; i<15 ; i++)
-            {
-                /*this.Dispatcher.Invoke((Action)(() =>
-                {
-                    GameCanvas.Children.Remove(_bulletsRectangles[i]);
-                }));*/
-            }
-        }
-
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
             if (KeyIsDown_Event != null)
-                KeyIsDown_Event(this,e);
+                KeyIsDown_Event(this, e);
+            /*if (e.Key == Key.Space)
+            {
+                Rectangle newBullet = new Rectangle
+                {
+                    Tag = "bullet",
+                    Height = 20,
+                    Width = 5,
+                    Fill = Brushes.Yellow,
+                    Stroke = Brushes.Red
+
+                };
+                Canvas.SetTop(newBullet, Canvas.GetTop(spaceShip) - newBullet.Height);
+                Canvas.SetLeft(newBullet, Canvas.GetLeft(spaceShip) + spaceShip.Width / 2 - 2);
+                GameCanvas.Children.Add(newBullet);               
+            }*/
         }
 
         private void KeyIsUp(object sender, KeyEventArgs e)
@@ -92,21 +88,21 @@ namespace SpaceInvaders.View
         {
             for (int i = 0; i < 15; i++)
             {
-                    _bulletsRectangles[i] = new Rectangle
-                    {
-                        Tag = "bullet",
-                        Height = 20,
-                        Width = 5,
-                        Fill = Brushes.Black,
-                        Stroke = Brushes.Black
+                _bulletsRectangles[i] = new Rectangle
+                {
+                    Tag = "bullet",
+                    Height = 20,
+                    Width = 5,
+                    Fill = Brushes.Black,
+                    Stroke = Brushes.Black
 
-                    };
-                    GameCanvas.Children.Add(_bulletsRectangles[i]);
+                };
+                GameCanvas.Children.Add(_bulletsRectangles[i]);
             }
         }
-        private void BulletsUpdate(Bullet[] bullets)
+        public void BulletsUpdate(Bullet[] bullets)
         {
-            for(int i = 0; i < bullets.Length; i++)
+            for (int i = 0; i < bullets.Length; i++)
             {
                 if (bullets[i].Alive)
                 {
@@ -124,7 +120,6 @@ namespace SpaceInvaders.View
                     {
                         _bulletsRectangles[i].Fill = Brushes.Black;
                         _bulletsRectangles[i].Stroke = Brushes.Black;
-                        
                     }));
                 }
 
@@ -137,33 +132,31 @@ namespace SpaceInvaders.View
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (enemies[i,j].Alive())
+                    if (enemies[i, j].Alive())
                     {
                         this.Dispatcher.Invoke((Action)(() =>
                         {
-                            Canvas.SetTop(_enemysRectangles[i,j], enemies[i,j].Y());
-                            Canvas.SetLeft(_enemysRectangles[i, j], enemies[i,j].X());
+                            Canvas.SetTop(_enemysRectangles[i, j], enemies[i, j].Y());
+                            Canvas.SetLeft(_enemysRectangles[i, j], enemies[i, j].X());
                         }));
                     }
                     else
                     {
                         this.Dispatcher.Invoke((Action)(() =>
                         {
-                            //_enemysRectangles[i,j].Fill = Brushes.Black;
                             GameCanvas.Children.Remove(_enemysRectangles[i, j]);
-
 
                         }));
                     }
                 }
             }
         }
-        
+
 
         public void View_GameCreated(EnemyEventArgs e)
         {
             makeEnemies(50, e.Enemys);
-        } 
+        }
 
 
 
@@ -181,14 +174,14 @@ namespace SpaceInvaders.View
                         Width = 45,
                         Fill = enemySkin
                     };
-                    Canvas.SetTop(_enemysRectangles[i, j], enemies[i,j].Y());
-                    Canvas.SetLeft(_enemysRectangles[i, j], enemies[i,j].X());
+                    Canvas.SetTop(_enemysRectangles[i, j], enemies[i, j].Y());
+                    Canvas.SetLeft(_enemysRectangles[i, j], enemies[i, j].X());
                     GameCanvas.Children.Add(_enemysRectangles[i, j]);
                     if (i == 0)
                     {
                         enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier1.png"));
                     }
-                    else if( i == 1)
+                    else if (i == 1)
                     {
                         enemySkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/invadier2.png"));
                     }
