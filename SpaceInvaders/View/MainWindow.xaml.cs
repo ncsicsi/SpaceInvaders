@@ -157,6 +157,8 @@ namespace SpaceInvaders.View
             makeEnemies(50, e.Enemys);
         } 
 
+
+
         private void makeEnemies(int enemiCount, EnemyStruct[,] enemies)
         {
             for (int i = 0; i < 5; i++)

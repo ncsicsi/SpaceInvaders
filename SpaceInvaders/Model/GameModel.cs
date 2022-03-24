@@ -58,6 +58,8 @@ namespace SpaceInvaders.Model
         private static int _shipWidth = 104;
         private static int _shipHeight = 63;
         private int _bulletCount;
+        private int _enemySpeed;
+        private int _enemyDirection;    // 0 ha jobbra, 1 balra, 2 lefele
 
         #endregion
 
@@ -100,6 +102,8 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = 50;
+            _enemySpeed = 1;
+            _enemyDirection = 0;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
@@ -118,7 +122,8 @@ namespace SpaceInvaders.Model
             {
                 _shipXPos += 5;
             }
-            if(_bullet == true)
+            EnemyMove();
+            if (_bullet == true)
             {
                 _bullet = false;
                 _bullets[_bulletCount].X = _shipXPos+50;
@@ -150,6 +155,7 @@ namespace SpaceInvaders.Model
                             {
                                 _bullets[i].Alive = false;
                                 _enemys[j, z].Alive(false);
+                                _enemysCount--;
                                 switch (_enemys[j, z].Type())
                                 {
                                     case 1:
@@ -167,7 +173,10 @@ namespace SpaceInvaders.Model
                     }
                 }
             }
-            
+            if (GameOverIs())
+            {
+                OnGameOver();
+            }
             OnGameAdvanced();
         }
 
@@ -263,11 +272,64 @@ namespace SpaceInvaders.Model
             OnGameCreated();
 
         }
+        private bool GameOverIs()
+        {
+            if (_lives == 0) return true;
+            if (_enemysCount == 0) return true;
+
+            return false;
+        }
 
         private void EnemyMove()
         {
-
+            int s;
+            int s2 = 0;
+            for (int i=0; i<5; i++)
+            {
+                for (int j=0; j<10; j++)
+                {
+                    switch (_enemyDirection)
+                    {
+                        
+                        case 0:
+                            if (_enemys[0, 0].X() < 625)
+                            {
+                                s = _enemys[i, j].X();
+                                _enemys[i, j].X(s + _enemySpeed);
+                            }
+                            else{
+                                _enemyDirection++;
+                            }
+                            break;
+                        case 1:
+                            if (_enemys[0, 9].X() > 15)
+                            {
+                                s = _enemys[i, j].X();
+                                _enemys[i, j].X(s - _enemySpeed);
+                            }
+                            else { 
+                                _enemyDirection++; 
+                            }
+                            break;
+                        case 2:
+                            
+                            s = _enemys[i, j].Y();
+                            _enemys[i, j].Y(s + 45);
+                            /*if (i==4 && j==9)
+                            {
+                                _enemyDirection = 0;
+                            }*/
+                            break;
+                    }
+                }
+            }
+            if(_enemyDirection == 2)
+            {
+                _enemyDirection = 0;
+            }
         }
+
+
 
 
         //elorehaladasa a jateknak es frissites
