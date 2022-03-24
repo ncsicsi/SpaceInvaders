@@ -145,6 +145,7 @@ namespace SpaceInvaders.View
                         this.Dispatcher.Invoke((Action)(() =>
                         {
                             _enemysRectangles[i,j].Fill = Brushes.Black;
+                            
                         }));
                     }
                 }

@@ -12,14 +12,22 @@ namespace SpaceInvaders.Model
         int _x;
         int _y;
         int _type;   // 1-3 tipus
+        bool _isMostLeft;
+        bool _isMostRight;
+
         public void Alive(bool alive) { _alive = alive; }
         public bool Alive() { return _alive; }
         public void Type(int type) { _type = type; }
         public int Type() { return _type; }
 
+
         public void X(int x) { _x = x; }
         public void Y(int y) { _y = y; }
         public int X() { return _x; }
         public int Y() { return _y; }
+        public bool IsMostLeft { get { return _isMostLeft; } set { _isMostLeft = value; } }
+        public bool IsMostRight { get { return _isMostRight; } set { _isMostRight = value; } }
+
+
     }
 }

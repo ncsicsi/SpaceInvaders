@@ -1,13 +1,21 @@
-﻿using System;
+﻿//#define RIGHT 0
+//#define LEFT 1
+//#define DOWN 2
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace SpaceInvaders.Model
 {
+
     internal class GameModel
     {
+
         /*
         #region public Structs 
         public struct Enemy
@@ -60,6 +68,9 @@ namespace SpaceInvaders.Model
         private int _bulletCount;
         private int _enemySpeed;
         private int _enemyDirection;    // 0 ha jobbra, 1 balra, 2 lefele
+        public enum direction {RIGHT, LEFT, DOWN};
+        private direction _direction;
+        
 
         #endregion
 
@@ -103,6 +114,7 @@ namespace SpaceInvaders.Model
             _bulletCount = 0;
             _enemysCount = 50;
             _enemySpeed = 1;
+            _direction= direction.RIGHT;
             _enemyDirection = 0;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
@@ -231,44 +243,31 @@ namespace SpaceInvaders.Model
                         left = 560;
                         break;
                 }
-                if (i < 10)
-                {
-                    _enemys[0, enemyColumn].Alive(true);
-                    _enemys[0, enemyColumn].Type(1);
-                    _enemys[0, enemyColumn].Y(10);
-                    _enemys[0, enemyColumn].X(left);
-                }
-                else if (i < 20)
-                {
-                    _enemys[1, enemyColumn].Alive(true);
-                    _enemys[1, enemyColumn].Type(2);
-                    _enemys[1, enemyColumn].Y(65);
-                    _enemys[1, enemyColumn].X(left);
-                }
-                else if (i < 30)
-                {
-                    _enemys[2, enemyColumn].Alive(true);
-                    _enemys[2, enemyColumn].Type(2);
-                    _enemys[2, enemyColumn].Y(2*55 + 10);
-                    _enemys[2, enemyColumn].X(left);
-                }
-                else if (i < 40)
-                {
-                    _enemys[3, enemyColumn].Alive(true);
-                    _enemys[3, enemyColumn].Type(3);
-                    _enemys[3, enemyColumn].Y(3 * 55 + 10);
-                    _enemys[3, enemyColumn].X(left);
-                }
-                else if (i < 50)
-                {
-                    _enemys[4, enemyColumn].Alive(true);
-                    _enemys[4, enemyColumn].Type(3);
-                    _enemys[4, enemyColumn].Y(4 * 55 + 10);
-                    _enemys[4, enemyColumn].X(left);
-                }
+                int type = 1;
+                if (i < 10) type = 1;
+                else if(i < 30) type = 2;
+                else if(i < 50) type = 3;
+
+                    _enemys[(i/10), enemyColumn].Alive(true);
+                    _enemys[i / 10, enemyColumn].Type(type);
+                    _enemys[i / 10, enemyColumn].Y(10+(i/10)*55);
+                    _enemys[i / 10, enemyColumn].X(left);
+                    _enemys[i / 10, enemyColumn].IsMostRight = false;
+                    _enemys[i / 10, enemyColumn].IsMostLeft = false;
+
                 enemyColumn++;
                 left -= 55;
             }
+            _enemys[0,0].IsMostRight = true;
+            _enemys[1,0].IsMostRight = true;
+            _enemys[2,0].IsMostRight = true;
+            _enemys[3,0].IsMostRight = true;
+            _enemys[4,0].IsMostRight = true;
+            _enemys[0,9].IsMostLeft = true;
+            _enemys[1,9].IsMostLeft = true;
+            _enemys[2,9].IsMostLeft = true;
+            _enemys[3,9].IsMostLeft = true;
+            _enemys[4,9].IsMostLeft = true;
             OnGameCreated();
 
         }
@@ -284,50 +283,167 @@ namespace SpaceInvaders.Model
         {
             int s;
             int s2 = 0;
-            for (int i=0; i<5; i++)
+            bool asd = false;
+
+            if(_direction == direction.RIGHT && MostRightCoord() < 625 )
+            {
+                MoveRight();
+            }
+            else if(_direction == direction.RIGHT && MostRightCoord() >= 625)
+            {
+                _direction = direction.LEFT;
+            }
+            if(_direction == direction.LEFT && MostLeftCoord()>15 )
+            {
+                MoveLeft();
+            }
+            else if (_direction == direction.LEFT && MostLeftCoord() <= 15)
+            {
+                _direction = direction.DOWN;
+            }
+            else if(_direction == direction.DOWN)
+            {
+                MoveDown();
+                _direction = direction.RIGHT;
+            }
+
+            /*for (int i=0; i<5; i++)
             {
                 for (int j=0; j<10; j++)
                 {
-                    switch (_enemyDirection)
+
+
+
+
+                    switch (_direction)
                     {
                         
-                        case 0:
-                            if (_enemys[0, 0].X() < 625)
+                        case direction.RIGHT:
+                            if (_enemys[4, 0].X() < 625)
                             {
                                 s = _enemys[i, j].X();
                                 _enemys[i, j].X(s + _enemySpeed);
                             }
                             else{
-                                _enemyDirection++;
+                                _direction = direction.LEFT;
                             }
                             break;
-                        case 1:
-                            if (_enemys[0, 9].X() > 15)
+                        case direction.LEFT:
+                            if (_enemys[4, 9].X() > 15)
                             {
                                 s = _enemys[i, j].X();
                                 _enemys[i, j].X(s - _enemySpeed);
                             }
-                            else { 
-                                _enemyDirection++; 
+                            else {
+                                _direction = direction.DOWN;
+                                asd = true;
                             }
                             break;
-                        case 2:
+                        case direction.DOWN:
                             
                             s = _enemys[i, j].Y();
                             _enemys[i, j].Y(s + 45);
-                            /*if (i==4 && j==9)
-                            {
-                                _enemyDirection = 0;
-                            }*/
+
+                            //_direction = direction.RIGHT;
+                            asd = false;
                             break;
                     }
-                }
+        }
+    }
+            if (_direction == direction.DOWN && asd == false)
+            {
+                _direction = direction.RIGHT;
             }
-            if(_enemyDirection == 2)
+            
+            */
+            /*if(_enemyDirection == 2)    //lefele
             {
                 _enemyDirection = 0;
             }
+            else if (_enemyDirection == 1)
+            {
+                _enemyDirection = 2;
+            }
+            else if (_enemyDirection == 0)
+            {
+                _enemyDirection = 1;
+            }*/
+
         }
+
+        private int MostRightCoord()
+        {
+            int x = 0;
+            int y = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                for(int j = 0; j < 10; j++)
+                {
+                    if (_enemys[i, j].IsMostRight)
+                    {
+                        x = _enemys[i,j].X();
+                        y = _enemys[i, j].Y();
+                    } 
+                }
+            }
+            return x;
+        }        
+        private int MostLeftCoord()
+        {
+            int x = 0;
+            int y = 0;
+            
+            for(int i = 0; i < 5; i++)
+            {
+                for(int j = 0; j < 10; j++)
+                {
+                    if (_enemys[i, j].IsMostLeft)
+                    {
+                        x = _enemys[i,j].X();
+                        y = _enemys[i, j].Y();
+                    } 
+                }
+            }
+            return (x);
+        }
+
+        private void MoveLeft()
+        {
+            int s;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    s = _enemys[i, j].X();
+                    _enemys[i, j].X(s - _enemySpeed);
+                }
+            }
+        }
+        private void MoveRight()
+        {
+            int s;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    s = _enemys[i, j].X();
+                    _enemys[i, j].X(s + _enemySpeed);
+                }
+            }
+        }
+        private void MoveDown()
+        {
+            int s;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    s = _enemys[i, j].Y();
+                    _enemys[i, j].Y(s + 45);
+                }
+            }
+        }
+        
 
 
 
