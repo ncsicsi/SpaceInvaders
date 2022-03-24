@@ -67,6 +67,7 @@ namespace SpaceInvaders.Model
         private static int _shipHeight = 63;
         private int _bulletCount;
         private int _enemySpeed;
+        private int _enemyBasicSpeed;
         private bool _win;
         public enum direction {RIGHT, LEFT, DOWN};
         private direction _direction;
@@ -113,7 +114,8 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = 50;
-            _enemySpeed = 1;
+            _enemyBasicSpeed = 1;
+            _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
@@ -129,7 +131,8 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = 50;
-            _enemySpeed = 2;
+            _enemyBasicSpeed++;
+            _enemySpeed = _enemyBasicSpeed;
             _direction = direction.RIGHT;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
@@ -173,6 +176,10 @@ namespace SpaceInvaders.Model
                                 _bullets[i].Alive = false;
                                 _enemys[j, z].Alive(false);
                                 _enemysCount--;
+                                if(_enemysCount == 1)
+                                {
+                                    _enemySpeed++;
+                                }
                                 switch (_enemys[j, z].Type())
                                 {
                                     case 1:
