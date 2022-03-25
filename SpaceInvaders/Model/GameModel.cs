@@ -318,15 +318,15 @@ namespace SpaceInvaders.Model
                                         _score += 5;
                                         break;
                                 }
-                                if (_enemys[j, z].IsMostDown)
+                                if ((j,z)==(_mostButtomEnemySerial))
                                 {
                                     NewMostDown();
                                 }
-                                if (_enemys[j, z].IsMostRight)
+                                if ((j, z) == (_mostRightEnemySerial))
                                 {
                                     NewMostRight();
                                 }
-                                if (_enemys[j, z].IsMostLeft)
+                                if ((j, z) == (_mostLeftEnemySerial))
                                 {
                                     NewMostLeft();
                                 }
@@ -468,7 +468,7 @@ namespace SpaceInvaders.Model
             {
                 for(int j = 0; j < 10; j++)
                 {
-                    if (_enemys[i, j].X() > max) {
+                    if (_enemys[i, j].X() > max && _enemys[i,j].Alive()) {
                         max = _enemys[i, j].X();
                         maxI = i;
                         maxJ = j;
@@ -487,7 +487,7 @@ namespace SpaceInvaders.Model
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (_enemys[i, j].X() < min)
+                    if (_enemys[i, j].X() < min && _enemys[i, j].Alive())
                     {
                         min = _enemys[i, j].X();
                         minI = i;
@@ -507,7 +507,7 @@ namespace SpaceInvaders.Model
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (_enemys[i, j].Y() > max)
+                    if (_enemys[i, j].Y() > max && _enemys[i, j].Alive())
                     {
                         max = _enemys[i, j].X();
                         maxI = i;
