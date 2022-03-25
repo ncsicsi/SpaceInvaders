@@ -52,7 +52,6 @@ namespace SpaceInvaders.Model
         #region Fields
         private int _score;
         private int _lives;
-        private int _invadiersSpeed;
         private int _enemysCount;
         private EnemyStruct[,] _enemys = new EnemyStruct[5, 10];
         private Bullet[]  _bullets= new Bullet[15];
@@ -70,6 +69,10 @@ namespace SpaceInvaders.Model
         private int _bulletCount;
         private int _enemySpeed;
         private int _enemyBasicSpeed;
+        private int _enemyBulletTimeDistance;   //milyen idokozonkent lonek az enemyk
+        private int _enemyBulletTimeCounter;
+        private Bullet _enemyBullet;
+        private int _bulletHight;
         private bool _win;
         private int _enemyButtomYPos;
         private (int, int) _mostRightEnemySerial;
@@ -115,11 +118,15 @@ namespace SpaceInvaders.Model
             ReSetEnemyTable();
             _score = 0;
             _lives = 2;
-            _invadiersSpeed = 10;
             _shipXPos = 298;
             _shipYPos = 570;
             _bullet = false;
             _bulletCount = 0;
+            _enemyBulletTimeDistance = 150;
+            _enemyBulletTimeCounter = 0;
+            _enemyBullet.Alive = false;
+            _enemyBullet.IsNewBullet = false;
+            _bulletHight = 20;
             _enemysCount = 50;
             _enemyBasicSpeed = 1;
             _enemySpeed = _enemyBasicSpeed;
@@ -162,6 +169,12 @@ namespace SpaceInvaders.Model
             else if (_goRight && _shipXPos < 576)
             {
                 _shipXPos += 5;
+            }
+            _enemyBulletTimeCounter++;
+            if(_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
+            {
+                _enemyBulletTimeCounter = 0;
+                CreateEnemyBullet();
             }
             EnemyMove();
             BulletMove();
@@ -264,6 +277,28 @@ namespace SpaceInvaders.Model
                 }
             }
         }
+
+        private void CreateEnemyBullet()
+        {
+            _enemyBullet.IsNewBullet = true;
+            _enemyBullet.Alive = true;
+            _enemyBullet.X = _shipXPos;
+            _enemyBullet.Y = _enemyButtomYPos;
+        }
+
+        private void EnemyBulletMove()
+        {
+            if (_enemyBullet.Alive)
+            {
+                _enemyBullet.IsNewBullet = false;
+                _enemyBullet.Y += 15;
+                if (_enemyBullet.Y + _bulletHight == _windowHeight)
+                {
+
+                }
+            }
+        }
+
         private void BulletMove()
         {
             for (int i = 0; i < 15; i++)
@@ -349,17 +384,6 @@ namespace SpaceInvaders.Model
 
         private int MostRightCoord()
         {
-            /*int x = 0;
-            for (int i = 0; i < 5; i++)
-            {
-                for(int j = 0; j < 10; j++)
-                {
-                    if (_enemys[i, j].IsMostRight)
-                    {
-                        x = _enemys[i,j].X();
-                    } 
-                }
-            }*/
             int x; int y;
             (x, y) = _mostRightEnemySerial;
             int max = _enemys[x, y].X();
@@ -367,18 +391,6 @@ namespace SpaceInvaders.Model
         }        
         private int MostLeftCoord()
         {
-            /*int x = 0;
-            
-            for(int i = 0; i < 5; i++)
-            {
-                for(int j = 0; j < 10; j++)
-                {
-                    if (_enemys[i, j].IsMostLeft)
-                    {
-                        x = _enemys[i,j].X();
-                    } 
-                }
-            }*/
             int x; int y;
             (x, y) = _mostLeftEnemySerial;
             int max = _enemys[x, y].X();
@@ -386,19 +398,6 @@ namespace SpaceInvaders.Model
         }        
         private int MostLeftDown()
         {
-            /*int y = 0;
-            
-            for(int i = 0; i < 5; i++)
-            {
-                for(int j = 0; j < 10; j++)
-                {
-                    if (_enemys[i, j].IsMostDown)
-                    {
-                        y = _enemys[i, j].Y();
-                    } 
-                }
-            }
-            return (y);*/
             int x; int y;
             (x,y) = _mostButtomEnemySerial;
             int max = _enemys[x, y].Y()+_enemySize;
