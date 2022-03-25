@@ -26,9 +26,6 @@ namespace SpaceInvaders.Model
         public void Y(int y) { _y = y; }
         public int X() { return _x; }
         public int Y() { return _y; }
-        public bool IsMostLeft { get { return _isMostLeft; } set { _isMostLeft = value; } }
-        public bool IsMostRight { get { return _isMostRight; } set { _isMostRight = value; } }
-        public bool IsMostDown { get { return _isMostDown; } set { _isMostDown = value; } }
 
 
     }

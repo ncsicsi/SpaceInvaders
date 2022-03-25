@@ -152,9 +152,19 @@ namespace SpaceInvaders
             }
             else
             {
-                MessageBox.Show("GameOver", "Game End",
-                MessageBoxButton.OK,
-                MessageBoxImage.Asterisk);
+                if (MessageBox.Show("Game Over! \n New Game?", "GameOver", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                {
+                    _model.stopTimer();
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        _view.Close();
+                    }));
+                }
+                else
+                {
+                    _view.GameOver();
+                    _model.NewGame();
+                }
             }
         }
 

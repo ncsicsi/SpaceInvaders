@@ -233,31 +233,14 @@ namespace SpaceInvaders.Model
                     _enemys[i / 10, enemyColumn].Type(type);
                     _enemys[i / 10, enemyColumn].Y(10+(i/10)*(_enemySize+10));
                     _enemys[i / 10, enemyColumn].X(left);
-                    _enemys[i / 10, enemyColumn].IsMostRight = false;
-                    _enemys[i / 10, enemyColumn].IsMostLeft = false;
-                    _enemys[i / 10, enemyColumn].IsMostDown = false;
 
                 enemyColumn++;
                 left -= (_enemySize+10);
             }
-            _enemys[0,0].IsMostRight = true;
-            _enemys[1,0].IsMostRight = true;
-            _enemys[2,0].IsMostRight = true;
-            _enemys[3,0].IsMostRight = true;
-            _enemys[4,0].IsMostRight = true;
-            _enemys[0,9].IsMostLeft = true;
-            _enemys[1,9].IsMostLeft = true;
-            _enemys[2,9].IsMostLeft = true;
-            _enemys[3,9].IsMostLeft = true;
-            _enemys[4,9].IsMostLeft = true;
-            for(int i=0; i < 10; i++)
-            {
-                _enemys[4,i].IsMostDown = true;
-            }
-            _enemyButtomYPos = _enemys[4, 0].Y() + _enemySize;
             _mostButtomEnemySerial = (4, 0);
             _mostRightEnemySerial = (0,0);
             _mostLeftEnemySerial = (0, 9);
+            _enemyButtomYPos = _enemys[4, 0].Y() + _enemySize;
             OnGameCreated();
 
         }
@@ -475,7 +458,6 @@ namespace SpaceInvaders.Model
                     }
                 }
             }
-            _enemys[maxI,maxJ].IsMostDown = true;
             _mostRightEnemySerial = (maxI,maxJ);
         }
         private void NewMostLeft()
@@ -495,7 +477,6 @@ namespace SpaceInvaders.Model
                     }
                 }
             }
-            _enemys[minI, minJ].IsMostLeft = true;
             _mostLeftEnemySerial = (minI, minJ);
         }
         private void NewMostDown()
@@ -515,7 +496,6 @@ namespace SpaceInvaders.Model
                     }
                 }
             }
-            _enemys[maxI, maxJ].IsMostDown = true;
             _mostButtomEnemySerial = (maxI, maxJ);
         }
 
