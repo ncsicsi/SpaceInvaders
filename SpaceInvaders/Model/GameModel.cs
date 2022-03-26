@@ -74,6 +74,7 @@ namespace SpaceInvaders.Model
         private Bullet _enemyBullet;
         private int _bulletHight;
         private bool _win;
+        private int _bulletspeed;
         private int _enemyButtomYPos;
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
@@ -122,6 +123,7 @@ namespace SpaceInvaders.Model
             _shipYPos = 570;
             _bullet = false;
             _bulletCount = 0;
+            _bulletspeed = 10;
             _enemyBulletTimeDistance = 150;
             _enemyBulletTimeCounter = 0;
             _enemyBullet.Alive = false;
@@ -131,7 +133,7 @@ namespace SpaceInvaders.Model
             _enemyBasicSpeed = 1;
             _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
-            _timer = new System.Timers.Timer(10);
+            _timer = new System.Timers.Timer(5);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
@@ -171,7 +173,8 @@ namespace SpaceInvaders.Model
                 _shipXPos += 5;
             }
             _enemyBulletTimeCounter++;
-            if(_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
+            EnemyBulletMove();
+            if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
             {
                 _enemyBulletTimeCounter = 0;
                 CreateEnemyBullet();
@@ -282,8 +285,8 @@ namespace SpaceInvaders.Model
         {
             _enemyBullet.IsNewBullet = true;
             _enemyBullet.Alive = true;
-            _enemyBullet.X = _shipXPos;
-            _enemyBullet.Y = _enemyButtomYPos;
+            _enemyBullet.X = _shipXPos+(_shipWidth/2);
+            _enemyBullet.Y = _enemyButtomYPos-_enemySize;
         }
 
         private void EnemyBulletMove()
@@ -291,10 +294,13 @@ namespace SpaceInvaders.Model
             if (_enemyBullet.Alive)
             {
                 _enemyBullet.IsNewBullet = false;
-                _enemyBullet.Y += 15;
-                if (_enemyBullet.Y + _bulletHight == _windowHeight)
+                _enemyBullet.Y += _bulletspeed;
+                if (_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X<=_shipXPos&& _enemyBullet.X +_shipWidth >= _shipXPos)
                 {
-
+                    _lives--;
+                    _enemyBullet.Alive = false;
+                }else if(_enemyBullet.Y + _bulletHight >= _windowHeight){
+                    _enemyBullet.Alive = false; ;
                 }
             }
         }
@@ -306,7 +312,7 @@ namespace SpaceInvaders.Model
                 if (_bullets[i].Alive)
                 {
                     _bullets[i].IsNewBullet = false;
-                    _bullets[i].Y -= 15;
+                    _bullets[i].Y -= _bulletspeed;
                     if (_bullets[i].Y == 0)
                     {
                         _bullets[i].Alive = false;
@@ -522,7 +528,7 @@ namespace SpaceInvaders.Model
         private void OnGameAdvanced()
         {
             if (GameAdvanced != null)
-                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys));
+                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet));
         }
         //enemy tabla letrehozasanak esemenye
         private void OnGameCreated()

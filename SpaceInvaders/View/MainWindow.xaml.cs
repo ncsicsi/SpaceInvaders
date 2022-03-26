@@ -26,7 +26,7 @@ namespace SpaceInvaders.View
     {
         Rectangle[,] _enemysRectangles = new Rectangle[5, 10];   //enemy teglalapok, amik megjelennek
         Rectangle[] _bulletsRectangles = new Rectangle[15];   //lovedek teglalapok
-        private int time = 0;
+        Rectangle _enemyBulletRectangle;
 
 
         /// Játékból való kilépés eseménye.
@@ -54,6 +54,7 @@ namespace SpaceInvaders.View
         {
             RemoveBullets();
             RemoveEnemys();
+            //RemoveEnemyBulleT();
         }
 
 
@@ -61,7 +62,7 @@ namespace SpaceInvaders.View
         {
             for (int i = 0; i < _bulletsRectangles.Length; i++)
             {
-                this.Dispatcher.Invoke((Action)(() =>
+                            this.Dispatcher.Invoke((Action)(() =>
                 {
                     GameCanvas.Children.Remove(_bulletsRectangles[i]);
                 }));
@@ -98,30 +99,38 @@ namespace SpaceInvaders.View
         public void View_GameAdvanced(GameEventArgs e)
         {
             //enemy bullet
-
+            EnemyBulletUpdate(e.EnemyBullet);
             //bullet move
             BulletsUpdate(e.Bullets);
             //enemy move
             EnemysUpdate(e.Enemies);
         }
-        private void BulletsRectangleCreated()
+        private void EnemyBulletUpdate(Bullet enemyBullet) 
         {
-            for (int i = 0; i < 15; i++)
+            this.Dispatcher.Invoke((Action)(() =>
             {
-                this.Dispatcher.Invoke((Action)(() =>
+                if (enemyBullet.IsNewBullet)
                 {
-                    _bulletsRectangles[i] = new Rectangle
+                    _enemyBulletRectangle = new Rectangle
                     {
-                        Tag = "bullet",
+                        Tag = "enemyBullet",
                         Height = 20,
                         Width = 5,
-                        Fill = Brushes.Black,
-                        Stroke = Brushes.Black
-
+                        Fill = Brushes.Yellow,
+                        Stroke = Brushes.Red,
                     };
-                    GameCanvas.Children.Add(_bulletsRectangles[i]);
-                }));
-            }
+                    GameCanvas.Children.Add(_enemyBulletRectangle);
+                    Canvas.SetTop(_enemyBulletRectangle, enemyBullet.Y);
+                    Canvas.SetLeft(_enemyBulletRectangle, enemyBullet.X);
+                }else if (enemyBullet.Alive)
+                {
+                    Canvas.SetTop(_enemyBulletRectangle, enemyBullet.Y);
+                    //Canvas.SetLeft(_enemyBulletRectangle, enemyBullet.X);
+                } else if (!enemyBullet.Alive)
+                {
+                    GameCanvas.Children.Remove(_enemyBulletRectangle);
+                }
+            }));
         }
         public void BulletsUpdate(Bullet[] bullets)
         {
@@ -136,11 +145,13 @@ namespace SpaceInvaders.View
                             Tag = "bullet",
                             Height = 20,
                             Width = 5,
-                            Fill = Brushes.Black,
-                            Stroke = Brushes.Black
+                            Fill = Brushes.Yellow,
+                            Stroke = Brushes.Red,
 
-                        };
+                    };
                         GameCanvas.Children.Add(_bulletsRectangles[i]);
+                        Canvas.SetTop(_bulletsRectangles[i], bullets[i].Y);
+                        Canvas.SetLeft(_bulletsRectangles[i], bullets[i].X);
                     }));
                 }else if(bullets[i].Alive && !bullets[i].IsNewBullet)
                 {
@@ -149,19 +160,16 @@ namespace SpaceInvaders.View
                         _bulletsRectangles[i].Fill = Brushes.Yellow;
                         _bulletsRectangles[i].Stroke = Brushes.Red;
                         Canvas.SetTop(_bulletsRectangles[i], bullets[i].Y);
-                        Canvas.SetLeft(_bulletsRectangles[i], bullets[i].X);
+                        //Canvas.SetLeft(_bulletsRectangles[i], bullets[i].X);
                     }));
                 }
                 else
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
-                        //_bulletsRectangles[i].Fill = Brushes.Black;
-                        //_bulletsRectangles[i].Stroke = Brushes.Black;
                         GameCanvas.Children.Remove(_bulletsRectangles[i]);
                     }));
                 }
-
             }
         }
 
