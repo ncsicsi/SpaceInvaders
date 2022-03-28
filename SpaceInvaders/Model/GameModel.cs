@@ -295,7 +295,7 @@ namespace SpaceInvaders.Model
             {
                 _enemyBullet.IsNewBullet = false;
                 _enemyBullet.Y += _bulletspeed;
-                if (_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X<=_shipXPos&& _enemyBullet.X +_shipWidth >= _shipXPos)
+                if (_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X>= _shipXPos && _enemyBullet.X <= _shipXPos + _shipWidth)
                 {
                     _lives--;
                     _enemyBullet.Alive = false;
