@@ -61,11 +61,16 @@ namespace SpaceInvaders.Model
         private bool _goRight;
         private bool _bullet;
         private static System.Timers.Timer _timer;
-        private static int _windowWidth = 500;
+        private static int _windowWidth = 700;
         private static int _windowHeight = 700;
+        private static int _windowBorder = 10;
         private static int _shipWidth = 104;
         private static int _shipHeight = 63;
+        private static int _shipSpeed = 5;
         private static int _enemySize = 45;
+        private static int _enemyColumns = 10;
+        private static int _enemyRows = 5;
+        private static int _enemyDistance = 10;
         private int _bulletCount;
         private int _enemySpeed;
         private int _enemyBasicSpeed;
@@ -166,11 +171,11 @@ namespace SpaceInvaders.Model
         {
             if (_goLeft && _shipXPos > 10)
             {
-                _shipXPos -= 5;
+                _shipXPos -= _shipSpeed;
             }
             else if (_goRight && _shipXPos < 576)
             {
-                _shipXPos += 5;
+                _shipXPos += _shipSpeed;
             }
             _enemyBulletTimeCounter++;
             EnemyBulletMove();
@@ -218,26 +223,28 @@ namespace SpaceInvaders.Model
         private void ReSetEnemyTable()
         {
             int enemyColumn = 0;
-            int left = 560;
+            int s = _windowWidth - ((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance));
+            int border =_windowWidth - (_windowWidth-((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance))) / 2 - _enemySize;
+            int left = border;
             for (int i = 0; i < _enemys.Length; i++)
             {
                 switch (i)
                 {
                     case 10:
                         enemyColumn=0;
-                        left = 560;
+                        left = border;
                         break;
                     case 20:
                         enemyColumn=0;
-                        left = 560;
+                        left = border;
                         break;
                     case 30:
                         enemyColumn=0;
-                        left = 560;
+                        left = border;
                         break;
                     case 40:
                         enemyColumn=0;
-                        left = 560;
+                        left = border;
                         break;
                 }
                 int type = 1;
@@ -245,18 +252,18 @@ namespace SpaceInvaders.Model
                 else if(i < 30) type = 2;
                 else if(i < 50) type = 3;
 
-                    _enemys[(i/10), enemyColumn].Alive(true);
-                    _enemys[i / 10, enemyColumn].Type(type);
-                    _enemys[i / 10, enemyColumn].Y(10+(i/10)*(_enemySize+10));
-                    _enemys[i / 10, enemyColumn].X(left);
+                    _enemys[(i / _enemyColumns), enemyColumn].Alive(true);
+                    _enemys[i / _enemyColumns, enemyColumn].Type(type);
+                    _enemys[i / _enemyColumns, enemyColumn].Y(_enemyDistance+(i/ _enemyColumns) *(_enemySize+ _enemyDistance));
+                    _enemys[i / _enemyColumns, enemyColumn].X(left);
 
                 enemyColumn++;
-                left -= (_enemySize+10);
+                left -= (_enemySize + _enemyDistance);
             }
-            _mostButtomEnemySerial = (4, 0);
+            _mostButtomEnemySerial = (_enemyRows-1, 0);
             _mostRightEnemySerial = (0,0);
-            _mostLeftEnemySerial = (0, 9);
-            _enemyButtomYPos = _enemys[4, 0].Y() + _enemySize;
+            _mostLeftEnemySerial = (0, _enemyColumns-1);
+            _enemyButtomYPos = _enemys[_enemyRows - 1, 0].Y() + _enemySize;
             OnGameCreated();
 
         }
@@ -295,7 +302,7 @@ namespace SpaceInvaders.Model
             {
                 _enemyBullet.IsNewBullet = false;
                 _enemyBullet.Y += _bulletspeed;
-                if (_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X>= _shipXPos && _enemyBullet.X <= _shipXPos + _shipWidth)
+                if (_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X>= _shipXPos && _enemyBullet.X <= _shipXPos  + _shipWidth )
                 {
                     _lives--;
                     _enemyBullet.Alive = false;
@@ -372,11 +379,11 @@ namespace SpaceInvaders.Model
             {
                 _direction = direction.LEFT;
             }
-            if(_direction == direction.LEFT && MostLeftCoord()>15 )
+            if(_direction == direction.LEFT && MostLeftCoord()> _windowBorder)
             {
                 MoveLeft();
             }
-            else if (_direction == direction.LEFT && MostLeftCoord() <= 15)
+            else if (_direction == direction.LEFT && MostLeftCoord() <= _windowBorder)
             {
                 _direction = direction.DOWN;
             }

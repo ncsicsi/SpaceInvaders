@@ -95,6 +95,14 @@ namespace SpaceInvaders.View
                 KeyIsUp_Event(this, e);
         }
 
+        //jatek letrehozasanak esemenye
+        public void View_GameCreated(EnemyEventArgs e)
+        {
+            makeEnemies(50, e.Enemys);
+            int a = 0;
+        }
+
+
         // ido elorehaladtanak esemeny
         public void View_GameAdvanced(GameEventArgs e)
         {
@@ -198,15 +206,6 @@ namespace SpaceInvaders.View
                 }
             }
         }
-
-
-        public void View_GameCreated(EnemyEventArgs e)
-        {
-            makeEnemies(50, e.Enemys);
-        }
-
-
-
         private void makeEnemies(int enemiCount, EnemyStruct[,] enemies)
         {
             for (int i = 0; i < 5; i++)
