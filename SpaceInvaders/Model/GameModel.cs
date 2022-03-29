@@ -16,6 +16,7 @@ namespace SpaceInvaders.Model
     internal class GameModel
     {
         #region Fields
+        private NeuralNetwork _network;
         private int _score;
         private int _lives;
         private int _enemysCount = 50;
@@ -50,7 +51,8 @@ namespace SpaceInvaders.Model
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
-        public enum direction {RIGHT, LEFT, DOWN};
+        private enum direction {RIGHT, LEFT, DOWN};
+        public enum action {GORIGHT, GOLEFT, SHOT };
         private direction _direction;
         
 
@@ -70,6 +72,7 @@ namespace SpaceInvaders.Model
         public void GoRight(bool goRight) { _goRight = goRight; }
         //bullet
         public void BulletOn(bool bullet) { _bullet = bullet; }
+        public bool NetworkOn { get { return _network.NetworkOn; } set { _network.NetworkOn = value; } }
 
 
         #endregion
@@ -77,6 +80,7 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel()
         {
+            _network = new NeuralNetwork();
             ReSetBulletTable();
         }
         #endregion
@@ -126,11 +130,30 @@ namespace SpaceInvaders.Model
         public void stopTimer()
         {
             _timer.Stop();
-
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            if (_network.NetworkOn)
+            {
+                NeuralNetwork.action nextAction = _network.NextAction();
+                switch (nextAction)
+                {
+                    case NeuralNetwork.action.GORIGHT:
+                        _goLeft = false;
+                        _goRight = true;
+                        break;
+                    case NeuralNetwork.action.GOLEFT:
+                        _goLeft = true;
+                        _goRight = false;
+                        break;
+                    case NeuralNetwork.action.SHOT:
+                        _goLeft = false;
+                        _goRight = false;
+                        _bullet = true;
+                        break;
+                }
+            }
             ShipMove();
             _enemyBulletTimeCounter++;
             EnemyBulletMove();

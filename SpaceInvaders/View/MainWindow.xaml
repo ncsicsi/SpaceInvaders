@@ -22,13 +22,13 @@
                 <TextBlock Text="SCORE " Foreground="White" FontSize="14" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding GameScore}" Foreground="White" FontSize="14"/>
+                <TextBlock Text="{Binding GameScore}" Foreground="LightGreen" FontSize="14"/>
             </StatusBarItem>
             <StatusBarItem Foreground="White" FontSize="14" HorizontalAlignment="Right">
                 <TextBlock Text="LIVES " />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding GameLives}" Foreground="White" FontSize="14" HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding GameLives}" Foreground="LightGreen" FontSize="14" HorizontalAlignment="Left"/>
             </StatusBarItem>
         </StatusBar>
         <Canvas Name="GameCanvas" Background="Black" Grid.Row="1" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp">

@@ -24,6 +24,8 @@ namespace SpaceInvaders.ViewModel
     {
         #region fields
         private GameModel _model;
+        private bool _manual = true;
+        private bool _ai = false;
         #endregion
 
         #region Properties
@@ -81,11 +83,6 @@ namespace SpaceInvaders.ViewModel
 
         #region Game event handler
 
-        /// Játék végének eseménykezelője.
-        private void GameTimeEvent(object sender, EventArgs e)
-        {
-
-        }
 
         private void Model_GameOver(object sender, GameEventArgs e)
         {
@@ -115,13 +112,32 @@ namespace SpaceInvaders.ViewModel
             switch (e.Key)
             {
                 case Key.Left:
-                    _model.GoLeft(true);
+                    if (_manual)
+                    {
+                        _model.GoLeft(true);
+                    }
                     break;
                 case Key.Right:
-                    _model.GoRight(true);
+                    if (_manual)
+                    {
+                        _model.GoRight(true);
+                    }
                     break;
                 case Key.Space:
-                    _model.BulletOn(true);
+                    if (_manual)
+                    {
+                        _model.BulletOn(true);
+                    }
+                    break;
+                case Key.M:
+                    _manual = true;
+                    _ai = false;
+                    _model.NetworkOn = false;
+                    break;
+                case Key.A:
+                    _manual = false;
+                    _ai = true;
+                    _model.NetworkOn = true;
                     break;
             }
         }
@@ -131,10 +147,16 @@ namespace SpaceInvaders.ViewModel
             switch (e.Key)
             {
                 case Key.Left:
-                    _model.GoLeft(false);
+                    if (_manual)
+                    {
+                        _model.GoLeft(false);
+                    }
                     break;
                 case Key.Right:
-                    _model.GoRight(false);
+                    if (_manual)
+                    {
+                        _model.GoRight(false);
+                    }
                     break;
                 case Key.Space:
                     break;
