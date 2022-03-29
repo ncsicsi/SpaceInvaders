@@ -45,7 +45,7 @@ namespace SpaceInvaders.Model
         public action NextAction()
         {
             Random random = new Random();
-            int rd = random.Next(0,2);
+            int rd = random.Next(0,3);
             switch (rd)
             {
                 case 0: 
