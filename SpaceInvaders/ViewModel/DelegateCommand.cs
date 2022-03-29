@@ -56,6 +56,4 @@ namespace SpaceInvaders.ViewModel
                 CanExecuteChanged(this, EventArgs.Empty);
         }
     }
-
-
 }

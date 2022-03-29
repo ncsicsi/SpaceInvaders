@@ -24,10 +24,14 @@ namespace SpaceInvaders.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Fields
         Rectangle[,] _enemysRectangles = new Rectangle[5, 10];   //enemy teglalapok, amik megjelennek
         Rectangle[] _bulletsRectangles = new Rectangle[15];   //lovedek teglalapok
         Rectangle _enemyBulletRectangle;
-
+        int _enemyRows = 0;
+        int _enemyColumns = 0;
+        int _enemySize = 0;
+        #endregion
 
         /// Játékból való kilépés eseménye.
         public event KeyEventHandler KeyIsDown_Event;
@@ -39,10 +43,6 @@ namespace SpaceInvaders.View
             InitializeComponent();
             GameCanvas.Focus();
             NewGame();
-
-
-
-
         }
         #endregion
 
@@ -54,7 +54,7 @@ namespace SpaceInvaders.View
         {
             RemoveBullets();
             RemoveEnemys();
-            //RemoveEnemyBulleT();
+            //RemoveEnemyBullet();
         }
 
 
@@ -68,11 +68,18 @@ namespace SpaceInvaders.View
                 }));
             }
         }
+        private void RemoveEnemyBullet()
+        {
+            this.Dispatcher.Invoke((Action)(() =>
+            {
+                GameCanvas.Children.Remove(_enemyBulletRectangle);
+            }));
+        }
         private void RemoveEnemys()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _enemyRows; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _enemyColumns; j++)
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
@@ -98,8 +105,10 @@ namespace SpaceInvaders.View
         //jatek letrehozasanak esemenye
         public void View_GameCreated(EnemyEventArgs e)
         {
+            _enemyRows = e.EnemRows;
+            _enemyColumns = e.EnemyColumns;
+            _enemySize = e.EnemySize;
             makeEnemies(50, e.Enemys);
-            int a = 0;
         }
 
 
@@ -124,7 +133,7 @@ namespace SpaceInvaders.View
                         Tag = "enemyBullet",
                         Height = 20,
                         Width = 5,
-                        Fill = Brushes.Yellow,
+                        Fill = Brushes.LightCoral,
                         Stroke = Brushes.Red,
                     };
                     GameCanvas.Children.Add(_enemyBulletRectangle);
@@ -183,9 +192,9 @@ namespace SpaceInvaders.View
 
         private void EnemysUpdate(EnemyStruct[,] enemies)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _enemyRows; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _enemyColumns; j++)
                 {
                     if (enemies[i, j].Alive())
                     {
@@ -208,9 +217,9 @@ namespace SpaceInvaders.View
         }
         private void makeEnemies(int enemiCount, EnemyStruct[,] enemies)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _enemyRows; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _enemyColumns; j++)
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
@@ -218,8 +227,8 @@ namespace SpaceInvaders.View
                         _enemysRectangles[i, j] = new Rectangle
                         {
                             Tag = "enemy",
-                            Height = 45,
-                            Width = 45,
+                            Height = _enemySize,
+                            Width = _enemySize,
                             Fill = enemySkin
                         };
                         Canvas.SetTop(_enemysRectangles[i, j], enemies[i, j].Y());

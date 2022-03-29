@@ -496,9 +496,9 @@ namespace SpaceInvaders.Model
             int max = 0;
             int maxI = 0;
             int maxJ = 0;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _enemyRows; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _enemyColumns; j++)
                 {
                     if (_enemys[i, j].Y() > max && _enemys[i, j].Alive())
                     {
@@ -541,7 +541,7 @@ namespace SpaceInvaders.Model
         private void OnGameCreated()
         {
             if (GameCreated != null)
-                GameCreated(this, new EnemyEventArgs(_enemys));
+                GameCreated(this, new EnemyEventArgs(_enemys, _enemyColumns, _enemyRows, _enemySize));
             
         }
 

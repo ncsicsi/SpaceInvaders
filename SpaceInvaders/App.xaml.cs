@@ -167,8 +167,6 @@ namespace SpaceInvaders
                 }
             }
         }
-
         #endregion
-
     }
 }
