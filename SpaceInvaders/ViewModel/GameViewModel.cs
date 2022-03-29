@@ -126,7 +126,7 @@ namespace SpaceInvaders.ViewModel
                 case Key.Space:
                     if (_manual)
                     {
-                        _model.BulletOn(true);
+                        //_model.BulletOn(true);
                     }
                     break;
                 case Key.M:
@@ -159,6 +159,10 @@ namespace SpaceInvaders.ViewModel
                     }
                     break;
                 case Key.Space:
+                    if (_manual)
+                    {
+                        _model.BulletOn(true);
+                    }
                     break;
             }
         }

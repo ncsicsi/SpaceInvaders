@@ -12,8 +12,8 @@ namespace SpaceInvaders.Model
         private int _score;
         private int _lives;
         private int _xPos;
-        private Bullet[] _bullets = new Bullet[15];
-        private EnemyStruct[,] _enemies = new EnemyStruct[5, 10];
+        private Bullet[] _bullets;
+        private EnemyStruct[,] _enemies;
         private Bullet _enemyBullet;
 
         //pontszám lekérdezése

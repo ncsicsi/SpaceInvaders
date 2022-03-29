@@ -25,8 +25,8 @@ namespace SpaceInvaders.View
     public partial class MainWindow : Window
     {
         #region Fields
-        Rectangle[,] _enemysRectangles = new Rectangle[5, 10];   //enemy teglalapok, amik megjelennek
-        Rectangle[] _bulletsRectangles = new Rectangle[15];   //lovedek teglalapok
+        Rectangle[,] _enemysRectangles; //enemy teglalapok, amik megjelennek
+        Rectangle[] _bulletsRectangles;   //lovedek teglalapok
         Rectangle _enemyBulletRectangle;
         int _enemyRows = 0;
         int _enemyColumns = 0;
@@ -62,7 +62,7 @@ namespace SpaceInvaders.View
         {
             for (int i = 0; i < _bulletsRectangles.Length; i++)
             {
-                            this.Dispatcher.Invoke((Action)(() =>
+                this.Dispatcher.Invoke((Action)(() =>
                 {
                     GameCanvas.Children.Remove(_bulletsRectangles[i]);
                 }));
@@ -108,6 +108,8 @@ namespace SpaceInvaders.View
             _enemyRows = e.EnemRows;
             _enemyColumns = e.EnemyColumns;
             _enemySize = e.EnemySize;
+            _enemysRectangles = new Rectangle[e.EnemRows, e.EnemyColumns];
+            _bulletsRectangles = new Rectangle[e.BulletCount];
             makeEnemies(e.EnemyCount, e.Enemys);
         }
 
