@@ -22,7 +22,7 @@ namespace SpaceInvaders.Model
         private EnemyStruct[,] _enemys = new EnemyStruct[5, 10];
         private Bullet[]  _bullets= new Bullet[15];
         private int _shipXPos;
-        private int _shipYPos = 570;
+        private int _shipYPos = 590;
         private bool _goLeft;
         private bool _goRight;
         private bool _bullet;
@@ -30,8 +30,8 @@ namespace SpaceInvaders.Model
         private static int _windowWidth = 700;
         private static int _windowHeight = 700;
         private static int _windowBorder = 10;
-        private static int _shipWidth = 104;
-        private static int _shipHeight = 63;
+        private static int _shipWidth = 60;
+        private static int _shipHeight = 30;
         private static int _shipSpeed = 5;
         private static int _enemySize = 45;
         private static int _enemyColumns = 10;

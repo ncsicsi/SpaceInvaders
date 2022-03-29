@@ -35,7 +35,7 @@
             <!--<Rectangle Name="enemy" Style="{DynamicResource EnemyRectangleStyle}" Canvas.Left="{Binding Enemys[0].X}"/>-->
                 
             
-            <Rectangle Name="spaceShip" Width="104" Height="63" Canvas.Top="570" Canvas.Left="{Binding XPos}">
+            <Rectangle Name="spaceShip" Width="60" Height="30" Canvas.Top="590" Canvas.Left="{Binding XPos}">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="/SpaceInvaders;component/images/spaceShip.png"/>
                 </Rectangle.Fill>
