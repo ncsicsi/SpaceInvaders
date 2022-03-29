@@ -18,11 +18,11 @@ namespace SpaceInvaders.Model
         #region Fields
         private int _score;
         private int _lives;
-        private int _enemysCount;
+        private int _enemysCount = 50;
         private EnemyStruct[,] _enemys = new EnemyStruct[5, 10];
         private Bullet[]  _bullets= new Bullet[15];
         private int _shipXPos;
-        private int _shipYPos;
+        private int _shipYPos = 570;
         private bool _goLeft;
         private bool _goRight;
         private bool _bullet;
@@ -39,13 +39,13 @@ namespace SpaceInvaders.Model
         private static int _enemyDistance = 10;
         private int _bulletCount;
         private int _enemySpeed;
-        private int _enemyBasicSpeed;
-        private int _enemyBulletTimeDistance;   //milyen idokozonkent lonek az enemyk
+        private int _enemyBasicSpeed = 1;
+        private int _enemyBulletTimeDistance = 150;   //milyen idokozonkent lonek az enemyk
         private int _enemyBulletTimeCounter;
         private Bullet _enemyBullet;
-        private int _bulletHight;
+        private int _bulletHight = 20;
         private bool _win;
-        private int _bulletspeed;
+        private int _bulletspeed = 5;
         private int _enemyButtomYPos;
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
@@ -88,17 +88,13 @@ namespace SpaceInvaders.Model
             _score = 0;
             _lives = 2;
             _shipXPos = 298;
-            _shipYPos = 570;
             _bullet = false;
             _bulletCount = 0;
-            _bulletspeed = 10;
-            _enemyBulletTimeDistance = 150;
             _enemyBulletTimeCounter = 0;
             _enemyBullet.Alive = false;
             _enemyBullet.IsNewBullet = false;
-            _bulletHight = 20;
-            _enemysCount = 50;
-            _enemyBasicSpeed = 1;
+            _goLeft = false;
+            _goRight = false;
             _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
             _timer = new System.Timers.Timer(5);
@@ -119,6 +115,8 @@ namespace SpaceInvaders.Model
             _enemySpeed = _enemyBasicSpeed;
             _lives++;
             _direction = direction.RIGHT;
+            _goLeft = false;
+            _goRight = false;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
@@ -133,14 +131,7 @@ namespace SpaceInvaders.Model
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_goLeft && _shipXPos > 10)
-            {
-                _shipXPos -= _shipSpeed;
-            }
-            else if (_goRight && _shipXPos < 576)
-            {
-                _shipXPos += _shipSpeed;
-            }
+            ShipMove();
             _enemyBulletTimeCounter++;
             EnemyBulletMove();
             if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
@@ -182,7 +173,6 @@ namespace SpaceInvaders.Model
                 _bullets[_bulletCount].Alive = false;
             }
         }
-
 
         private void ReSetEnemyTable()
         {
@@ -237,8 +227,8 @@ namespace SpaceInvaders.Model
             if (_bullet == true)
             {
                 _bullet = false;
-                _bullets[_bulletCount].X = _shipXPos + 50;
-                _bullets[_bulletCount].Y = 550;
+                _bullets[_bulletCount].X = _shipXPos + _shipWidth/2 - 1;
+                _bullets[_bulletCount].Y = _shipYPos - _bulletHight;
                 _bullets[_bulletCount].Alive = true;
                 _bullets[_bulletCount].IsNewBullet = true;
                 if (_bulletCount < 14)
@@ -257,7 +247,8 @@ namespace SpaceInvaders.Model
             _enemyBullet.IsNewBullet = true;
             _enemyBullet.Alive = true;
             _enemyBullet.X = _shipXPos+(_shipWidth/2);
-            _enemyBullet.Y = _enemyButtomYPos-_enemySize;
+            _enemyBullet.Y = _windowBorder + _bulletHight;
+            //_enemyBullet.Y = _enemyButtomYPos-_enemySize;
         }
 
         private void EnemyBulletMove()
@@ -288,9 +279,9 @@ namespace SpaceInvaders.Model
                     {
                         _bullets[i].Alive = false;
                     }
-                    for (int j = 0; j < 5; j++)
+                    for (int j = 0; j < _enemyRows; j++)
                     {
-                        for (int z = 0; z < 10; z++)
+                        for (int z = 0; z < _enemyColumns; z++)
                         {
                             if (_enemys[j, z].Alive() == true && _enemys[j, z].X() <= _bullets[i].X && _enemys[j, z].X() + 45 >= _bullets[i].X && _enemys[j, z].Y() >= _bullets[i].Y - 45 && _enemys[j, z].Y() <= _bullets[i].Y)
                             {
@@ -329,6 +320,24 @@ namespace SpaceInvaders.Model
                         }
                     }
                 }
+            }
+        }
+        private void ShipMove()
+        {
+            if (_goLeft && _shipXPos > _windowBorder)
+            {
+                _shipXPos -= _shipSpeed;
+            }
+            else if (_goRight && _shipXPos + _shipWidth + _windowBorder + _shipSpeed < _windowWidth)
+            {
+                _shipXPos += _shipSpeed;
+            }
+            _enemyBulletTimeCounter++;
+            EnemyBulletMove();
+            if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
+            {
+                _enemyBulletTimeCounter = 0;
+                CreateEnemyBullet();
             }
         }
 
@@ -384,9 +393,9 @@ namespace SpaceInvaders.Model
         private void MoveLeft()
         {
             int s;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _enemyRows; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _enemyColumns; j++)
                 {
                     s = _enemys[i, j].X();
                     _enemys[i, j].X(s - _enemySpeed);
@@ -408,12 +417,12 @@ namespace SpaceInvaders.Model
         private void MoveDown()
         {
             int s;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _enemyRows; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _enemyColumns; j++)
                 {
                     s = _enemys[i, j].Y();
-                    _enemys[i, j].Y(s + 45);
+                    _enemys[i, j].Y(s + _enemySize);
                 }
             }
         }
@@ -423,9 +432,9 @@ namespace SpaceInvaders.Model
             int max = -1;
             int maxI = 0;
             int maxJ = 0;
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < _enemyRows; i++)
             {
-                for(int j = 0; j < 10; j++)
+                for(int j = 0; j < _enemyColumns; j++)
                 {
                     if (_enemys[i, j].X() > max && _enemys[i,j].Alive()) {
                         max = _enemys[i, j].X();
@@ -441,9 +450,9 @@ namespace SpaceInvaders.Model
             int min = 1000;
             int minI = 0;
             int minJ = 0;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _enemyRows; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _enemyColumns; j++)
                 {
                     if (_enemys[i, j].X() < min && _enemys[i, j].Alive())
                     {
@@ -505,7 +514,7 @@ namespace SpaceInvaders.Model
         private void OnGameCreated()
         {
             if (GameCreated != null)
-                GameCreated(this, new EnemyEventArgs(_enemys, _enemyColumns, _enemyRows, _enemySize));
+                GameCreated(this, new EnemyEventArgs(_enemys, _enemyColumns, _enemyRows, _enemySize, _enemysCount));
             
         }
 

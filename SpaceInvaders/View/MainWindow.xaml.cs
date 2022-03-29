@@ -108,7 +108,7 @@ namespace SpaceInvaders.View
             _enemyRows = e.EnemRows;
             _enemyColumns = e.EnemyColumns;
             _enemySize = e.EnemySize;
-            makeEnemies(50, e.Enemys);
+            makeEnemies(e.EnemyCount, e.Enemys);
         }
 
 
@@ -142,7 +142,6 @@ namespace SpaceInvaders.View
                 }else if (enemyBullet.Alive)
                 {
                     Canvas.SetTop(_enemyBulletRectangle, enemyBullet.Y);
-                    //Canvas.SetLeft(_enemyBulletRectangle, enemyBullet.X);
                 } else if (!enemyBullet.Alive)
                 {
                     GameCanvas.Children.Remove(_enemyBulletRectangle);
@@ -174,10 +173,7 @@ namespace SpaceInvaders.View
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
-                        _bulletsRectangles[i].Fill = Brushes.Yellow;
-                        _bulletsRectangles[i].Stroke = Brushes.Red;
                         Canvas.SetTop(_bulletsRectangles[i], bullets[i].Y);
-                        //Canvas.SetLeft(_bulletsRectangles[i], bullets[i].X);
                     }));
                 }
                 else
@@ -209,7 +205,6 @@ namespace SpaceInvaders.View
                         this.Dispatcher.Invoke((Action)(() =>
                         {
                             GameCanvas.Children.Remove(_enemysRectangles[i, j]);
-
                         }));
                     }
                 }
