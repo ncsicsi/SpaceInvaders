@@ -15,40 +15,6 @@ namespace SpaceInvaders.Model
 
     internal class GameModel
     {
-
-        /*
-        #region public Structs 
-        public struct Enemy
-        {
-            bool _alive;
-            int _x;
-            int _y;
-            int _type;   // 1-3 tipus
-            public void Alive(bool alive) { _alive = alive; }
-            public bool Alive() { return _alive; }
-            public void Type(int type) { _type = type; }
-            public int Type() { return _type; }
-
-            public void X(int x) { _x=x; }
-            public void Y(int y) { _y = y; }
-            public int X() {   return _x;  }
-            public int Y() {  return _y;  }
-        }
-
-
-        public struct Bullet
-        {
-            private int _bulletX;
-            private int _bulletY;
-            //private bool _bullet;
-            private bool _bulletAlive;
-            public int X { get { return _bulletX; } set { _bulletX = value; } }
-            public int Y { get { return _bulletY; } set { _bulletY = value; } }
-            public bool Alive { get { return _bulletAlive; } set { _bulletAlive = value; } }
-        }
-        #endregion
-        */
-
         #region Fields
         private int _score;
         private int _lives;
@@ -111,10 +77,7 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel()
         {
-
             ReSetBulletTable();
-
-
         }
         #endregion
 
@@ -154,6 +117,7 @@ namespace SpaceInvaders.Model
             _enemysCount = 50;
             _enemyBasicSpeed++;
             _enemySpeed = _enemyBasicSpeed;
+            _lives++;
             _direction = direction.RIGHT;
             _timer = new System.Timers.Timer(10);
             _timer.Elapsed += _timer_Elapsed;

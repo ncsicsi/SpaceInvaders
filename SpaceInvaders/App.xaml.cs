@@ -85,7 +85,7 @@ namespace SpaceInvaders
 
             if (MessageBox.Show("Biztos, hogy ki akar lépni?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
-                //_model.stopTimer();
+                _model.stopTimer();
                 e.Cancel = true; // töröljük a bezárást
                 
             }
@@ -140,6 +140,7 @@ namespace SpaceInvaders
         //jatekvege esemeny
         private void Model_GameOver(object sender, GameOverEventArgs e)
         {
+            _model.stopTimer();
             if (e.Win)
             {
                 _view.GameOver();
