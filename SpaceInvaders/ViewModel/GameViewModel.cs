@@ -112,31 +112,31 @@ namespace SpaceInvaders.ViewModel
             switch (e.Key)
             {
                 case Key.Left:
-                    if (_manual)
+                    if (_model.NetworkOn == false)
                     {
                         _model.GoLeft(true);
                     }
                     break;
                 case Key.Right:
-                    if (_manual)
+                    if (_model.NetworkOn == false)
                     {
                         _model.GoRight(true);
                     }
                     break;
                 case Key.Space:
-                    if (_manual)
+                    if (_model.NetworkOn == false)
                     {
                         //_model.BulletOn(true);
                     }
                     break;
                 case Key.M:
-                    _manual = true;
-                    _ai = false;
+                    //_manual = true;
+                    //_ai = false;
                     _model.ChangeManual();
                     break;
                 case Key.A:
-                    _manual = false;
-                    _ai = true;
+                    //_manual = false;
+                    //_ai = true;
                     _model.ChangeAI();
                     break;
             }
@@ -147,19 +147,19 @@ namespace SpaceInvaders.ViewModel
             switch (e.Key)
             {
                 case Key.Left:
-                    if (_manual)
+                    if (_model.NetworkOn == false)
                     {
                         _model.GoLeft(false);
                     }
                     break;
                 case Key.Right:
-                    if (_manual)
+                    if (_model.NetworkOn == false)
                     {
                         _model.GoRight(false);
                     }
                     break;
                 case Key.Space:
-                    if (_manual)
+                    if (_model.NetworkOn == false)
                     {
                         _model.BulletOn(true);
                     }

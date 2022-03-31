@@ -82,13 +82,17 @@ namespace SpaceInvaders
         /// Nézet bezárásának eseménykezelője.
         private void View_Closing(object sender, CancelEventArgs e)
         {
-
+            _model.stopTimer();
             if (MessageBox.Show("Biztos, hogy ki akar lépni?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
                 e.Cancel = true; // töröljük a bezárást
+                _model.startTimer();
             }
-            _model.stopTimer();
-            _view.RoundOver();
+            else
+            {
+                _model.stopTimer();
+                _view.RoundOver();
+            }
         }
         /// Nézet bezárásának eseménykezelője.
         private void View_GameAdvanced(object sender, GameEventArgs e)

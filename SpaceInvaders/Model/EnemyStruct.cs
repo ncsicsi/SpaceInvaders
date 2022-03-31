@@ -17,8 +17,7 @@ namespace SpaceInvaders.Model
         bool _isMostDown;
         public enum enyemyType { RED, ORANGE, BLUE };
 
-        public void Alive(bool alive) { _alive = alive; }
-        public bool Alive() { return _alive; }
+        public bool Alive { get { return _alive; } set { _alive = value; } }
         public enyemyType Type { get { return _type; } set { _type = value; } }
 
 
