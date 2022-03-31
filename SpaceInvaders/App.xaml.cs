@@ -85,10 +85,10 @@ namespace SpaceInvaders
 
             if (MessageBox.Show("Biztos, hogy ki akar lépni?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
-                _model.stopTimer();
                 e.Cancel = true; // töröljük a bezárást
-                
             }
+            _model.stopTimer();
+            _view.RoundOver();
         }
         /// Nézet bezárásának eseménykezelője.
         private void View_GameAdvanced(object sender, GameEventArgs e)
@@ -143,17 +143,17 @@ namespace SpaceInvaders
             _model.stopTimer();
             if (e.Win)
             {
-                _view.GameOver();
-                MessageBox.Show("Új kor kovetkezik", "Game End",
+                _view.RoundOver();
+                /*MessageBox.Show("Új kor kovetkezik", "Game End",
                     MessageBoxButton.OK,
                     MessageBoxImage.Asterisk);
-                
+                */
                 _model.NewRound();
                 _view.NewGame();
             }
             else
             {
-                if (MessageBox.Show("Game Over! \n New Game?", "GameOver", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                if (MessageBox.Show("Game Over! \n New Game?", "RoundOver", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
                     _model.stopTimer();
                     this.Dispatcher.Invoke((Action)(() =>
@@ -163,7 +163,7 @@ namespace SpaceInvaders
                 }
                 else
                 {
-                    _view.GameOver();
+                    _view.RoundOver();
                     _model.NewGame();
                 }
             }

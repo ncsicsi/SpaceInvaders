@@ -50,7 +50,7 @@ namespace SpaceInvaders.View
         {
             //BulletsRectangleCreated();
         }
-        public void GameOver()
+        public void RoundOver()
         {
             RemoveBullets();
             RemoveEnemys();

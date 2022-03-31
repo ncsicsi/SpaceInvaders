@@ -64,7 +64,7 @@ namespace SpaceInvaders.ViewModel
             _model = model;
             _model.GameAdvanced += new EventHandler<GameEventArgs>(Model_GameAdvanced);
             _model.GameCreated += new EventHandler<EnemyEventArgs>(Model_GameCreated);
-            //_model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
+            //_model.RoundOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
 
             SetUpTable();
         }
@@ -132,12 +132,12 @@ namespace SpaceInvaders.ViewModel
                 case Key.M:
                     _manual = true;
                     _ai = false;
-                    _model.NetworkOn = false;
+                    _model.ChangeManual();
                     break;
                 case Key.A:
                     _manual = false;
                     _ai = true;
-                    _model.NetworkOn = true;
+                    _model.ChangeAI();
                     break;
             }
         }

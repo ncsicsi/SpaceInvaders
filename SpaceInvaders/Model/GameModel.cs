@@ -98,6 +98,7 @@ namespace SpaceInvaders.Model
             _shipXPos = 298;
             _bullet = false;
             _bulletCount = 0;
+            _enemysCount = 50;
             _enemyBulletTimeCounter = 0;
             _enemyBullet.Alive = false;
             _enemyBullet.IsNewBullet = false;
@@ -122,8 +123,7 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = 50;
-            _enemyBasicSpeed++;
-            _enemySpeed = _enemyBasicSpeed;
+            _enemySpeed++;
             _lives++;
             _direction = direction.RIGHT;
             _goLeft = false;
@@ -143,26 +143,6 @@ namespace SpaceInvaders.Model
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_network.NetworkOn)
-            {
-                NeuralNetwork.action nextAction = _network.NextAction();
-                switch (nextAction)
-                {
-                    case NeuralNetwork.action.GORIGHT:
-                        _goLeft = false;
-                        _goRight = true;
-                        break;
-                    case NeuralNetwork.action.GOLEFT:
-                        _goLeft = true;
-                        _goRight = false;
-                        break;
-                    case NeuralNetwork.action.SHOT:
-                        _goLeft = false;
-                        _goRight = false;
-                        _bullet = true;
-                        break;
-                }
-            }
             ShipMove();
             _enemyBulletTimeCounter++;
             EnemyBulletMove();
@@ -179,6 +159,7 @@ namespace SpaceInvaders.Model
             {
                  OnGameOver(_win);
             }
+            NetworkAction();
         }
 
         #endregion
@@ -516,6 +497,29 @@ namespace SpaceInvaders.Model
             }
             _mostButtomEnemySerial = (maxI, maxJ);
         }
+        private void NetworkAction()
+        {
+            if (_network.NetworkOn)
+            {
+                NeuralNetwork.action nextAction = _network.NextAction();
+                switch (nextAction)
+                {
+                    case NeuralNetwork.action.GORIGHT:
+                        _goLeft = false;
+                        _goRight = true;
+                        break;
+                    case NeuralNetwork.action.GOLEFT:
+                        _goLeft = true;
+                        _goRight = false;
+                        break;
+                    case NeuralNetwork.action.SHOT:
+                        _goLeft = false;
+                        _goRight = false;
+                        _bullet = true;
+                        break;
+                }
+            }
+        }
 
         private bool GameOverIs()
         {
@@ -555,8 +559,27 @@ namespace SpaceInvaders.Model
         private void OnGameOver(bool win)
         {
             _timer.Stop();
-            if (GameOver != null)
+                if (GameOver != null)
                 GameOver(this, new GameOverEventArgs(win));
+        }
+
+        #endregion
+
+        #region Public methods
+
+        public void ChangeManual()
+        {
+            _goLeft = false;
+            _goRight = false;
+            _bullet = false;
+            NetworkOn = false;
+        }
+        public void ChangeAI()
+        {
+            _goLeft = false;
+            _goRight = false;
+            _bullet = false;
+            NetworkOn = true;
         }
 
         #endregion
