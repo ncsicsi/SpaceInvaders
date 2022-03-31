@@ -10,9 +10,6 @@ namespace SpaceInvaders.Model
     public class NeuralNetwork
     {
         #region Fields
-        bool _goLeft;
-        bool _goRight;
-        bool _bulletOn;
         bool _networkOn;
         public enum action { GORIGHT, GOLEFT, SHOT };
         #endregion
@@ -29,7 +26,7 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Private Methods
-        private void Start()
+        /*private void Start()
         {
             _networkOn = true;
         }
@@ -37,7 +34,7 @@ namespace SpaceInvaders.Model
         private void Stop()
         {
             _networkOn = false;
-        }
+        }*/
         #endregion
 
         #region Public methods

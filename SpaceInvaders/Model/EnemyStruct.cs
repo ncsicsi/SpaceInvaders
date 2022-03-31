@@ -11,15 +11,15 @@ namespace SpaceInvaders.Model
         bool _alive;
         int _x;
         int _y;
-        int _type;   // 1-3 tipus
+        enyemyType _type;   // 1-3 tipus
         bool _isMostLeft;
         bool _isMostRight;
         bool _isMostDown;
+        public enum enyemyType { RED, ORANGE, BLUE };
 
         public void Alive(bool alive) { _alive = alive; }
         public bool Alive() { return _alive; }
-        public void Type(int type) { _type = type; }
-        public int Type() { return _type; }
+        public enyemyType Type { get { return _type; } set { _type = value; } }
 
 
         public void X(int x) { _x = x; }

@@ -53,7 +53,6 @@ namespace SpaceInvaders.Model
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
         private enum direction {RIGHT, LEFT, DOWN};
-        private enum enyemyType {RED, ORANGE, BLUE};
         private direction _direction;
         
 
@@ -215,13 +214,13 @@ namespace SpaceInvaders.Model
                         left = border;
                         break;
                 }
-                int type = 1;
-                if (i < 10) type = 1;
-                else if(i < 30) type = 2;
-                else if(i < 50) type = 3;
+                EnemyStruct.enyemyType type =EnemyStruct.enyemyType.RED;
+                if (i < 10) type = EnemyStruct.enyemyType.RED;
+                else if(i < 30) type = EnemyStruct.enyemyType.ORANGE; 
+                else if(i < 50) type = EnemyStruct.enyemyType.BLUE;
 
-                    _enemys[(i / _enemyColumns), enemyColumn].Alive(true);
-                    _enemys[i / _enemyColumns, enemyColumn].Type(type);
+                _enemys[(i / _enemyColumns), enemyColumn].Alive(true);
+                    _enemys[i / _enemyColumns, enemyColumn].Type=type;
                     _enemys[i / _enemyColumns, enemyColumn].Y(_enemyDistance+(i/ _enemyColumns) *(_enemySize+ _enemyDistance));
                     _enemys[i / _enemyColumns, enemyColumn].X(left);
 
@@ -306,15 +305,15 @@ namespace SpaceInvaders.Model
                                 {
                                     _enemySpeed++;
                                 }
-                                switch (_enemys[j, z].Type())
+                                switch (_enemys[j, z].Type)
                                 {
-                                    case 1:
+                                    case EnemyStruct.enyemyType.RED:
                                         _score += 15;
                                         break;
-                                    case 2:
+                                    case EnemyStruct.enyemyType.ORANGE:
                                         _score += 10;
                                         break;
-                                    case 3:
+                                    case EnemyStruct.enyemyType.BLUE:
                                         _score += 5;
                                         break;
                                 }
