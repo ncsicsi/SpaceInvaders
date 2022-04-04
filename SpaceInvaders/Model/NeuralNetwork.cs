@@ -9,14 +9,6 @@ namespace SpaceInvaders.Model
 {
     public class NeuralNetwork
     {
-        struct Weight
-        { 
-            double _value;
-            int from;
-            int to;
-            public double Value { get { return _value; } set { _value = value; } }
-        }
-
         #region Fields
         bool _networkOn;
         public enum action { GORIGHT, GOLEFT, SHOT };
@@ -26,7 +18,7 @@ namespace SpaceInvaders.Model
         private int _hiddenNeuronsCount;
         private int _incommingNeuronsCount = 5;
         private int _outcommingNeuronsCount = 3;
-        private Weight[] _weights;
+        private double[] _weights;
 
 
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
@@ -49,7 +41,8 @@ namespace SpaceInvaders.Model
             _hiddenNeurons = new double[hiddenNeuronsCount];
             _incommingNeurons = new double[_incommingNeuronsCount]; ;
             _outcommingNeurons = new double[_outcommingNeuronsCount];
-            _weights = new Weight[_incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
+            _weights = new double[_incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
+            //ResetNetrowkWeights();
         }
         #endregion
 
@@ -72,12 +65,20 @@ namespace SpaceInvaders.Model
             RefreshIncomingNeurons();
             ReSetNeurons();
             //hidden neuronok szamitasa
+            double asd = 0;
+            double z = 0;
+            int sos = 0;
             for (int h = 0; h < _hiddenNeuronsCount; h++)
             {
                 for (int i = 0; i < _incommingNeuronsCount; i++)
                 {
-                    _hiddenNeurons[h] += _incommingNeurons[i] * _weights[i * _hiddenNeuronsCount + h].Value;
+                    z = _incommingNeurons[i] * _weights[i * _hiddenNeuronsCount + h];
+                    double ize = asd;
+                    asd = ize + z;
+                    asd = asd;
+                    sos++;
                 }
+                asd = 0;
                 _hiddenNeurons[h] =1/(1+Math.Exp(-_hiddenNeurons[h]));
             }
             //kimeneti neuronok szamitasa
@@ -86,7 +87,7 @@ namespace SpaceInvaders.Model
             {
                 for(int h= 0; h < _hiddenNeuronsCount; h++)
                 {
-                    _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[s + h *_outcommingNeuronsCount + o].Value;
+                    _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[s + h *_outcommingNeuronsCount + o];
                 }
             }
             double max = _outcommingNeurons[0];
@@ -101,8 +102,6 @@ namespace SpaceInvaders.Model
             }
 
 
-            Random random = new Random();
-            int rd = random.Next(0,3);
             switch (maxPlace)
             {
                 case 0: 
@@ -122,8 +121,8 @@ namespace SpaceInvaders.Model
         {
             _incommingNeurons[0] = _bulletDistance;
             _incommingNeurons[1] = _enemyCount;      //enemyk szama  0-50
-            _incommingNeurons[2] = _ClosestEnemyYDistance;   //lealsobb enemy_network._ClosestEnemyDirection = 0; tavosaga y szerint 0-700
-            _incommingNeurons[3] = _ClosestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-700
+            _incommingNeurons[2] = _ClosestEnemyYDistance;   //lealsobb enemy_network._ClosestEnemyDirection = 0; tavosaga y szerint 0-70
+            _incommingNeurons[3] = _ClosestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
             _incommingNeurons[4] = _ClosestEnemyDirection;
         }
         private void ReSetNeurons()
@@ -135,6 +134,17 @@ namespace SpaceInvaders.Model
             for(int i= 0; i < _outcommingNeuronsCount; i++)
             {
                 _outcommingNeurons[i] = 0;
+            }
+        }
+        //sulyok elsonek legyenek random szamok
+        private void ResetNetrowkWeights()
+        {
+            int s = _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount;
+            for (int i = 0; i < s; i++)
+            {
+                Random random = new Random();
+                double rd = random.Next(0, 10);
+                _weights[i] = rd;
             }
         }
         #endregion

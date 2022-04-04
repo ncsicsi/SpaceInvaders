@@ -524,8 +524,8 @@ namespace SpaceInvaders.Model
             _network._enemyCount = _enemysCount;
             int x, y; 
             (x,y)= _mostButtomEnemySerial;
-            _network._ClosestEnemyYDistance = _shipYPos - _enemys[x,y].Y() - _enemySize;
-            _network._ClosestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2));
+            _network._ClosestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/100;
+            _network._ClosestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/100;
             if(_network._ClosestEnemyXDistance == (_shipXPos + _shipWidth / 2) - (_enemys[x, y].X() + _enemySize / 2))
             {
                 _network._ClosestEnemyDirection = 0;
