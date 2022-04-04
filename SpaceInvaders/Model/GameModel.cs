@@ -238,8 +238,8 @@ namespace SpaceInvaders.Model
             if (_bullet == true)
             {
                 _bullet = false;
-                _bullets[_bulletCount].X = _shipXPos + _shipWidth/2 - 1;
-                _bullets[_bulletCount].Y = _shipYPos - _bulletHight;
+                _bullets[_bulletCount].X = _shipXPos + _shipWidth/2-2;
+                _bullets[_bulletCount].Y = _shipYPos - _bulletHight-6;
                 _bullets[_bulletCount].Alive = true;
                 _bullets[_bulletCount].IsNewBullet = true;
                 if (_bulletCount < _maxBullet - 1)
@@ -257,7 +257,7 @@ namespace SpaceInvaders.Model
         {
             _enemyBullet.IsNewBullet = true;
             _enemyBullet.Alive = true;
-            _enemyBullet.X = _shipXPos+(_shipWidth/2);
+            _enemyBullet.X = _shipXPos+(_shipWidth/2)-2;
             _enemyBullet.Y = _windowBorder + _bulletHight;
             //_enemyBullet.Y = _enemyButtomYPos-_enemySize;
         }
@@ -521,11 +521,11 @@ namespace SpaceInvaders.Model
             {
                 _network._bulletDistance = 0;
             }
-            _network._enemyCount = _enemysCount;
+            _network._enemyCount = _enemysCount/10D;
             int x, y; 
             (x,y)= _mostButtomEnemySerial;
-            _network._ClosestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/100;
-            _network._ClosestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/100;
+            _network._ClosestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/100D;
+            _network._ClosestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/100D;
             if(_network._ClosestEnemyXDistance == (_shipXPos + _shipWidth / 2) - (_enemys[x, y].X() + _enemySize / 2))
             {
                 _network._ClosestEnemyDirection = 0;

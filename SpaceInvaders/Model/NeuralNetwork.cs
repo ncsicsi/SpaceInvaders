@@ -42,7 +42,7 @@ namespace SpaceInvaders.Model
             _incommingNeurons = new double[_incommingNeuronsCount]; ;
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _weights = new double[_incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
-            //ResetNetrowkWeights();
+            ResetNetrowkWeights();
         }
         #endregion
 
@@ -65,21 +65,13 @@ namespace SpaceInvaders.Model
             RefreshIncomingNeurons();
             ReSetNeurons();
             //hidden neuronok szamitasa
-            double asd = 0;
-            double z = 0;
-            int sos = 0;
             for (int h = 0; h < _hiddenNeuronsCount; h++)
             {
                 for (int i = 0; i < _incommingNeuronsCount; i++)
                 {
-                    z = _incommingNeurons[i] * _weights[i * _hiddenNeuronsCount + h];
-                    double ize = asd;
-                    asd = ize + z;
-                    asd = asd;
-                    sos++;
+                    _hiddenNeurons[h] += _incommingNeurons[i] * _weights[i * _hiddenNeuronsCount + h];
                 }
-                asd = 0;
-                _hiddenNeurons[h] =1/(1+Math.Exp(-_hiddenNeurons[h]));
+                _hiddenNeurons[h] =1/(1+ Math.Exp(-_hiddenNeurons[h]));
             }
             //kimeneti neuronok szamitasa
             int s = _incommingNeuronsCount * _hiddenNeuronsCount;
@@ -123,7 +115,7 @@ namespace SpaceInvaders.Model
             _incommingNeurons[1] = _enemyCount;      //enemyk szama  0-50
             _incommingNeurons[2] = _ClosestEnemyYDistance;   //lealsobb enemy_network._ClosestEnemyDirection = 0; tavosaga y szerint 0-70
             _incommingNeurons[3] = _ClosestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
-            _incommingNeurons[4] = _ClosestEnemyDirection;
+            _incommingNeurons[4] = _ClosestEnemyDirection;   //jobbra vagy balra van az enemy
         }
         private void ReSetNeurons()
         {
@@ -144,7 +136,7 @@ namespace SpaceInvaders.Model
             {
                 Random random = new Random();
                 double rd = random.Next(0, 10);
-                _weights[i] = rd;
+                _weights[i] = rd/10D;
             }
         }
         #endregion
