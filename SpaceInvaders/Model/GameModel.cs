@@ -80,7 +80,7 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel()
         {
-            _network = new NeuralNetwork(10);
+            _network = new NeuralNetwork(10,10);
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             ReSetBulletTable();
@@ -393,7 +393,6 @@ namespace SpaceInvaders.Model
             int max = _enemys[x, y].Y()+_enemySize;
             return (max);
         }
-
         private void MoveLeft()
         {
             int s;
@@ -430,7 +429,6 @@ namespace SpaceInvaders.Model
                 }
             }
         }
-
         private void NewMostRight()
         {
             int max = -1;
@@ -524,16 +522,17 @@ namespace SpaceInvaders.Model
             _network._enemyCount = _enemysCount/10D;
             int x, y; 
             (x,y)= _mostButtomEnemySerial;
-            _network._ClosestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/100D;
-            _network._ClosestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/100D;
-            if(_network._ClosestEnemyXDistance == (_shipXPos + _shipWidth / 2) - (_enemys[x, y].X() + _enemySize / 2))
+            _network._closestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/100D;
+            _network._closestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/100D;
+            if(_network._closestEnemyXDistance == (_shipXPos + _shipWidth / 2) - (_enemys[x, y].X() + _enemySize / 2))
             {
-                _network._ClosestEnemyDirection = 0;
+                _network._closestEnemyDirection = 0;
             }
             else
             {
-                _network._ClosestEnemyDirection = 1;
+                _network._closestEnemyDirection = 1;
             }
+            _network._lives = _lives;
         }
         private bool GameOverIs()
         {
@@ -573,6 +572,7 @@ namespace SpaceInvaders.Model
         private void OnGameOver(bool win)
         {
             _timer.Stop();
+            _network.GameOver(_score);
                 if (GameOver != null)
                 GameOver(this, new GameOverEventArgs(win));
         }

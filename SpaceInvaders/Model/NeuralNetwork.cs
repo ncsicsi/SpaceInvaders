@@ -11,21 +11,28 @@ namespace SpaceInvaders.Model
     {
         #region Fields
         bool _networkOn;
+        //network
         public enum action { GORIGHT, GOLEFT, SHOT };
         private double[] _hiddenNeurons;
         private double[] _incommingNeurons;
         private double[] _outcommingNeurons;
         private int _hiddenNeuronsCount;
-        private int _incommingNeuronsCount = 5;
+        private int _incommingNeuronsCount = 6;
         private int _outcommingNeuronsCount = 3;
-        private double[] _weights;
-
+        private double[,] _weights;
+        //evolucio
+        private int _individualCount;
+        private int _activeIndividual = 10;
+        private int _bestIndividual = 0;
+        private int _worstIndividual = 9;
+        private int[] _indicidualScores;
 
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
         public double _enemyCount = 0;      //enemyk szama  0-50
-        public double _ClosestEnemyYDistance = 0;   //lealsobb enemy_network._ClosestEnemyDirection = 0; tavosaga y szerint 0-700
-        public double _ClosestEnemyXDistance = 0;   // legalsobb enemy tavolsaga x szerint 0-700
-        public double _ClosestEnemyDirection = 0;   //jobbra vagy ballra van 0/1
+        public double _closestEnemyYDistance = 0;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-700
+        public double _closestEnemyXDistance = 0;   // legalsobb enemy tavolsaga x szerint 0-700
+        public double _closestEnemyDirection = 0;   //jobbra vagy ballra van 0/1
+        public double _lives = 0;   //eletpontok szama
         public double _enemySpeed = 0;  //enemy gyorsasaga
         public double _enemyMoveDirection = 0; //enemy mozgas iranya
         #endregion
@@ -35,28 +42,12 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Constructor
-        public NeuralNetwork(int hiddenNeuronsCount)
+        public NeuralNetwork(int hiddenNeuronsCount, int individualCount)
         {
-            _hiddenNeuronsCount = hiddenNeuronsCount;
-            _hiddenNeurons = new double[hiddenNeuronsCount];
-            _incommingNeurons = new double[_incommingNeuronsCount]; ;
-            _outcommingNeurons = new double[_outcommingNeuronsCount];
-            _weights = new double[_incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
-            ResetNetrowkWeights();
+            CreatePopulation(hiddenNeuronsCount, individualCount);
         }
         #endregion
 
-        #region Private Methods
-        /*private void Start()
-        {
-            _networkOn = true;
-        }
-
-        private void Stop()
-        {
-            _networkOn = false;
-        }*/
-        #endregion
 
         #region Public methods
 
@@ -69,7 +60,7 @@ namespace SpaceInvaders.Model
             {
                 for (int i = 0; i < _incommingNeuronsCount; i++)
                 {
-                    _hiddenNeurons[h] += _incommingNeurons[i] * _weights[i * _hiddenNeuronsCount + h];
+                    _hiddenNeurons[h] += _incommingNeurons[i] * _weights[_activeIndividual, i * _hiddenNeuronsCount + h];
                 }
                 _hiddenNeurons[h] =1/(1+ Math.Exp(-_hiddenNeurons[h]));
             }
@@ -79,7 +70,7 @@ namespace SpaceInvaders.Model
             {
                 for(int h= 0; h < _hiddenNeuronsCount; h++)
                 {
-                    _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[s + h *_outcommingNeuronsCount + o];
+                    _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[_activeIndividual, s + h *_outcommingNeuronsCount + o];
                 }
             }
             double max = _outcommingNeurons[0];
@@ -109,13 +100,18 @@ namespace SpaceInvaders.Model
             return action.SHOT;
         }
 
+        #endregion
+
+        #region Network Private Methods 
+
         private void RefreshIncomingNeurons()
         {
             _incommingNeurons[0] = _bulletDistance;
             _incommingNeurons[1] = _enemyCount;      //enemyk szama  0-50
-            _incommingNeurons[2] = _ClosestEnemyYDistance;   //lealsobb enemy_network._ClosestEnemyDirection = 0; tavosaga y szerint 0-70
-            _incommingNeurons[3] = _ClosestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
-            _incommingNeurons[4] = _ClosestEnemyDirection;   //jobbra vagy balra van az enemy
+            _incommingNeurons[2] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
+            _incommingNeurons[3] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
+            _incommingNeurons[4] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
+            _incommingNeurons[5] = _lives;  //eletpontok szama
         }
         private void ReSetNeurons()
         {
@@ -136,7 +132,43 @@ namespace SpaceInvaders.Model
             {
                 Random random = new Random();
                 double rd = random.Next(0, 10);
-                _weights[i] = rd/10D;
+                _weights[_activeIndividual, i] = rd/10D;
+            }
+        }
+        #endregion
+
+        # region Evolution Private Methods
+
+        private void CreatePopulation(int hiddenNeuronsCount, int individualCount)
+        {
+            _hiddenNeuronsCount = hiddenNeuronsCount;
+            _hiddenNeurons = new double[hiddenNeuronsCount];
+            _incommingNeurons = new double[_incommingNeuronsCount]; ;
+            _outcommingNeurons = new double[_outcommingNeuronsCount];
+            _individualCount = individualCount;
+            _weights = new double[_individualCount, _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
+            for(int i=0; i< _individualCount; i++)
+            {
+                _activeIndividual = i;
+                ResetNetrowkWeights();
+            }
+            _activeIndividual = 0;
+        }
+
+        #endregion
+
+        #region Evolution Public Methods
+
+        public void GameOver(int score)
+        {
+            _indicidualScores[_activeIndividual] = score;
+            if(_activeIndividual < _individualCount)
+            {
+                _activeIndividual++;
+            }
+            else
+            {
+                _activeIndividual = 0;
             }
         }
         #endregion
