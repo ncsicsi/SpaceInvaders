@@ -158,6 +158,11 @@ namespace SpaceInvaders
                 _model.NewRound();
                 _view.NewGame();
             }
+            else if (e.NetworkOn)
+            {
+                _view.RoundOver();
+                _model.NewGame();
+            }
             else
             {
                 if (MessageBox.Show("Game Over! \n New Game?", "RoundOver", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)

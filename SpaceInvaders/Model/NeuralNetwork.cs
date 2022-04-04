@@ -146,6 +146,7 @@ namespace SpaceInvaders.Model
             _incommingNeurons = new double[_incommingNeuronsCount]; ;
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _individualCount = individualCount;
+            _indicidualScores = new int[_individualCount];
             _weights = new double[_individualCount, _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
             {
@@ -159,17 +160,21 @@ namespace SpaceInvaders.Model
 
         #region Evolution Public Methods
 
-        public void GameOver(int score)
+        public void GameOver(int score, bool win)
         {
-            _indicidualScores[_activeIndividual] = score;
-            if(_activeIndividual < _individualCount)
+            if (!win)
             {
-                _activeIndividual++;
+                _indicidualScores[_activeIndividual] = score;
+                if (_activeIndividual < _individualCount)
+                {
+                    _activeIndividual++;
+                }
+                else
+                {
+                    _activeIndividual = 0;
+                }
             }
-            else
-            {
-                _activeIndividual = 0;
-            }
+            int a = 0;
         }
         #endregion
 

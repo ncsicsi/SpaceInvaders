@@ -106,7 +106,7 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
-            _network.NetworkOn = false;
+            //_network.NetworkOn = false;
             OnGameCreated();
             _timer = new System.Timers.Timer(5);
             _timer.Elapsed += _timer_Elapsed;
@@ -572,9 +572,9 @@ namespace SpaceInvaders.Model
         private void OnGameOver(bool win)
         {
             _timer.Stop();
-            _network.GameOver(_score);
+            _network.GameOver(_score, win);
                 if (GameOver != null)
-                GameOver(this, new GameOverEventArgs(win));
+                GameOver(this, new GameOverEventArgs(win, _network.NetworkOn));
         }
 
         #endregion
