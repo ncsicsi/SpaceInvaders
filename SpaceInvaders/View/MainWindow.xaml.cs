@@ -54,7 +54,7 @@ namespace SpaceInvaders.View
         {
             RemoveBullets();
             RemoveEnemys();
-            //RemoveEnemyBullet();
+            RemoveEnemyBullet();
         }
 
 

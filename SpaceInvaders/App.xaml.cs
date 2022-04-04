@@ -62,6 +62,10 @@ namespace SpaceInvaders
             _viewModel = new GameViewModel(_model);
             _viewModel.GameAdvanced += new EventHandler<GameEventArgs>(View_GameAdvanced);
             _viewModel.GameCreated += new EventHandler<EnemyEventArgs>(View_GameCreated);
+            _viewModel.NewGame += new EventHandler(ViewModel_NewGame);
+            _viewModel.ExitGame += new EventHandler(ViewModel_ExitGame);
+            //_viewModel.LoadNetwork += new EventHandler(ViewModel_LoadNetwork);
+            //_viewModel.SaveNetwork += new EventHandler(ViewModel_SaveNetwork);
 
             // nézet létrehozása
             _view = new MainWindow();
@@ -124,9 +128,8 @@ namespace SpaceInvaders
         // Uj jatek inditasanak esemenykezeloje
         private void ViewModel_NewGame(object sender, EventArgs e)
         {
-
+            _view.RoundOver();
             _model.NewGame();
-
         }
 
         // Játékból való kilépés eseménykezelője.

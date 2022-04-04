@@ -10,7 +10,7 @@ namespace SpaceInvaders.Model
     public class NeuralNetwork
     {
         struct Weight
-        {
+        { 
             double _value;
             int from;
             int to;
@@ -34,7 +34,8 @@ namespace SpaceInvaders.Model
         public double _ClosestEnemyYDistance = 0;   //lealsobb enemy_network._ClosestEnemyDirection = 0; tavosaga y szerint 0-700
         public double _ClosestEnemyXDistance = 0;   // legalsobb enemy tavolsaga x szerint 0-700
         public double _ClosestEnemyDirection = 0;   //jobbra vagy ballra van 0/1
-
+        public double _enemySpeed = 0;  //enemy gyorsasaga
+        public double _enemyMoveDirection = 0; //enemy mozgas iranya
         #endregion
 
         #region Properties
@@ -88,13 +89,21 @@ namespace SpaceInvaders.Model
                     _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[s + h *_outcommingNeuronsCount + o].Value;
                 }
             }
-
-            
+            double max = _outcommingNeurons[0];
+            int maxPlace = 0;
+            for (int i = 1; i < _outcommingNeuronsCount; i++)
+            {
+                if(_outcommingNeurons[i] > max)
+                {
+                    max = _outcommingNeurons[i];
+                    maxPlace = i;
+                }
+            }
 
 
             Random random = new Random();
             int rd = random.Next(0,3);
-            switch (rd)
+            switch (maxPlace)
             {
                 case 0: 
                     return action.GORIGHT;

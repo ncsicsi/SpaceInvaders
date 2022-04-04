@@ -13,11 +13,26 @@
         </Style>
     </Window.Resources>
     <Grid Name="mainGrid" Background="Black">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="137*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StatusBar Grid.Row="0" Grid.Column="2" Name="Label"  Background="Black">
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <!--<MenuItem Header="New Game" Command="{Binding NewGameCommand}" />
+                <Separator />-->
+                <MenuItem Header="Load Netwok" Command="{Binding LoadNetworkCommand}"/>
+                <MenuItem Header="Save Network" Command="{Binding SaveNetworkCommand}"/>
+                <Separator />
+                <MenuItem Header="Escape" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar Grid.Row="1" Name="Label"  Background="Black" Grid.ColumnSpan="2">
             <StatusBarItem >
                 <TextBlock Text="SCORE " Foreground="White" FontSize="14" />
             </StatusBarItem>
@@ -31,11 +46,8 @@
                 <TextBlock Text="{Binding GameLives}" Foreground="LightGreen" FontSize="14" HorizontalAlignment="Left"/>
             </StatusBarItem>
         </StatusBar>
-        <Canvas Name="GameCanvas" Background="Black" Grid.Row="1" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp">
-            <!--<Rectangle Name="enemy" Style="{DynamicResource EnemyRectangleStyle}" Canvas.Left="{Binding Enemys[0].X}"/>-->
-                
-            
-            <Rectangle Name="spaceShip" Width="60" Height="30" Canvas.Top="590" Canvas.Left="{Binding XPos}">
+        <Canvas Name="GameCanvas" Background="Black" Grid.Row="2" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" Grid.ColumnSpan="2">
+           <Rectangle Name="spaceShip" Width="60" Height="30" Canvas.Top="580" Canvas.Left="{Binding XPos}">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="/SpaceInvaders;component/images/spaceShip.png"/>
                 </Rectangle.Fill>

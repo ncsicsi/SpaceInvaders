@@ -35,7 +35,13 @@ namespace SpaceInvaders.ViewModel
 
         /// Kilépés parancs lekérdezése.
         public DelegateCommand ExitCommand { get; private set; }
-        
+
+        /// Halo sulyinak betöltése parancs lekérdezése.
+        public DelegateCommand LoadNetworkCommand { get; private set; }
+
+        /// halo sulyinak mentése parancs lekérdezése.
+        public DelegateCommand SaveNetworkCommand { get; private set; }
+
         // Eletek lekerdezese
         public Int32 GameLives { get {return _model.Lives;} }
 
@@ -65,6 +71,12 @@ namespace SpaceInvaders.ViewModel
             _model.GameAdvanced += new EventHandler<GameEventArgs>(Model_GameAdvanced);
             _model.GameCreated += new EventHandler<EnemyEventArgs>(Model_GameCreated);
             //_model.RoundOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
+
+            // parancsok kezelése
+            NewGameCommand = new DelegateCommand(param => OnNewGame());
+            //LoadNetworkCommand = new DelegateCommand(param => OnLoadGame());
+            //SaveNetworkCommand = new DelegateCommand(param => OnSaveGame());
+            ExitCommand = new DelegateCommand(param => OnExitGame());
 
             SetUpTable();
         }
@@ -172,6 +184,12 @@ namespace SpaceInvaders.ViewModel
         {
             if (ExitGame != null)
                 ExitGame(this, EventArgs.Empty);
+        }
+        //Uj jatek esemenykivaltasa
+        private void OnNewGame()
+        {
+            if (NewGame != null)
+                NewGame(this, EventArgs.Empty);
         }
 
         #endregion
