@@ -42,7 +42,7 @@ namespace SpaceInvaders.Model
         private int _bulletCount;
         private int _enemySpeed;
         private int _enemyBasicSpeed = 1;
-        private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 150
+        private int _enemyBulletTimeDistance = 150;   //milyen idokozonkent lonek az enemyk 300
         private int _enemyBulletTimeCounter;
         private Bullet _enemyBullet;
         private int _bulletHight = 20;

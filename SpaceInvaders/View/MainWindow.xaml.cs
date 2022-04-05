@@ -61,12 +61,23 @@ namespace SpaceInvaders.View
         private void RemoveBullets()
         {
             for (int i = 0; i < _bulletsRectangles.Length; i++)
+             {
+                 this.Dispatcher.Invoke((Action)(() =>
+                 {
+                     GameCanvas.Children.Remove(_bulletsRectangles[i]);
+                 }));
+             }
+            /*
+            this.Dispatcher.Invoke((Action)(() =>
             {
-                this.Dispatcher.Invoke((Action)(() =>
+                foreach (var x in GameCanvas.Children.OfType<Rectangle>())
                 {
-                    GameCanvas.Children.Remove(_bulletsRectangles[i]);
-                }));
-            }
+                    if (x is Rectangle && (string)x.Tag == "bullet")
+                    {
+                        GameCanvas.Children.Remove(x);
+                    }
+                }
+            }));*/
         }
         private void RemoveEnemyBullet()
         {
@@ -87,6 +98,16 @@ namespace SpaceInvaders.View
                     }));
                 }
             }
+            /*this.Dispatcher.Invoke((Action)(() =>
+            {
+                foreach (var x in GameCanvas.Children.OfType<Rectangle>())
+                {
+                    if (x is Rectangle && (string)x.Tag == "enemy")
+                    {
+                        GameCanvas.Children.Remove(x);
+                    }
+                }
+            }));*/
         }
 
         #region private methods

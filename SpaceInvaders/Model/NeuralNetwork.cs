@@ -25,6 +25,7 @@ namespace SpaceInvaders.Model
         private int _activeIndividual = 10;
         private int _bestIndividual = 0;
         private int _worstIndividual = 9;
+        private int _rdIndividual = 0;
         private int[] _indicidualScores;
 
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
@@ -169,7 +170,7 @@ namespace SpaceInvaders.Model
                 }
             }            
             int minScore = _indicidualScores[9];
-            _bestIndividual = 9;
+            _worstIndividual = 9;
             for(int i = 8; i > 0; i--)
             {
                 if (_indicidualScores[i] < minScore)
@@ -178,6 +179,35 @@ namespace SpaceInvaders.Model
                     minScore = _indicidualScores[i];
                 }
             }
+        }
+
+        private void EvolutePopulation()
+        {
+            Random random = new Random();
+            double mutation;
+            int rd = random.Next(0, 10);
+            while ( rd != _bestIndividual && rd != _worstIndividual)
+            {
+                rd = random.Next(0, 10);
+            }
+            _rdIndividual = rd; 
+            for (int i=0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
+            {
+                rd = random.Next(0,1);
+                mutation = random.Next(0,10);
+                mutation = mutation / 10D;
+                if (rd == 0)    // legjobbtol kapja a gent
+                {
+                    _weights[_worstIndividual, i] = _weights[_bestIndividual, i] + mutation;
+                }
+                else
+                {
+                    //randomtol kapja
+                }
+                {
+                    _weights[_worstIndividual, i] = _weights[_rdIndividual, i] + mutation;
+                }
+            } ;
         }
         #endregion
 
@@ -196,6 +226,8 @@ namespace SpaceInvaders.Model
                 {
                     _activeIndividual = 0;
                     RoundResults();
+                    EvolutePopulation();
+                    
                 }
             }
         }
