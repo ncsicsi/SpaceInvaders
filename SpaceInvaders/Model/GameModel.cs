@@ -22,7 +22,7 @@ namespace SpaceInvaders.Model
         private int _enemysCount = 50;
         private static int _maxenemyCount=50;
         private EnemyStruct[,] _enemys;
-        private static int _maxBullet = 110;
+        private static int _maxBullet = 120;
         private Bullet[] _bullets;
         private int _shipXPos;
         private int _shipYPos = 590;
@@ -289,7 +289,7 @@ namespace SpaceInvaders.Model
                 {
                     _bullets[i].IsNewBullet = false;
                     _bullets[i].Y -= _bulletspeed;
-                    if (_bullets[i].Y == 0)
+                    if (_bullets[i].Y <= 5)
                     {
                         _bullets[i].Alive = false;
                     }

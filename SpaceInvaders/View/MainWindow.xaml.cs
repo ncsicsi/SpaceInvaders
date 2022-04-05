@@ -67,17 +67,6 @@ namespace SpaceInvaders.View
                      GameCanvas.Children.Remove(_bulletsRectangles[i]);
                  }));
              }
-            /*
-            this.Dispatcher.Invoke((Action)(() =>
-            {
-                foreach (var x in GameCanvas.Children.OfType<Rectangle>())
-                {
-                    if (x is Rectangle && (string)x.Tag == "bullet")
-                    {
-                        GameCanvas.Children.Remove(x);
-                    }
-                }
-            }));*/
         }
         private void RemoveEnemyBullet()
         {
