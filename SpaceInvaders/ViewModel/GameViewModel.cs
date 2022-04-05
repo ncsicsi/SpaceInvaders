@@ -47,6 +47,7 @@ namespace SpaceInvaders.ViewModel
 
         // Pontszam lekerdezese
         public Int32 GameScore { get { return _model.Score; } }
+        public Int32 GameRounds { get { return _model.Rounds; } }
         // hajo helyzetenek lekerdezese lekerdezese
         public Int32 XPos { get { return _model.XPos; } }
         #endregion
@@ -88,6 +89,8 @@ namespace SpaceInvaders.ViewModel
             OnPropertyChanged("GameLives");
             OnPropertyChanged("GameScore");
             OnPropertyChanged("XPos");
+            OnPropertyChanged("GameRounds");
+            
         }
 
 
@@ -109,6 +112,7 @@ namespace SpaceInvaders.ViewModel
             OnPropertyChanged("GameLives");
             OnPropertyChanged("GameScore");
             OnPropertyChanged("XPos");
+            OnPropertyChanged("GameRounds");
             if (GameAdvanced != null)
                 GameAdvanced(this, e);
         } 

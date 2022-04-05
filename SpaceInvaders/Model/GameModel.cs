@@ -53,6 +53,7 @@ namespace SpaceInvaders.Model
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
+        private int _rounds;
         private enum direction {RIGHT, LEFT, DOWN};
         private direction _direction;
         
@@ -64,6 +65,7 @@ namespace SpaceInvaders.Model
         public Int32 Score { get { return _score; } }
         //eletek lekerdezese
         public Int32 Lives { get { return _lives; } }
+        public Int32 Rounds { get { return _rounds; } }
         //jatek vege lekerdezese
         public Boolean IsGameOver { get { return (_lives == 0); } }
         //hajo y pos lekerdezese vege lekerdezese
@@ -81,7 +83,7 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel()
         {
-            _network = new NeuralNetwork(10,20);
+            _network = new NeuralNetwork(10,40);
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             ReSetBulletTable();
@@ -89,6 +91,7 @@ namespace SpaceInvaders.Model
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
+            _rounds = 0;
         }
         #endregion
 
@@ -112,7 +115,8 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
-            //_network.NetworkOn = false;
+            _network.NetworkOn = true;
+            _rounds++;
             OnGameCreated();
             _timer.Start();
             
@@ -522,11 +526,35 @@ namespace SpaceInvaders.Model
             {
                 _network._bulletDistance = 0;
             }
+            if(_enemyBullet.Alive)
+            {
+                if(_enemyBullet.X >_shipXPos)
+                {
+                    _network._bulletXRightDistance = (_enemyBullet.X - _shipXPos - _shipWidth/2)/10D;
+                }
+                else
+                {
+                    _network._bulletXRightDistance = 0;
+                }
+                if (_enemyBullet.X < _shipXPos)
+                {
+                    _network._bulletXLeftDistance =(_shipXPos - _enemyBullet.X +_shipWidth / 2)/10D;
+                }
+                else
+                {
+                    _network._bulletXLeftDistance = 0;
+                }
+            }
+            else
+            {
+                _network._bulletXRightDistance = 0;
+                _network._bulletXLeftDistance = 0;
+            }
             _network._enemyCount = _enemysCount/1D;
             int x, y; 
             (x,y)= _mostButtomEnemySerial;
-            _network._closestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/1D;
-            _network._closestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/1D;
+            _network._closestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/10D;
+            _network._closestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/10D;
             if(_network._closestEnemyXDistance == (_shipXPos + _shipWidth / 2) - (_enemys[x, y].X() + _enemySize / 2))
             {
                 _network._closestEnemyDirection = 0;
@@ -536,7 +564,7 @@ namespace SpaceInvaders.Model
                 _network._closestEnemyDirection = 1;
             }
             _network._lives = _lives;
-            _network._xPos = _shipXPos/1D;
+            _network._xPos = _shipXPos/10D;
             _network._rightEnemyCount = RightEnemyCount();
             _network._leftEnemyCount = LeftEnemyCount();
 
@@ -544,9 +572,9 @@ namespace SpaceInvaders.Model
         private int RightEnemyCount()
         {
             int count = 0;
-            for (int i=0; i< _enemyRows; i++) 
+            for (int i=0; i < _enemyRows; i++) 
             {
-                for(int j=0; j< _enemyColumns; j++)
+                for(int j=0; j < _enemyColumns; j++)
                 {
                     if (_enemys[i,j].Alive && _enemys[i,j].X() > _shipXPos + _shipWidth / 2)
                     {

@@ -204,7 +204,7 @@ namespace SpaceInvaders.View
             {
                 for (int j = 0; j < _enemyColumns; j++)
                 {
-                    if (enemies[i, j].Alive)
+                    if (enemies[i, j].Alive && _enemysRectangles[i,j] != null)
                     {
                         this.Dispatcher.Invoke((Action)(() =>
                         {

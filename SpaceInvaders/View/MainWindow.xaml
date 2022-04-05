@@ -45,6 +45,12 @@
             <StatusBarItem>
                 <TextBlock Text="{Binding GameLives}" Foreground="LightGreen" FontSize="14" HorizontalAlignment="Left"/>
             </StatusBarItem>
+            <StatusBarItem Foreground="White" FontSize="14" HorizontalAlignment="Right">
+                <TextBlock Text="ROUND " />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding GameRounds}" Foreground="LightGreen" FontSize="14" HorizontalAlignment="Left"/>
+            </StatusBarItem>
         </StatusBar>
         <Canvas Name="GameCanvas" Background="Black" Grid.Row="2" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" Grid.ColumnSpan="2">
            <Rectangle Name="spaceShip" Width="60" Height="30" Canvas.Top="580" Canvas.Left="{Binding XPos}">

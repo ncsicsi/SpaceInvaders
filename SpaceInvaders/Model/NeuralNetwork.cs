@@ -17,7 +17,7 @@ namespace SpaceInvaders.Model
         private double[] _incommingNeurons;
         private double[] _outcommingNeurons;
         private int _hiddenNeuronsCount;
-        private int _incommingNeuronsCount = 9;
+        private int _incommingNeuronsCount = 11;
         private int _outcommingNeuronsCount = 3;
         private double[,] _weights;
 
@@ -32,6 +32,8 @@ namespace SpaceInvaders.Model
 
         //bejovo neuronok
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
+        public double _bulletXRightDistance = 0; //jobbra a bullet tavolsga (0, ha nincs bullet/balra van)
+        public double _bulletXLeftDistance = 0; //balra a bullet tavolsga (0, ha nincs bullet/jobbraa van)
         public double _enemyCount = 0;      //enemyk szama  0-50
         public double _closestEnemyYDistance = 0;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-700
         public double _closestEnemyXDistance = 0;   // legalsobb enemy tavolsaga x szerint 0-700
@@ -70,6 +72,10 @@ namespace SpaceInvaders.Model
                     _hiddenNeurons[h] += _incommingNeurons[i] * _weights[_activeIndividual, i * _hiddenNeuronsCount + h];
                 }
                 _hiddenNeurons[h] =1/(1+ Math.Exp(-_hiddenNeurons[h]));
+                if (_hiddenNeurons[h] == 1)
+                {
+                    int bug = 1;
+                }
             }
             //kimeneti neuronok szamitasa
             int s = _incommingNeuronsCount * _hiddenNeuronsCount;
@@ -114,14 +120,16 @@ namespace SpaceInvaders.Model
         private void RefreshIncomingNeurons()
         {
             _incommingNeurons[0] = _bulletDistance;
-            _incommingNeurons[1] = _enemyCount;      //enemyk szama  0-50
-            _incommingNeurons[2] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
-            _incommingNeurons[3] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
-            _incommingNeurons[4] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
-            _incommingNeurons[5] = _lives;  //eletpontok szama
-            _incommingNeurons[6] = _xPos;  //hajo pozicioja x tengely szerint
-            _incommingNeurons[7] = _rightEnemyCount;    //jobbra levo enemyk szama
-            _incommingNeurons[8] = _leftEnemyCount;    //balra levo enemyk szama
+            _incommingNeurons[1] = _bulletXRightDistance;
+            _incommingNeurons[2] = _bulletXLeftDistance;
+            _incommingNeurons[3] = _enemyCount;      //enemyk szama  0-50
+            _incommingNeurons[4] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
+            _incommingNeurons[5] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
+            _incommingNeurons[6] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
+            _incommingNeurons[7] = _lives;  //eletpontok szama
+            _incommingNeurons[8] = _xPos;  //hajo pozicioja x tengely szerint
+            _incommingNeurons[9] = _rightEnemyCount;    //jobbra levo enemyk szama
+            _incommingNeurons[10] = _leftEnemyCount;    //balra levo enemyk szama
 
 
         }
@@ -207,7 +215,7 @@ namespace SpaceInvaders.Model
             {
                 rd = random.Next(1,10);
                 mutation = random.Next(0,1000);
-                mutation = mutation / 10000D;
+                mutation = mutation / 1000000D;
                 if (rd < 6)    // legjobbtol kapja a gent
                 {
                     _weights[_worstIndividual, i] = _weights[_bestIndividual, i] + mutation;
@@ -217,7 +225,7 @@ namespace SpaceInvaders.Model
                     //randomtol kapja
                 }
                 {
-                    _weights[_worstIndividual, i] = _weights[_rdIndividual, i] + mutation;
+                    _weights[_worstIndividual, i] = _weights[_rdIndividual, i] - mutation;
                 }
             } ;
         }
