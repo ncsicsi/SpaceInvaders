@@ -171,7 +171,7 @@ namespace SpaceInvaders.View
                         Canvas.SetTop(_bulletsRectangles[i], bullets[i].Y);
                         Canvas.SetLeft(_bulletsRectangles[i], bullets[i].X);
                     }));
-                }else if(bullets[i].Alive && !bullets[i].IsNewBullet)
+                }else if(bullets[i].Alive && !bullets[i].IsNewBullet && _bulletsRectangles[i] != null)
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {

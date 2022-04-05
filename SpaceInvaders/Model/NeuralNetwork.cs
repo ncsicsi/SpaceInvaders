@@ -156,6 +156,29 @@ namespace SpaceInvaders.Model
             _activeIndividual = 0;
         }
 
+        private void RoundResults()
+        {
+            int maxScore = _indicidualScores[0];
+            _bestIndividual = 0;
+            for(int i = 1; i<_individualCount; i++)
+            {
+                if (_indicidualScores[i] > maxScore)
+                {
+                    _bestIndividual = i;
+                    maxScore = _indicidualScores[i];
+                }
+            }            
+            int minScore = _indicidualScores[9];
+            _bestIndividual = 9;
+            for(int i = 8; i > 0; i--)
+            {
+                if (_indicidualScores[i] < minScore)
+                {
+                    _worstIndividual = i;
+                    minScore = _indicidualScores[i];
+                }
+            }
+        }
         #endregion
 
         #region Evolution Public Methods
@@ -165,16 +188,16 @@ namespace SpaceInvaders.Model
             if (!win)
             {
                 _indicidualScores[_activeIndividual] = score;
-                if (_activeIndividual < _individualCount)
+                if (_activeIndividual < _individualCount-1)
                 {
                     _activeIndividual++;
                 }
                 else
                 {
                     _activeIndividual = 0;
+                    RoundResults();
                 }
             }
-            int a = 0;
         }
         #endregion
 

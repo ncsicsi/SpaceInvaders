@@ -21,7 +21,7 @@ namespace SpaceInvaders.Model
         private int _lives;
         private int _enemysCount = 50;
         private EnemyStruct[,] _enemys;
-        private static int _maxBullet = 60;
+        private static int _maxBullet = 110;
         private Bullet[] _bullets;
         private int _shipXPos;
         private int _shipYPos = 590;
@@ -84,12 +84,17 @@ namespace SpaceInvaders.Model
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             ReSetBulletTable();
+            _timer = new System.Timers.Timer(5);
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
         }
         #endregion
 
         #region Public Methods
         public void NewGame()
         {
+            _timer.Stop();
             ReSetEnemyTable();
             ReSetBulletTable();
             _score = 0;
@@ -108,15 +113,12 @@ namespace SpaceInvaders.Model
             _direction= direction.RIGHT;
             //_network.NetworkOn = false;
             OnGameCreated();
-            _timer = new System.Timers.Timer(5);
-            _timer.Elapsed += _timer_Elapsed;
-            _timer.AutoReset = true;
-            _timer.Enabled = true;
             _timer.Start();
             
         }
         public void NewRound()
         {
+            _timer.Stop();
             ReSetEnemyTable();
             ReSetBulletTable();
             _shipXPos = 298;
@@ -130,10 +132,10 @@ namespace SpaceInvaders.Model
             _goRight = false;
             _bullet = false;
             OnGameCreated();
-            _timer = new System.Timers.Timer(20);
-            _timer.Elapsed += _timer_Elapsed;
-            _timer.AutoReset = true;
-            _timer.Enabled = true;
+            //_timer = new System.Timers.Timer(20);
+            //_timer.Elapsed += _timer_Elapsed;
+            //_timer.AutoReset = true;
+            //_timer.Enabled = true;
             _timer.Start();
         }
 

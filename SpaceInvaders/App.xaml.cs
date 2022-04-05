@@ -55,11 +55,13 @@ namespace SpaceInvaders
         {
             //model letrehozasa
             _model = new GameModel();
+            _view = new MainWindow();
+            _viewModel = new GameViewModel(_model);
             _model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
 
 
             //nzetmodel letrehozasa
-            _viewModel = new GameViewModel(_model);
+            //_viewModel = new GameViewModel(_model);
             _viewModel.GameAdvanced += new EventHandler<GameEventArgs>(View_GameAdvanced);
             _viewModel.GameCreated += new EventHandler<EnemyEventArgs>(View_GameCreated);
             _viewModel.NewGame += new EventHandler(ViewModel_NewGame);
@@ -68,7 +70,7 @@ namespace SpaceInvaders
             //_viewModel.SaveNetwork += new EventHandler(ViewModel_SaveNetwork);
 
             // nézet létrehozása
-            _view = new MainWindow();
+            //_view = new MainWindow();
             _view.DataContext = _viewModel;
 
             _view.KeyIsDown_Event += new KeyEventHandler(View_KeyIsDown);
@@ -160,6 +162,7 @@ namespace SpaceInvaders
             }
             else if (e.NetworkOn)
             {
+                _model.stopTimer();
                 _view.RoundOver();
                 _model.NewGame();
             }
