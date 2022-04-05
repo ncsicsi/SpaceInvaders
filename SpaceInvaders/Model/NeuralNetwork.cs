@@ -151,8 +151,8 @@ namespace SpaceInvaders.Model
             for (int i = 0; i < s; i++)
             {
                 Random random = new Random();
-                double rd = random.Next(0, 1000);
-                _weights[_activeIndividual, i] = rd/1000000D;
+                double rd = random.Next(0, 5000);
+                _weights[_activeIndividual, i] = rd / 1000000D;
             }
         }
         #endregion
