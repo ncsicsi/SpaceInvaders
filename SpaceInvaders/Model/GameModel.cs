@@ -20,6 +20,7 @@ namespace SpaceInvaders.Model
         private int _score;
         private int _lives;
         private int _enemysCount = 50;
+        private static int _maxenemyCount=50;
         private EnemyStruct[,] _enemys;
         private static int _maxBullet = 110;
         private Bullet[] _bullets;
@@ -80,7 +81,7 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel()
         {
-            _network = new NeuralNetwork(10,10);
+            _network = new NeuralNetwork(10,20);
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             ReSetBulletTable();
@@ -102,7 +103,7 @@ namespace SpaceInvaders.Model
             _shipXPos = 298;
             _bullet = false;
             _bulletCount = 0;
-            _enemysCount = 50;
+            _enemysCount = _maxenemyCount;
             _enemyBulletTimeCounter = 0;
             _enemyBullet.Alive = false;
             _enemyBullet.IsNewBullet = false;
@@ -124,7 +125,7 @@ namespace SpaceInvaders.Model
             _shipXPos = 298;
             _bullet = false;
             _bulletCount = 0;
-            _enemysCount = 50;
+            _enemysCount = _maxenemyCount;
             _enemySpeed++;
             _lives++;
             _direction = direction.RIGHT;
@@ -515,17 +516,17 @@ namespace SpaceInvaders.Model
         {
             if (_enemyBullet.Alive)
             {
-                _network._bulletDistance = _shipYPos - _enemyBullet.Y - _bulletHight; //enemy bullet tavolsaga
+                _network._bulletDistance = (_shipYPos - _enemyBullet.Y - _bulletHight)/10D; //enemy bullet tavolsaga
             }
             else
             {
                 _network._bulletDistance = 0;
             }
-            _network._enemyCount = _enemysCount/10D;
+            _network._enemyCount = _enemysCount/1D;
             int x, y; 
             (x,y)= _mostButtomEnemySerial;
-            _network._closestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/100D;
-            _network._closestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/100D;
+            _network._closestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/1D;
+            _network._closestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/1D;
             if(_network._closestEnemyXDistance == (_shipXPos + _shipWidth / 2) - (_enemys[x, y].X() + _enemySize / 2))
             {
                 _network._closestEnemyDirection = 0;
@@ -535,6 +536,40 @@ namespace SpaceInvaders.Model
                 _network._closestEnemyDirection = 1;
             }
             _network._lives = _lives;
+            _network._xPos = _shipXPos/1D;
+            _network._rightEnemyCount = RightEnemyCount();
+            _network._leftEnemyCount = LeftEnemyCount();
+
+        }
+        private int RightEnemyCount()
+        {
+            int count = 0;
+            for (int i=0; i< _enemyRows; i++) 
+            {
+                for(int j=0; j< _enemyColumns; j++)
+                {
+                    if (_enemys[i,j].Alive && _enemys[i,j].X() > _shipXPos + _shipWidth / 2)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+        private int LeftEnemyCount()
+        {
+            int count = 0;
+            for (int i = 0; i < _enemyRows; i++)
+            {
+                for (int j = 0; j < _enemyColumns; j++)
+                {
+                    if (_enemys[i, j].Alive && _enemys[i, j].X() < _shipXPos+_shipWidth/2)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
         }
         private bool GameOverIs()
         {

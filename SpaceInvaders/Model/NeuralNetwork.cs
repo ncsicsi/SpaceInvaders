@@ -17,9 +17,10 @@ namespace SpaceInvaders.Model
         private double[] _incommingNeurons;
         private double[] _outcommingNeurons;
         private int _hiddenNeuronsCount;
-        private int _incommingNeuronsCount = 6;
+        private int _incommingNeuronsCount = 9;
         private int _outcommingNeuronsCount = 3;
         private double[,] _weights;
+
         //evolucio
         private int _individualCount;
         private int _activeIndividual = 10;
@@ -27,13 +28,18 @@ namespace SpaceInvaders.Model
         private int _worstIndividual = 9;
         private int _rdIndividual = 0;
         private int[] _indicidualScores;
+        private int _roundCounter;
 
+        //bejovo neuronok
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
         public double _enemyCount = 0;      //enemyk szama  0-50
         public double _closestEnemyYDistance = 0;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-700
         public double _closestEnemyXDistance = 0;   // legalsobb enemy tavolsaga x szerint 0-700
         public double _closestEnemyDirection = 0;   //jobbra vagy ballra van 0/1
         public double _lives = 0;   //eletpontok szama
+        public double _xPos; //hajo pozicioja x tengely szeirnt
+        public double _rightEnemyCount; // jobbra levo enemyk szama
+        public double _leftEnemyCount;  // balra levo enemyk szama
         public double _enemySpeed = 0;  //enemy gyorsasaga
         public double _enemyMoveDirection = 0; //enemy mozgas iranya
         #endregion
@@ -113,6 +119,11 @@ namespace SpaceInvaders.Model
             _incommingNeurons[3] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
             _incommingNeurons[4] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
             _incommingNeurons[5] = _lives;  //eletpontok szama
+            _incommingNeurons[6] = _xPos;  //hajo pozicioja x tengely szerint
+            _incommingNeurons[7] = _rightEnemyCount;    //jobbra levo enemyk szama
+            _incommingNeurons[8] = _leftEnemyCount;    //balra levo enemyk szama
+
+
         }
         private void ReSetNeurons()
         {
@@ -132,8 +143,8 @@ namespace SpaceInvaders.Model
             for (int i = 0; i < s; i++)
             {
                 Random random = new Random();
-                double rd = random.Next(0, 10);
-                _weights[_activeIndividual, i] = rd/10D;
+                double rd = random.Next(0, 1000);
+                _weights[_activeIndividual, i] = rd/1000000D;
             }
         }
         #endregion
@@ -148,6 +159,7 @@ namespace SpaceInvaders.Model
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _individualCount = individualCount;
             _indicidualScores = new int[_individualCount];
+            _roundCounter = 0;
             _weights = new double[_individualCount, _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
             {
@@ -193,10 +205,10 @@ namespace SpaceInvaders.Model
             _rdIndividual = rd; 
             for (int i=0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
             {
-                rd = random.Next(0,1);
-                mutation = random.Next(0,10);
-                mutation = mutation / 10D;
-                if (rd == 0)    // legjobbtol kapja a gent
+                rd = random.Next(1,10);
+                mutation = random.Next(0,1000);
+                mutation = mutation / 10000D;
+                if (rd < 6)    // legjobbtol kapja a gent
                 {
                     _weights[_worstIndividual, i] = _weights[_bestIndividual, i] + mutation;
                 }
@@ -218,16 +230,16 @@ namespace SpaceInvaders.Model
             if (!win)
             {
                 _indicidualScores[_activeIndividual] = score;
-                if (_activeIndividual < _individualCount-1)
+                if (_activeIndividual < _individualCount-1 && _roundCounter < _individualCount - 1)
                 {
                     _activeIndividual++;
+                    _roundCounter++;
                 }
                 else
                 {
-                    _activeIndividual = 0;
                     RoundResults();
                     EvolutePopulation();
-                    
+                    _activeIndividual = _worstIndividual;
                 }
             }
         }
