@@ -59,6 +59,8 @@ namespace SpaceInvaders.ViewModel
 
         /// Játékból való kilépés eseménye.
         public event EventHandler ExitGame;
+        public event EventHandler LoadNetwork;
+        public event EventHandler SaveNetwork;
 
         public event EventHandler<GameEventArgs> GameAdvanced;
         public event EventHandler<EnemyEventArgs> GameCreated;
@@ -75,8 +77,8 @@ namespace SpaceInvaders.ViewModel
 
             // parancsok kezelése
             NewGameCommand = new DelegateCommand(param => OnNewGame());
-            //LoadNetworkCommand = new DelegateCommand(param => OnLoadGame());
-            //SaveNetworkCommand = new DelegateCommand(param => OnSaveGame());
+            LoadNetworkCommand = new DelegateCommand(param => OnLoadNetwork());
+            SaveNetworkCommand = new DelegateCommand(param => OnSaveNetwork());
             ExitCommand = new DelegateCommand(param => OnExitGame());
 
             SetUpTable();
@@ -194,6 +196,20 @@ namespace SpaceInvaders.ViewModel
         {
             if (NewGame != null)
                 NewGame(this, EventArgs.Empty);
+        }
+        /// Játék betöltése eseménykiváltása.
+        private void OnLoadNetwork()
+        {
+            if (LoadNetwork != null)
+                LoadNetwork(this, EventArgs.Empty);
+            // GenerateTabel();
+        }
+
+        /// Játék mentése eseménykiváltása.
+        private void OnSaveNetwork()
+        {
+            if (SaveNetwork != null)
+                SaveNetwork(this, EventArgs.Empty);
         }
 
         #endregion

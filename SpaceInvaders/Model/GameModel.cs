@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using SpaceInvaders.Persistence;
 
 
 namespace SpaceInvaders.Model
@@ -17,6 +17,9 @@ namespace SpaceInvaders.Model
     {
         #region Fields
         private NeuralNetwork _network;
+        private int _populationSize = 40;
+        private int _hiddenNeuronSize = 10;
+        private IGameDataAccess _dataAccess; //adateleres
         private int _score;
         private int _lives;
         private int _enemysCount = 50;
@@ -81,9 +84,9 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Constructor
-        public GameModel()
+        public GameModel(IGameDataAccess dataAccess)
         {
-            _network = new NeuralNetwork(10,40);
+            _network = new NeuralNetwork(_hiddenNeuronSize,_populationSize);
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             ReSetBulletTable();
@@ -144,6 +147,72 @@ namespace SpaceInvaders.Model
             _timer.Start();
         }
 
+        // Jatek betoltese
+        public async Task LoadGameAsync(String path)
+        {
+            if (_dataAccess == null)
+                throw new InvalidOperationException("No data access is provided.");
+
+            Data data = await _dataAccess.LoadAsync(path);
+            _rounds = data._round;
+            _populationSize = data._populationSize;
+            //_hiddenNeuronSize = data._weightsSize;
+            _network.LoadNetwork(data);
+            /*_table = h.T;
+            _gameStepCount = h.Step;
+            OnGameAdvanced();
+            if (_gameStepCount % 2 == 0)
+            {
+                _actPlayer = Table.Player.Hunter;
+            }
+            else _actPlayer = Table.Player.Escaper;
+            _gameTableSize = h.T.Size;
+
+            switch (_gameTableSize)
+            {
+                case (GameTableSmall):
+                    _gameStepsLimit = GameStepsSmall;
+                    break;
+                case (GameTableMedium):
+                    _gameStepsLimit = GameStepsMedium;
+                    break;
+                case (GameTableLarge):
+                    _gameStepsLimit = GameStepsLarge;
+                    break;
+            }*/
+
+            NetworkLoaded?.Invoke(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet));
+        }
+
+        // neuralos halok mentese mentése
+
+        public async Task SaveNetworkAsync(String path)
+        {
+            if (_dataAccess == null)
+                throw new InvalidOperationException("No data access is provided.");
+
+            await _dataAccess.SaveAsync(path, _rounds, _populationSize, _network.WeightsCount, _network.Weights);
+        }
+
+
+        #endregion
+
+        #region Events
+
+        /// Játék létrehozásának eseménye.
+        public event EventHandler<EnemyEventArgs> GameCreated;
+        // Játék végének eseménye.
+        public event EventHandler<GameOverEventArgs> GameOver;
+        //Jatek előrehaladáskor frissitesi esemeny
+        public event EventHandler<GameEventArgs> GameAdvanced;
+        public event EventHandler<GameEventArgs> NetworkLoaded;
+        //Enemy tabla letrehozasanak esemenye, hogy lekuldjuk a viewba
+
+
+        #endregion
+
+        #region Private Methods
+
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             NetworkAction();
@@ -161,27 +230,10 @@ namespace SpaceInvaders.Model
             OnGameAdvanced();
             if (GameOverIs())
             {
-                 OnGameOver(_win);
+                OnGameOver(_win);
             }
-            
+
         }
-
-        #endregion
-
-        #region Events
-
-        /// Játék létrehozásának eseménye.
-        public event EventHandler<EnemyEventArgs> GameCreated;
-        // Játék végének eseménye.
-        public event EventHandler<GameOverEventArgs> GameOver;
-        //Jatek előrehaladáskor frissitesi esemeny
-        public event EventHandler<GameEventArgs> GameAdvanced;
-        //Enemy tabla letrehozasanak esemenye, hogy lekuldjuk a viewba
-        
-
-        #endregion
-
-        #region Private Methods
 
         private void ReSetBulletTable()
         {

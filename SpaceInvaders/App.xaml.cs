@@ -21,6 +21,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SpaceInvaders.Persistence;
 
 
 
@@ -54,7 +55,7 @@ namespace SpaceInvaders
         private void App_Startup(object sender, StartupEventArgs e)
         {
             //model letrehozasa
-            _model = new GameModel();
+            _model = new GameModel(new GameFileDataAccess());
             _view = new MainWindow();
             _viewModel = new GameViewModel(_model);
             _model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
@@ -66,8 +67,8 @@ namespace SpaceInvaders
             _viewModel.GameCreated += new EventHandler<EnemyEventArgs>(View_GameCreated);
             _viewModel.NewGame += new EventHandler(ViewModel_NewGame);
             _viewModel.ExitGame += new EventHandler(ViewModel_ExitGame);
-            //_viewModel.LoadNetwork += new EventHandler(ViewModel_LoadNetwork);
-            //_viewModel.SaveNetwork += new EventHandler(ViewModel_SaveNetwork);
+            _viewModel.LoadNetwork += new EventHandler(ViewModel_LoadNetwork);
+            _viewModel.SaveNetwork += new EventHandler(ViewModel_SaveNetwork);
 
             // nézet létrehozása
             //_view = new MainWindow();
@@ -140,6 +141,57 @@ namespace SpaceInvaders
             
             _view.Close(); // ablak bezárása
         }
+
+        // network betöltésének eseménykezelője.
+        private async void ViewModel_LoadNetwork(object sender, System.EventArgs e)
+        {
+            /*try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog(); // dialógusablak
+                openFileDialog.Title = "neuralis halok betöltése";
+                openFileDialog.Filter = "neuralis halok|*.stl";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    // játék betöltése
+                    await _model.LoadNetworkAsync(openFileDialog.FileName);
+
+                }
+            }
+            catch (GameDataException)
+            {
+                MessageBox.Show("A fájl betöltése sikertelen!", "Sudoku", MessageBoxButton.OK, MessageBoxImage.Error);
+            }*/
+
+        }
+
+        // neowork mentésének eseménykezelője.
+        private async void ViewModel_SaveNetwork(object sender, EventArgs e)
+        {
+
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog(); // dialógablak
+                saveFileDialog.Title = "neuralis halok betöltése";
+                saveFileDialog.Filter = "neuralis halok|*.stl";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    /*try
+                    {
+                        // játéktábla mentése
+                        await _model.SaveNetworkAsync(saveFileDialog.FileName);
+                    }
+                    catch (GameDataException)
+                    {
+                        MessageBox.Show("Játék mentése sikertelen!" + Environment.NewLine + "Hibás az elérési út, vagy a könyvtár nem írható.", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }*/
+                }
+            }
+            catch
+            {
+                MessageBox.Show("A fájl mentése sikertelen!", "Invaders", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
 
         #endregion
 

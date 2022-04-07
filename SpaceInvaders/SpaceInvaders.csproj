@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Moq" Version="4.17.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\invadier1.png" />
     <Resource Include="Images\invadier2.png" />
     <Resource Include="Images\invadier3.png" />

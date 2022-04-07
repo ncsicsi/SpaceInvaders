@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SpaceInvaders.Model;
+using SpaceInvaders.Persistence;
 
 namespace SpaceInvaders.Model
 {
     public class NeuralNetwork
     {
         #region Fields
-        bool _networkOn;
+        private IGameDataAccess _dataAccess; //adateleres
         //network
+        public bool _networkOn;
         public enum action { GORIGHT, GOLEFT, SHOT };
         private double[] _hiddenNeurons;
         private double[] _incommingNeurons;
@@ -48,6 +50,8 @@ namespace SpaceInvaders.Model
 
         #region Properties
         public bool NetworkOn { get { return _networkOn; } set { _networkOn = value; } }
+        public double[,] Weights { get {return _weights; } }
+        public int WeightsCount { get {return _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; } }
         #endregion
 
         #region Constructor
@@ -111,6 +115,19 @@ namespace SpaceInvaders.Model
                     break;
             }
             return action.SHOT;
+        }
+
+        public void LoadNetwork(Data data)
+        {
+            //_hiddenNeuronsCount = data._weightsSize;
+            _individualCount = data._populationSize;
+            for(int i = 0; i < _individualCount; i++)
+            {
+                for(int j=0; j< data._weightsSize; j++)
+                {
+                    _weights[i,j] = data._weights[i, j];
+                }
+            }
         }
 
         #endregion

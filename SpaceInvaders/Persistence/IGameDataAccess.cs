@@ -9,9 +9,9 @@ namespace SpaceInvaders.Persistence
     public interface IGameDataAccess
     {
         //fájl betoltese
-    Task<int> LoadAsync(String path);
+    Task<Data> LoadAsync(String path);
     //fájl mentese
-    //Task SaveAsync(String path, Table table, int stepCount);
+    Task SaveAsync(String path, int round, int populationSize, int weightsSize, double [,] weights);
     }
     
 }
