@@ -240,8 +240,6 @@ namespace SpaceInvaders.Model
                 else
                 {
                     //randomtol kapja
-                }
-                {
                     _weights[_worstIndividual, i] = _weights[_rdIndividual, i] - mutation;
                 }
             } ;

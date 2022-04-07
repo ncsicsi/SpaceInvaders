@@ -171,19 +171,19 @@ namespace SpaceInvaders
             try
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog(); // dialógablak
-                saveFileDialog.Title = "neuralis halok betöltése";
-                saveFileDialog.Filter = "neuralis halok|*.stl";
+                saveFileDialog.Title = "neuralis hálok betöltése";
+                saveFileDialog.Filter = "neurális hálók|*.stl";
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    /*try
-                    {
+                    
+                    try{
                         // játéktábla mentése
                         await _model.SaveNetworkAsync(saveFileDialog.FileName);
                     }
                     catch (GameDataException)
                     {
                         MessageBox.Show("Játék mentése sikertelen!" + Environment.NewLine + "Hibás az elérési út, vagy a könyvtár nem írható.", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }*/
+                    }
                 }
             }
             catch

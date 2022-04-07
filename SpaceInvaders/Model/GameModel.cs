@@ -17,8 +17,8 @@ namespace SpaceInvaders.Model
     {
         #region Fields
         private NeuralNetwork _network;
-        private int _populationSize = 40;
-        private int _hiddenNeuronSize = 10;
+        private int _populationSize = 20;
+        private int _hiddenNeuronSize = 25;
         private IGameDataAccess _dataAccess; //adateleres
         private int _score;
         private int _lives;
@@ -46,7 +46,7 @@ namespace SpaceInvaders.Model
         private int _bulletCount;
         private int _enemySpeed;
         private int _enemyBasicSpeed = 1;
-        private int _enemyBulletTimeDistance = 150;   //milyen idokozonkent lonek az enemyk 300
+        private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
         private int _enemyBulletTimeCounter;
         private Bullet _enemyBullet;
         private int _bulletHight = 20;
@@ -90,7 +90,7 @@ namespace SpaceInvaders.Model
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             ReSetBulletTable();
-            _timer = new System.Timers.Timer(5);
+            _timer = new System.Timers.Timer(1);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
@@ -158,28 +158,6 @@ namespace SpaceInvaders.Model
             _populationSize = data._populationSize;
             //_hiddenNeuronSize = data._weightsSize;
             _network.LoadNetwork(data);
-            /*_table = h.T;
-            _gameStepCount = h.Step;
-            OnGameAdvanced();
-            if (_gameStepCount % 2 == 0)
-            {
-                _actPlayer = Table.Player.Hunter;
-            }
-            else _actPlayer = Table.Player.Escaper;
-            _gameTableSize = h.T.Size;
-
-            switch (_gameTableSize)
-            {
-                case (GameTableSmall):
-                    _gameStepsLimit = GameStepsSmall;
-                    break;
-                case (GameTableMedium):
-                    _gameStepsLimit = GameStepsMedium;
-                    break;
-                case (GameTableLarge):
-                    _gameStepsLimit = GameStepsLarge;
-                    break;
-            }*/
 
             NetworkLoaded?.Invoke(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet));
         }
@@ -389,6 +367,9 @@ namespace SpaceInvaders.Model
                             }
                         }
                     }
+                }else if (_bullets[i].Y < 0)
+                {
+                    _bullets[i].Alive = false;
                 }
             }
         }
