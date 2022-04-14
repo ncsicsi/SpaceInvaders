@@ -24,7 +24,9 @@ namespace SpaceInvaders.Model
         private int _incommingNeuronsCount = 11;
         private int _outcommingNeuronsCount = 3;
         private double[,] _weights;
-
+        private double _score;
+        private double _elapsedTime;
+        private double _avoidBullets;
 
         //evolucio
         private int _individualCount;
@@ -32,8 +34,13 @@ namespace SpaceInvaders.Model
         private int _bestIndividual = 0;
         private int _worstIndividual = 9;
         private int _rdIndividual = 0;
-        private int[] _indicidualScores;
+        private double[] _indicidualFittnes;
         private int _roundCounter;
+
+        //fittnes sulyok
+        private double _scoreWeight = 10;
+        private double _elapsedTimeWeighht = 2;
+        private double _avoidBulletsWeight = 15; 
 
         //bejovo neuronok
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
@@ -55,6 +62,9 @@ namespace SpaceInvaders.Model
         public bool NetworkOn { get { return _networkOn; } set { _networkOn = value; } }
         public double[,] Weights { get {return _weights; } }
         public int WeightsCount { get {return _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; } }
+        public double Score { get { return _score; } set { _score = value; } }
+        public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
+        public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
         #endregion
 
         #region Constructor
@@ -182,6 +192,7 @@ namespace SpaceInvaders.Model
                 _weights[_activeIndividual, i] = rd / 1000000D;*/
             }
         }
+        /*
         private static double SampleGaussian(Random random, double mean, double stddev)
         {
             // The method requires sampling from a uniform random of (0,1]
@@ -191,7 +202,7 @@ namespace SpaceInvaders.Model
 
             double y1 = Math.Sqrt(-2.0 * Math.Log(x1)) * Math.Cos(2.0 * Math.PI * x2);
             return y1 * stddev + mean;
-        }
+        }*/
         #endregion
 
         # region Evolution Private Methods
@@ -203,7 +214,7 @@ namespace SpaceInvaders.Model
             _incommingNeurons = new double[_incommingNeuronsCount]; ;
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _individualCount = individualCount;
-            _indicidualScores = new int[_individualCount];
+            _indicidualFittnes = new double[_individualCount];
             _roundCounter = 0;
             _weights = new double[_individualCount, _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
@@ -216,24 +227,24 @@ namespace SpaceInvaders.Model
 
         private void RoundResults()
         {
-            int maxScore = _indicidualScores[0];
+            double maxFittnes = _indicidualFittnes[0];
             _bestIndividual = 0;
             for(int i = 1; i<_individualCount; i++)
             {
-                if (_indicidualScores[i] > maxScore)
+                if (_indicidualFittnes[i] > maxFittnes)
                 {
                     _bestIndividual = i;
-                    maxScore = _indicidualScores[i];
+                    maxFittnes = _indicidualFittnes[i];
                 }
             }            
-            int minScore = _indicidualScores[_individualCount-1];
+            double minFittnes = _indicidualFittnes[_individualCount-1];
             _worstIndividual = _individualCount-1;
-            for(int i = _individualCount-2; i > 0; i--)
+            for(int i = _individualCount-2; i > -1; i--)
             {
-                if (_indicidualScores[i] < minScore)
+                if (_indicidualFittnes[i] < minFittnes)
                 {
                     _worstIndividual = i;
-                    minScore = _indicidualScores[i];
+                    minFittnes = _indicidualFittnes[i];
                 }
             }
         }
@@ -246,7 +257,7 @@ namespace SpaceInvaders.Model
             Random mutationRd = new Random();
             while ( rd != _bestIndividual && rd != _worstIndividual)
             {
-                rd = random.Next(0, 10);
+                rd = random.Next(0, _individualCount-1);
             }
             _rdIndividual = rd; 
             for (int i=0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
@@ -254,7 +265,7 @@ namespace SpaceInvaders.Model
                 /*rd = random.Next(1,10);
                 mutation = random.Next(0,1000);
                 mutation = mutation / 1000000D;*/
-                mutation = NormalDistribution.Sample(mutationRd, 0D, 0.5D);
+                mutation = NormalDistribution.Sample(mutationRd, 0D, 0.05D);
                 if (rd < 6)    // legjobbtol kapja a gent
                 {
                     _weights[_worstIndividual, i] = _weights[_bestIndividual, i] + mutation;
@@ -262,10 +273,21 @@ namespace SpaceInvaders.Model
                 else
                 {
                     //randomtol kapja
-                    _weights[_worstIndividual, i] = _weights[_rdIndividual, i] - mutation;
+                    _weights[_worstIndividual, i] = _weights[_rdIndividual, i] + mutation;
                 }
             } ;
         }
+        private void CalculateFittnes()
+        {
+            _indicidualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight; 
+        }
+        private void ReSetFittnes()
+        {
+            _elapsedTime = 0;
+            _score = 0;
+            _avoidBullets = 0;
+        }
+
         #endregion
 
         #region Evolution Public Methods
@@ -274,10 +296,12 @@ namespace SpaceInvaders.Model
         {
             if (!win)
             {
-                _indicidualScores[_activeIndividual] = score;
+                _score = score;
+                CalculateFittnes();
                 if (_activeIndividual < _individualCount-1 && _roundCounter < _individualCount - 1)
                 {
                     _activeIndividual++;
+                    ReSetFittnes();
                     _roundCounter++;
                 }
                 else
@@ -285,6 +309,7 @@ namespace SpaceInvaders.Model
                     RoundResults();
                     EvolutePopulation();
                     _activeIndividual = _worstIndividual;
+                    ReSetFittnes();
                 }
             }
         }

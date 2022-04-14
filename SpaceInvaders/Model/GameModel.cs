@@ -90,7 +90,7 @@ namespace SpaceInvaders.Model
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             ReSetBulletTable();
-            _timer = new System.Timers.Timer(1);
+            _timer = new System.Timers.Timer(20);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
@@ -206,6 +206,7 @@ namespace SpaceInvaders.Model
             BulletMove();
             CreateBullet();
             OnGameAdvanced();
+            _network.ElapsedTime+=0.02D;
             if (GameOverIs())
             {
                 OnGameOver(_win);
@@ -310,7 +311,8 @@ namespace SpaceInvaders.Model
                     _lives--;
                     _enemyBullet.Alive = false;
                 }else if(_enemyBullet.Y + _bulletHight >= _windowHeight){
-                    _enemyBullet.Alive = false; ;
+                    _enemyBullet.Alive = false;
+                    _network.AvoidBullets++;
                 }
             }
         }
