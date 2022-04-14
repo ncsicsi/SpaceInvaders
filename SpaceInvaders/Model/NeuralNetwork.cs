@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Numerics.Distributions;
+using Extreme.Statistics.Distributions;
 using SpaceInvaders.Model;
 using SpaceInvaders.Persistence;
 
@@ -22,6 +24,7 @@ namespace SpaceInvaders.Model
         private int _incommingNeuronsCount = 11;
         private int _outcommingNeuronsCount = 3;
         private double[,] _weights;
+
 
         //evolucio
         private int _individualCount;
@@ -167,10 +170,27 @@ namespace SpaceInvaders.Model
             int s = _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount;
             for (int i = 0; i < s; i++)
             {
-                Random random = new Random();
+                double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                double stddev = Math.Sqrt(varienece);
+                var random = new Random();
+                double sample = Math.Abs( NormalDistribution.Sample(random, 0D, stddev));
+                _weights[_activeIndividual, i] = sample;
+                //NormalDistribution(5, stddev).
+                //sample = NormalDistribution.Sample(5.0, stddev);
+                /*Random random = new Random();
                 double rd = random.Next(0, 5000);
-                _weights[_activeIndividual, i] = rd / 1000000D;
+                _weights[_activeIndividual, i] = rd / 1000000D;*/
             }
+        }
+        private static double SampleGaussian(Random random, double mean, double stddev)
+        {
+            // The method requires sampling from a uniform random of (0,1]
+            // but Random.NextDouble() returns a sample of [0,1).
+            double x1 = 1 - random.NextDouble();
+            double x2 = 1 - random.NextDouble();
+
+            double y1 = Math.Sqrt(-2.0 * Math.Log(x1)) * Math.Cos(2.0 * Math.PI * x2);
+            return y1 * stddev + mean;
         }
         #endregion
 
@@ -206,9 +226,9 @@ namespace SpaceInvaders.Model
                     maxScore = _indicidualScores[i];
                 }
             }            
-            int minScore = _indicidualScores[9];
-            _worstIndividual = 9;
-            for(int i = 8; i > 0; i--)
+            int minScore = _indicidualScores[_individualCount-1];
+            _worstIndividual = _individualCount-1;
+            for(int i = _individualCount-2; i > 0; i--)
             {
                 if (_indicidualScores[i] < minScore)
                 {
@@ -223,6 +243,7 @@ namespace SpaceInvaders.Model
             Random random = new Random();
             double mutation;
             int rd = random.Next(0, 10);
+            Random mutationRd = new Random();
             while ( rd != _bestIndividual && rd != _worstIndividual)
             {
                 rd = random.Next(0, 10);
@@ -230,9 +251,10 @@ namespace SpaceInvaders.Model
             _rdIndividual = rd; 
             for (int i=0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
             {
-                rd = random.Next(1,10);
+                /*rd = random.Next(1,10);
                 mutation = random.Next(0,1000);
-                mutation = mutation / 1000000D;
+                mutation = mutation / 1000000D;*/
+                mutation = NormalDistribution.Sample(mutationRd, 0D, 0.5D);
                 if (rd < 6)    // legjobbtol kapja a gent
                 {
                     _weights[_worstIndividual, i] = _weights[_bestIndividual, i] + mutation;
