@@ -17,7 +17,7 @@ namespace SpaceInvaders.Model
     {
         #region Fields
         private NeuralNetwork _network;
-        private int _populationSize = 2;
+        private int _populationSize = 20;
         private int _hiddenNeuronSize = 25;
         private IGameDataAccess _dataAccess; //adateleres
         private int _score;

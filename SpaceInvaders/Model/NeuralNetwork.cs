@@ -253,17 +253,17 @@ namespace SpaceInvaders.Model
         {
             Random random = new Random();
             double mutation;
-            int rd = random.Next(0, 10);
+            int rd = _bestIndividual;
             Random mutationRd = new Random();
-            while ( rd != _bestIndividual && rd != _worstIndividual)
+            while ( rd == _bestIndividual || rd == _worstIndividual)
             {
                 rd = random.Next(0, _individualCount-1);
             }
             _rdIndividual = rd; 
             for (int i=0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
             {
-                /*rd = random.Next(1,10);
-                mutation = random.Next(0,1000);
+                rd = random.Next(1,10);
+                /*mutation = random.Next(0,1000);
                 mutation = mutation / 1000000D;*/
                 mutation = NormalDistribution.Sample(mutationRd, 0D, 0.05D);
                 if (rd < 6)    // legjobbtol kapja a gent
