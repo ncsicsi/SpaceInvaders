@@ -288,6 +288,7 @@ namespace SpaceInvaders.Model
                 {
                     _bulletCount = 0;
                 }
+                _network.UsedBullets++;
             }
         }
 

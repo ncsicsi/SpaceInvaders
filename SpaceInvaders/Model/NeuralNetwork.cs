@@ -27,6 +27,7 @@ namespace SpaceInvaders.Model
         private double _score;
         private double _elapsedTime;
         private double _avoidBullets;
+        private double _usedBullets = 0;
 
         //evolucio
         private int _individualCount;
@@ -37,10 +38,12 @@ namespace SpaceInvaders.Model
         private double[] _indicidualFittnes;
         private int _roundCounter;
 
+
         //fittnes sulyok
-        private double _scoreWeight = 10;
+        private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
-        private double _avoidBulletsWeight = 15; 
+        private double _avoidBulletsWeight = 30; 
+        private double _usedBulletssWeight = 0.1; 
 
         //bejovo neuronok
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
@@ -65,6 +68,7 @@ namespace SpaceInvaders.Model
         public double Score { get { return _score; } set { _score = value; } }
         public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
         public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
+        public double UsedBullets { get { return _usedBullets; } set { _usedBullets = value; } }
         #endregion
 
         #region Constructor
@@ -251,6 +255,10 @@ namespace SpaceInvaders.Model
 
         private void EvolutePopulation()
         {
+            if (Deadlock())
+            {
+                RandomIndividual();
+            }
             Random random = new Random();
             double mutation;
             int rd = _bestIndividual;
@@ -277,15 +285,48 @@ namespace SpaceInvaders.Model
                 }
             } ;
         }
+        private bool Deadlock()
+        {
+            bool deadlock = true;
+            double fittnes = _indicidualFittnes[0];
+            for(int i=1; i<_individualCount; i++)
+            {
+                if(_indicidualFittnes[i] != fittnes)
+                {
+                    deadlock = false;
+                }
+                else
+                {
+                    fittnes = _indicidualFittnes[i];
+                }
+            }
+            return deadlock;
+
+        }
+        private void RandomIndividual()
+        {
+            Random randomIndividual = new Random();
+            int rd = randomIndividual.Next(0, _individualCount);
+            int s = _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount;
+            for (int i = 0; i < s; i++)
+            {
+                double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                double stddev = Math.Sqrt(varienece);
+                var random = new Random();
+                double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
+                _weights[rd, i] = sample;
+            }
+        }
         private void CalculateFittnes()
         {
-            _indicidualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight; 
+            _indicidualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight - _usedBullets*_usedBulletssWeight; 
         }
         private void ReSetFittnes()
         {
             _elapsedTime = 0;
             _score = 0;
             _avoidBullets = 0;
+            _usedBullets = 0;
         }
 
         #endregion
