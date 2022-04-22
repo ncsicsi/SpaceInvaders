@@ -154,10 +154,19 @@ namespace SpaceInvaders.Model
                 {
                     _weights[i,j] = data._weights[i, j];
                 }
-                _individualFittnes[i] = 0;
+                _individualFittnes[i] = data._individualFittnes[i];
             }
-            _activeIndividual = 0;
+
+            RoundResults();
+            _activeIndividual = _worstIndividual;
+            _roundCounter = data._round;
+            ReSetFittnes();
         }
+        public void BestPlay()
+        {
+            _activeIndividual = _bestIndividual;
+        }
+
 
         #endregion
 
@@ -315,6 +324,7 @@ namespace SpaceInvaders.Model
                 double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
                 _weights[rd, i] = sample;
             }
+            _activeIndividual = rd;
         }
         private void CalculateFittnes()
         {
@@ -347,8 +357,8 @@ namespace SpaceInvaders.Model
                 else
                 {
                     RoundResults();
-                    EvolutePopulation();
                     _activeIndividual = _worstIndividual;
+                    EvolutePopulation();
                     ReSetFittnes();
                 }
             }

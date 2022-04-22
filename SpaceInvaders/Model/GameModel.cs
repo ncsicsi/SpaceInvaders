@@ -198,6 +198,11 @@ namespace SpaceInvaders.Model
             NetworkOn = true;
         }
 
+        public void BestPlay()
+        {
+            _network.BestPlay();
+        }
+
 
         #endregion
 

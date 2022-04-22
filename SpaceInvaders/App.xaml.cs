@@ -70,6 +70,7 @@ namespace SpaceInvaders
             _viewModel.ExitGame += new EventHandler(ViewModel_ExitGame);
             _viewModel.LoadNetwork += new EventHandler(ViewModel_LoadNetwork);
             _viewModel.SaveNetwork += new EventHandler(ViewModel_SaveNetwork);
+            _viewModel.BestPlay += new EventHandler(ViewModel_BestPlay);
 
             // nézet létrehozása
             //_view = new MainWindow();
@@ -134,6 +135,13 @@ namespace SpaceInvaders
         {
             _view.RoundOver();
             _model.NewGame();
+        }
+        private void ViewModel_BestPlay(object sender, EventArgs e)
+        {
+            _view.RoundOver();
+            _model.NewGame();
+            _model.BestPlay();
+            _view.NewGame();
         }
 
         // Játékból való kilépés eseménykezelője.

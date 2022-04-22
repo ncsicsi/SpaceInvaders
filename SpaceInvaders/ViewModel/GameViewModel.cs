@@ -41,6 +41,7 @@ namespace SpaceInvaders.ViewModel
 
         /// halo sulyinak mentése parancs lekérdezése.
         public DelegateCommand SaveNetworkCommand { get; private set; }
+        public DelegateCommand BestPlayCommand { get; private set; }
 
         // Eletek lekerdezese
         public Int32 GameLives { get {return _model.Lives;} }
@@ -62,6 +63,7 @@ namespace SpaceInvaders.ViewModel
         public event EventHandler ExitGame;
         public event EventHandler LoadNetwork;
         public event EventHandler SaveNetwork;
+        public event EventHandler BestPlay;
 
         public event EventHandler<GameEventArgs> GameAdvanced;
         public event EventHandler<EnemyEventArgs> GameCreated;
@@ -80,6 +82,7 @@ namespace SpaceInvaders.ViewModel
             NewGameCommand = new DelegateCommand(param => OnNewGame());
             LoadNetworkCommand = new DelegateCommand(param => OnLoadNetwork());
             SaveNetworkCommand = new DelegateCommand(param => OnSaveNetwork());
+            BestPlayCommand = new DelegateCommand(param => OnBestPlay());
             ExitCommand = new DelegateCommand(param => OnExitGame());
 
             SetUpTable();
@@ -213,6 +216,12 @@ namespace SpaceInvaders.ViewModel
         {
             if (SaveNetwork != null)
                 SaveNetwork(this, EventArgs.Empty);
+        }        
+        // Legjobb halo lejatszasa
+        private void OnBestPlay()
+        {
+            if (BestPlay != null)
+                BestPlay(this, EventArgs.Empty);
         }
 
         #endregion

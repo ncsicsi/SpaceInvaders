@@ -29,7 +29,7 @@
                 <MenuItem Header="Load Netwok" Command="{Binding LoadNetworkCommand}"/>
                 <MenuItem Header="Save Network" Command="{Binding SaveNetworkCommand}"/>
                 <Separator />
-                <MenuItem Header="Best Play" Command="{Binding BestPlay}"/>
+                <MenuItem Header="Best Play" Command="{Binding BestPlayCommand}"/>
                 <Separator/>
                 <MenuItem Header="Escape" Command="{Binding ExitCommand}"/>
             </MenuItem>
