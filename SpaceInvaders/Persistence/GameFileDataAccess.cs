@@ -10,18 +10,20 @@ namespace SpaceInvaders.Persistence
 {
     public struct Data
     {
-        public Data(int round ,int populationSize, int weightsSize, double [,] weights)
+        public Data(int round ,int populationSize, int weightsSize, double [,] weights, double [] individualFittnes)
         {
             _round = round;
             _populationSize = populationSize;
             _weightsSize = weightsSize;
             _weights = weights;
+            _individualFittnes = individualFittnes;
         }
 
         public int _round { get; set; }
         public int _populationSize { get; set; }
         public int _weightsSize { get; set; }
         public double[,] _weights { get; set; }
+        public double[] _individualFittnes { get; set; }
 
         public override string ToString() => $"({_round},{_populationSize}, {_weightsSize}, {_weights})";
     }
@@ -56,7 +58,15 @@ namespace SpaceInvaders.Persistence
                             weights[i, j] = double.Parse(numbers[j]);
                         }
                     }
-                    Data data=new Data(round, populationSize,weightsSize,weights);
+
+                    double[] individualFittnes = new double [populationSize];
+                    line = await reader.ReadLineAsync();
+                    numbers = line.Split(' ');
+                    for (int i = 0; i < populationSize; i++)
+                    { 
+                        individualFittnes[i] = double.Parse(numbers[i]);
+                    }
+                    Data data=new Data(round, populationSize,weightsSize,weights, individualFittnes);
                     return data;
                 }
             //}
@@ -67,7 +77,7 @@ namespace SpaceInvaders.Persistence
         }
 
         // Mentes
-        public async Task SaveAsync(String path, int round, int populationSize, int weightsSize, double[,] weights)
+        public async Task SaveAsync(String path, int round, int populationSize, int weightsSize, double[,] weights, double[] individualFittnes)
         {
             //try
             //{
@@ -88,6 +98,11 @@ namespace SpaceInvaders.Persistence
                             await writer.WriteAsync(weights[i,j] + " ");
                         }
                         await writer.WriteLineAsync();
+                    }
+                    //kiirjuk a fittnest
+                    for (int i=0; i < populationSize; i++)
+                    {
+                        await writer.WriteAsync(individualFittnes[i] + " ");
                     }
 
                 }

@@ -23,7 +23,7 @@ namespace SpaceInvaders.Model
         private double _incomingBiasNeuron = 1;
         private double _hiddenBiasNeuron = 1;
         private int _hiddenNeuronsCount;
-        private int _incommingNeuronsCount = 11;
+        private int _incommingNeuronsCount = 12;
         private int _outcommingNeuronsCount = 3;
         private double[,] _weights;
         private double _score;
@@ -37,7 +37,7 @@ namespace SpaceInvaders.Model
         private int _bestIndividual = 0;
         private int _worstIndividual = 9;
         private int _rdIndividual = 0;
-        private double[] _indicidualFittnes;
+        private double[] _individualFittnes;
         private int _roundCounter;
 
 
@@ -56,7 +56,8 @@ namespace SpaceInvaders.Model
         public double _closestEnemyXDistance = 0;   // legalsobb enemy tavolsaga x szerint 0-700
         public double _closestEnemyDirection = 0;   //jobbra vagy ballra van 0/1
         public double _lives = 0;   //eletpontok szama
-        public double _xPos; //hajo pozicioja x tengely szeirnt
+        public double _leftDistanc; //hajo mennnyit tud meg balra menni
+        public double _rightDistanc; //hajo mennnyit tud meg balra menni
         public double _rightEnemyCount; // jobbra levo enemyk szama
         public double _leftEnemyCount;  // balra levo enemyk szama
         public double _enemySpeed = 0;  //enemy gyorsasaga
@@ -66,6 +67,7 @@ namespace SpaceInvaders.Model
         #region Properties
         public bool NetworkOn { get { return _networkOn; } set { _networkOn = value; } }
         public double[,] Weights { get {return _weights; } }
+        public double[] IndividualFittnes { get {return _individualFittnes; } }
         public int WeightsCount { get {return (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount; } }
         public double Score { get { return _score; } set { _score = value; } }
         public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
@@ -152,7 +154,7 @@ namespace SpaceInvaders.Model
                 {
                     _weights[i,j] = data._weights[i, j];
                 }
-                _indicidualFittnes[i] = 0;
+                _individualFittnes[i] = 0;
             }
             _activeIndividual = 0;
         }
@@ -172,9 +174,10 @@ namespace SpaceInvaders.Model
             _incommingNeurons[6] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
             _incommingNeurons[7] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
             _incommingNeurons[8] = _lives;  //eletpontok szama
-            _incommingNeurons[9] = _xPos;  //hajo pozicioja x tengely szerint
-            _incommingNeurons[10] = _rightEnemyCount;    //jobbra levo enemyk szama
-            _incommingNeurons[11] = _leftEnemyCount;    //balra levo enemyk szama
+            _incommingNeurons[9] = _leftDistanc;  //hajo mennnyit tud meg balra menni
+            _incommingNeurons[10] = _rightDistanc;  //hajo mennnyit tud meg jobbra menni
+            _incommingNeurons[11] = _rightEnemyCount;    //jobbra levo enemyk szama
+            _incommingNeurons[12] = _leftEnemyCount;    //balra levo enemyk szama
 
 
         }
@@ -214,7 +217,7 @@ namespace SpaceInvaders.Model
             _incommingNeurons = new double[_incommingNeuronsCount + 1]; ;
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _individualCount = individualCount;
-            _indicidualFittnes = new double[_individualCount];
+            _individualFittnes = new double[_individualCount];
             _roundCounter = 0;
             _weights = new double[_individualCount, (_incommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
@@ -227,24 +230,24 @@ namespace SpaceInvaders.Model
 
         private void RoundResults()
         {
-            double maxFittnes = _indicidualFittnes[0];
+            double maxFittnes = _individualFittnes[0];
             _bestIndividual = 0;
             for(int i = 1; i<_individualCount; i++)
             {
-                if (_indicidualFittnes[i] > maxFittnes)
+                if (_individualFittnes[i] > maxFittnes)
                 {
                     _bestIndividual = i;
-                    maxFittnes = _indicidualFittnes[i];
+                    maxFittnes = _individualFittnes[i];
                 }
             }            
-            double minFittnes = _indicidualFittnes[_individualCount-1];
+            double minFittnes = _individualFittnes[_individualCount-1];
             _worstIndividual = _individualCount-1;
             for(int i = _individualCount-2; i > -1; i--)
             {
-                if (_indicidualFittnes[i] < minFittnes)
+                if (_individualFittnes[i] < minFittnes)
                 {
                     _worstIndividual = i;
-                    minFittnes = _indicidualFittnes[i];
+                    minFittnes = _individualFittnes[i];
                 }
             }
         }
@@ -284,16 +287,16 @@ namespace SpaceInvaders.Model
         private bool Deadlock()
         {
             bool deadlock = true;
-            double fittnes = _indicidualFittnes[0];
+            double fittnes = _individualFittnes[0];
             for(int i=1; i<_individualCount; i++)
             {
-                if(_indicidualFittnes[i] != fittnes)
+                if(_individualFittnes[i] != fittnes)
                 {
                     deadlock = false;
                 }
                 else
                 {
-                    fittnes = _indicidualFittnes[i];
+                    fittnes = _individualFittnes[i];
                 }
             }
             return deadlock;
@@ -315,7 +318,7 @@ namespace SpaceInvaders.Model
         }
         private void CalculateFittnes()
         {
-            _indicidualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight - _usedBullets*_usedBulletssWeight; 
+            _individualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight - _usedBullets*_usedBulletssWeight; 
         }
         private void ReSetFittnes()
         {

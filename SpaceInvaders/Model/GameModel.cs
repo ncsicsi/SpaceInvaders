@@ -108,7 +108,7 @@ namespace SpaceInvaders.Model
             ReSetBulletTable();
             _score = 0;
             _lives = 2;
-            _shipXPos = 298;
+            _shipXPos = 312;
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = _maxenemyCount;
@@ -131,7 +131,7 @@ namespace SpaceInvaders.Model
             _timer.Stop();
             ReSetEnemyTable();
             ReSetBulletTable();
-            _shipXPos = 298;
+            _shipXPos = 312;
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = _maxenemyCount;
@@ -172,7 +172,7 @@ namespace SpaceInvaders.Model
             if (_dataAccess == null)
                 throw new InvalidOperationException("No data access is provided.");
 
-            await _dataAccess.SaveAsync(path, _rounds, _populationSize, _network.WeightsCount, _network.Weights);
+            await _dataAccess.SaveAsync(path, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes);
         }
 
         public void stopTimer()
@@ -626,9 +626,10 @@ namespace SpaceInvaders.Model
                 _network._closestEnemyDirection = 1;
             }
             _network._lives = _lives/2;
-            _network._xPos = _shipXPos/700D;
-            _network._rightEnemyCount = RightEnemyCount()/50;
-            _network._leftEnemyCount = LeftEnemyCount()/50;
+            _network._leftDistanc = (_shipXPos-7)/628D;
+            _network._rightDistanc = (627-_shipXPos)/628D;
+            _network._rightEnemyCount = RightEnemyCount()/50D;
+            _network._leftEnemyCount = LeftEnemyCount()/50D;
 
         }
         private int RightEnemyCount()
