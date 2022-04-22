@@ -20,6 +20,8 @@ namespace SpaceInvaders.Model
         private double[] _hiddenNeurons;
         private double[] _incommingNeurons;
         private double[] _outcommingNeurons;
+        private double _incomingBiasNeuron = 1;
+        private double _hiddenBiasNeuron = 1;
         private int _hiddenNeuronsCount;
         private int _incommingNeuronsCount = 11;
         private int _outcommingNeuronsCount = 3;
@@ -88,7 +90,7 @@ namespace SpaceInvaders.Model
             //hidden neuronok szamitasa
             for (int h = 0; h < _hiddenNeuronsCount; h++)
             {
-                for (int i = 0; i < _incommingNeuronsCount; i++)
+                for (int i = 0; i < _incommingNeuronsCount ; i++)
                 {
                     _hiddenNeurons[h] += _incommingNeurons[i] * _weights[_activeIndividual, i * _hiddenNeuronsCount + h];
                 }
@@ -100,6 +102,11 @@ namespace SpaceInvaders.Model
             }
             //kimeneti neuronok szamitasa
             int s = _incommingNeuronsCount * _hiddenNeuronsCount;
+            for (int o = 0; o < _outcommingNeuronsCount; o++)
+            {
+                _outcommingNeurons[o] += _hiddenBiasNeuron * _weights[_activeIndividual, s + o];
+            }
+            s = _incommingNeuronsCount * _hiddenNeuronsCount + _outcommingNeuronsCount;
             for (int o = 0; o < _outcommingNeuronsCount; o++)
             {
                 for(int h= 0; h < _hiddenNeuronsCount; h++)
@@ -153,17 +160,18 @@ namespace SpaceInvaders.Model
 
         private void RefreshIncomingNeurons()
         {
-            _incommingNeurons[0] = _bulletDistance;
-            _incommingNeurons[1] = _bulletXRightDistance;
-            _incommingNeurons[2] = _bulletXLeftDistance;
-            _incommingNeurons[3] = _enemyCount;      //enemyk szama  0-50
-            _incommingNeurons[4] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
-            _incommingNeurons[5] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
-            _incommingNeurons[6] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
-            _incommingNeurons[7] = _lives;  //eletpontok szama
-            _incommingNeurons[8] = _xPos;  //hajo pozicioja x tengely szerint
-            _incommingNeurons[9] = _rightEnemyCount;    //jobbra levo enemyk szama
-            _incommingNeurons[10] = _leftEnemyCount;    //balra levo enemyk szama
+            _incommingNeurons[0] = _incomingBiasNeuron;
+            _incommingNeurons[1] = _bulletDistance;
+            _incommingNeurons[2] = _bulletXRightDistance;
+            _incommingNeurons[3] = _bulletXLeftDistance;
+            _incommingNeurons[4] = _enemyCount;      //enemyk szama  0-50
+            _incommingNeurons[5] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
+            _incommingNeurons[6] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
+            _incommingNeurons[7] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
+            _incommingNeurons[8] = _lives;  //eletpontok szama
+            _incommingNeurons[9] = _xPos;  //hajo pozicioja x tengely szerint
+            _incommingNeurons[10] = _rightEnemyCount;    //jobbra levo enemyk szama
+            _incommingNeurons[11] = _leftEnemyCount;    //balra levo enemyk szama
 
 
         }
@@ -178,10 +186,10 @@ namespace SpaceInvaders.Model
                 _outcommingNeurons[i] = 0;
             }
         }
-        //sulyok elsonek legyenek random szamok
+        //sulyok elsonek legyenek gauss szerint random szamok szamok
         private void ResetNetrowkWeights()
         {
-            int s = _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount;
+            int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
             for (int i = 0; i < s; i++)
             {
                 double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
@@ -189,24 +197,9 @@ namespace SpaceInvaders.Model
                 var random = new Random();
                 double sample = Math.Abs( NormalDistribution.Sample(random, 0D, stddev));
                 _weights[_activeIndividual, i] = sample;
-                //NormalDistribution(5, stddev).
-                //sample = NormalDistribution.Sample(5.0, stddev);
-                /*Random random = new Random();
-                double rd = random.Next(0, 5000);
-                _weights[_activeIndividual, i] = rd / 1000000D;*/
             }
         }
-        /*
-        private static double SampleGaussian(Random random, double mean, double stddev)
-        {
-            // The method requires sampling from a uniform random of (0,1]
-            // but Random.NextDouble() returns a sample of [0,1).
-            double x1 = 1 - random.NextDouble();
-            double x2 = 1 - random.NextDouble();
 
-            double y1 = Math.Sqrt(-2.0 * Math.Log(x1)) * Math.Cos(2.0 * Math.PI * x2);
-            return y1 * stddev + mean;
-        }*/
         #endregion
 
         # region Evolution Private Methods
@@ -215,12 +208,12 @@ namespace SpaceInvaders.Model
         {
             _hiddenNeuronsCount = hiddenNeuronsCount;
             _hiddenNeurons = new double[hiddenNeuronsCount];
-            _incommingNeurons = new double[_incommingNeuronsCount]; ;
+            _incommingNeurons = new double[_incommingNeuronsCount + 1]; ;
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _individualCount = individualCount;
             _indicidualFittnes = new double[_individualCount];
             _roundCounter = 0;
-            _weights = new double[_individualCount, _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount];
+            _weights = new double[_individualCount, (_incommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
             {
                 _activeIndividual = i;
