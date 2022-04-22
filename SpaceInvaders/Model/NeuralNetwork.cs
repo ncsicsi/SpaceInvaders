@@ -66,11 +66,12 @@ namespace SpaceInvaders.Model
         #region Properties
         public bool NetworkOn { get { return _networkOn; } set { _networkOn = value; } }
         public double[,] Weights { get {return _weights; } }
-        public int WeightsCount { get {return _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; } }
+        public int WeightsCount { get {return (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount; } }
         public double Score { get { return _score; } set { _score = value; } }
         public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
         public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
         public double UsedBullets { get { return _usedBullets; } set { _usedBullets = value; } }
+        public int ActiveIndividual { get { return _activeIndividual; } }
         #endregion
 
         #region Constructor
@@ -151,7 +152,9 @@ namespace SpaceInvaders.Model
                 {
                     _weights[i,j] = data._weights[i, j];
                 }
+                _indicidualFittnes[i] = 0;
             }
+            _activeIndividual = 0;
         }
 
         #endregion

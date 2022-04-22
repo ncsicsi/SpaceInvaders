@@ -80,7 +80,7 @@ namespace SpaceInvaders.Persistence
                     await writer.WriteLineAsync(); //uj sor
                     writer.Write(weightsSize); // kiírjuk a sulyok szamat
                     await writer.WriteLineAsync(); //uj sor
-
+                    //Kiirjuk a sulyokat
                     for (Int32 i = 0; i < populationSize; i++)
                     {
                         for (Int32 j = 0; j < weightsSize; j++)

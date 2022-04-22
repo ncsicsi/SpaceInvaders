@@ -15,6 +15,7 @@ namespace SpaceInvaders.Model
         private Bullet[] _bullets;
         private EnemyStruct[,] _enemies;
         private Bullet _enemyBullet;
+        private int _activeIndividual;
 
         //pontszám lekérdezése
         public int Score { get { return _score; } }
@@ -22,10 +23,11 @@ namespace SpaceInvaders.Model
         public int YPos { get { return _xPos; } }
         public Bullet[] Bullets { get { return _bullets; } }
         public EnemyStruct[,] Enemies { get { return _enemies; } }
+        public int ActiveIndividual { get { return _activeIndividual; } }
         public Bullet EnemyBullet { get { return _enemyBullet; } }
 
         #region Constructor
-        public GameEventArgs(int score, int lives, int xPos, Bullet[] bullets, EnemyStruct[,] enemies, Bullet enemyBullet)
+        public GameEventArgs(int score, int lives, int xPos, Bullet[] bullets, EnemyStruct[,] enemies, Bullet enemyBullet, int activeIndividual)
         {
             _score = score;
             _lives = lives;
@@ -33,6 +35,7 @@ namespace SpaceInvaders.Model
             _bullets = bullets;
             _enemies = enemies;
             _enemyBullet = enemyBullet;
+            _activeIndividual = activeIndividual;
         }
         #endregion
     }

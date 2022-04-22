@@ -59,6 +59,7 @@ namespace SpaceInvaders
             _view = new MainWindow();
             _viewModel = new GameViewModel(_model);
             _model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
+            //_model.NetworkLoaded += new EventHandler<GameEventArgs>(Model_NetworkLoaded);
 
 
             //nzetmodel letrehozasa
@@ -146,7 +147,8 @@ namespace SpaceInvaders
         private async void ViewModel_LoadNetwork(object sender, System.EventArgs e)
         {
             /*try
-            {
+            {*/
+                _model.stopTimer();
                 OpenFileDialog openFileDialog = new OpenFileDialog(); // dialógusablak
                 openFileDialog.Title = "neuralis halok betöltése";
                 openFileDialog.Filter = "neuralis halok|*.stl";
@@ -154,9 +156,12 @@ namespace SpaceInvaders
                 {
                     // játék betöltése
                     await _model.LoadNetworkAsync(openFileDialog.FileName);
+                    _view.RoundOver();
+                    _model.NewGame();
+                    _view.NewGame();
 
-                }
             }
+            /*}
             catch (GameDataException)
             {
                 MessageBox.Show("A fájl betöltése sikertelen!", "Sudoku", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -170,8 +175,9 @@ namespace SpaceInvaders
 
             try
             {
+                _model.stopTimer();
                 SaveFileDialog saveFileDialog = new SaveFileDialog(); // dialógablak
-                saveFileDialog.Title = "neuralis hálok betöltése";
+                saveFileDialog.Title = "neuralis hálok mentese";
                 saveFileDialog.Filter = "neurális hálók|*.stl";
                 if (saveFileDialog.ShowDialog() == true)
                 {
@@ -185,6 +191,7 @@ namespace SpaceInvaders
                         MessageBox.Show("Játék mentése sikertelen!" + Environment.NewLine + "Hibás az elérési út, vagy a könyvtár nem írható.", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
+                _model.startTimer();
             }
             catch
             {
@@ -197,6 +204,10 @@ namespace SpaceInvaders
 
 
         #region Model Event Handler
+        private void Model_NetworkLoaded(object sender, GameOverEventArgs e)
+        {
+            //_view.NewGame();
+        }
 
         //jatekvege esemeny
         private void Model_GameOver(object sender, GameOverEventArgs e)

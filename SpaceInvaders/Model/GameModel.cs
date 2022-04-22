@@ -69,6 +69,7 @@ namespace SpaceInvaders.Model
         //eletek lekerdezese
         public Int32 Lives { get { return _lives; } }
         public Int32 Rounds { get { return _rounds; } }
+        public Int32 ActiveIndividual { get { return _network.ActiveIndividual; } }
         //jatek vege lekerdezese
         public Boolean IsGameOver { get { return (_lives == 0); } }
         //hajo y pos lekerdezese vege lekerdezese
@@ -89,6 +90,7 @@ namespace SpaceInvaders.Model
             _network = new NeuralNetwork(_hiddenNeuronSize,_populationSize);
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
+            _dataAccess = dataAccess;
             ReSetBulletTable();
             _timer = new System.Timers.Timer(20);
             _timer.Elapsed += _timer_Elapsed;
@@ -134,7 +136,7 @@ namespace SpaceInvaders.Model
             _bulletCount = 0;
             _enemysCount = _maxenemyCount;
             _enemySpeed++;
-            _lives++;
+            //_lives++;
             _direction = direction.RIGHT;
             _goLeft = false;
             _goRight = false;
@@ -148,7 +150,7 @@ namespace SpaceInvaders.Model
         }
 
         // Jatek betoltese
-        public async Task LoadGameAsync(String path)
+        public async Task LoadNetworkAsync(String path)
         {
             if (_dataAccess == null)
                 throw new InvalidOperationException("No data access is provided.");
@@ -158,8 +160,9 @@ namespace SpaceInvaders.Model
             _populationSize = data._populationSize;
             //_hiddenNeuronSize = data._weightsSize;
             _network.LoadNetwork(data);
-
-            NetworkLoaded?.Invoke(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet));
+            GameOver(this, new GameOverEventArgs(false, _network.NetworkOn));
+            //NewGame();
+            NetworkLoaded?.Invoke(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
         }
 
         // neuralos halok mentese mentése
@@ -170,6 +173,29 @@ namespace SpaceInvaders.Model
                 throw new InvalidOperationException("No data access is provided.");
 
             await _dataAccess.SaveAsync(path, _rounds, _populationSize, _network.WeightsCount, _network.Weights);
+        }
+
+        public void stopTimer()
+        {
+            _timer.Stop();
+        }
+        public void startTimer()
+        {
+            _timer.Start();
+        }
+        public void ChangeManual()
+        {
+            _goLeft = false;
+            _goRight = false;
+            _bullet = false;
+            NetworkOn = false;
+        }
+        public void ChangeAI()
+        {
+            _goLeft = false;
+            _goRight = false;
+            _bullet = false;
+            NetworkOn = true;
         }
 
 
@@ -659,7 +685,7 @@ namespace SpaceInvaders.Model
         private void OnGameAdvanced()
         {
             if (GameAdvanced != null)
-                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet));
+                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
         }
         //enemy tabla letrehozasanak esemenye
         private void OnGameCreated()
@@ -680,32 +706,6 @@ namespace SpaceInvaders.Model
 
         #endregion
 
-        #region Public methods
-
-        public void stopTimer()
-        {
-            _timer.Stop();
-        }
-        public void startTimer()
-        {
-            _timer.Start();
-        }
-        public void ChangeManual()
-        {
-            _goLeft = false;
-            _goRight = false;
-            _bullet = false;
-            NetworkOn = false;
-        }
-        public void ChangeAI()
-        {
-            _goLeft = false;
-            _goRight = false;
-            _bullet = false;
-            NetworkOn = true;
-        }
-
-        #endregion
 
     }
 }

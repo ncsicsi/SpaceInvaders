@@ -29,6 +29,8 @@
                 <MenuItem Header="Load Netwok" Command="{Binding LoadNetworkCommand}"/>
                 <MenuItem Header="Save Network" Command="{Binding SaveNetworkCommand}"/>
                 <Separator />
+                <MenuItem Header="Best Play" Command="{Binding BestPlay}"/>
+                <Separator/>
                 <MenuItem Header="Escape" Command="{Binding ExitCommand}"/>
             </MenuItem>
         </Menu>
@@ -50,6 +52,12 @@
             </StatusBarItem>
             <StatusBarItem>
                 <TextBlock Text="{Binding GameRounds}" Foreground="LightGreen" FontSize="14" HorizontalAlignment="Left"/>
+            </StatusBarItem>
+            <StatusBarItem Foreground="White" FontSize="14" HorizontalAlignment="Right">
+                <TextBlock Text="INDIVIDUAL:" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding ActiveIndividual}" Foreground="LightGreen" FontSize="14" HorizontalAlignment="Left"/>
             </StatusBarItem>
         </StatusBar>
         <Canvas Name="GameCanvas" Background="Black" Grid.Row="2" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" Grid.ColumnSpan="2">
