@@ -59,6 +59,7 @@ namespace SpaceInvaders.Model
         private int _rounds;
         private enum direction {RIGHT, LEFT, DOWN};
         private direction _direction;
+        private bool _viewOn;
         
 
         #endregion
@@ -166,7 +167,6 @@ namespace SpaceInvaders.Model
         }
 
         // neuralos halok mentese mentése
-
         public async Task SaveNetworkAsync(String path)
         {
             if (_dataAccess == null)
@@ -201,6 +201,38 @@ namespace SpaceInvaders.Model
         public void BestPlay()
         {
             _network.BestPlay();
+        }
+
+        public void TurnOffView()
+        {
+            _timer.Stop();
+            _viewOn = false;
+            while (!_viewOn)
+            {
+                NetworkAction();
+                ShipMove();
+                _enemyBulletTimeCounter++;
+                EnemyBulletMove();
+                if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
+                {
+                    _enemyBulletTimeCounter = 0;
+                    CreateEnemyBullet();
+                }
+                EnemyMove();
+                BulletMove();
+                CreateBullet();
+                _network.ElapsedTime += 0.02D;
+                if (GameOverIs())
+                {
+                    OnGameOver(_win);
+                }
+            }
+        }
+
+        public void TurnOnView()
+        {
+            _timer.Start();
+            _viewOn = true;
         }
 
 

@@ -33,6 +33,10 @@
                 <Separator/>
                 <MenuItem Header="Escape" Command="{Binding ExitCommand}"/>
             </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="Turn Off" Command="{Binding TurnOffViewCommand}"/>
+                <MenuItem Header="Turn On" Command="{Binding TurnOnViewCommand}"/>
+            </MenuItem>
         </Menu>
         <StatusBar Grid.Row="1" Name="Label"  Background="Black" Grid.ColumnSpan="2">
             <StatusBarItem >

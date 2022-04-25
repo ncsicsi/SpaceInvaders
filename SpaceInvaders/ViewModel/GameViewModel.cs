@@ -24,8 +24,6 @@ namespace SpaceInvaders.ViewModel
     {
         #region fields
         private GameModel _model;
-        private bool _manual = true;
-        private bool _ai = false;
         #endregion
 
         #region Properties
@@ -42,6 +40,8 @@ namespace SpaceInvaders.ViewModel
         /// halo sulyinak mentése parancs lekérdezése.
         public DelegateCommand SaveNetworkCommand { get; private set; }
         public DelegateCommand BestPlayCommand { get; private set; }
+        public DelegateCommand TurnOffViewCommand { get; private set; }
+        public DelegateCommand TurnOnViewCommand { get; private set; }
 
         // Eletek lekerdezese
         public Int32 GameLives { get {return _model.Lives;} }
@@ -64,6 +64,8 @@ namespace SpaceInvaders.ViewModel
         public event EventHandler LoadNetwork;
         public event EventHandler SaveNetwork;
         public event EventHandler BestPlay;
+        public event EventHandler TurnOffView;
+        public event EventHandler TurnOnView;
 
         public event EventHandler<GameEventArgs> GameAdvanced;
         public event EventHandler<EnemyEventArgs> GameCreated;
@@ -84,6 +86,8 @@ namespace SpaceInvaders.ViewModel
             SaveNetworkCommand = new DelegateCommand(param => OnSaveNetwork());
             BestPlayCommand = new DelegateCommand(param => OnBestPlay());
             ExitCommand = new DelegateCommand(param => OnExitGame());
+            TurnOffViewCommand = new DelegateCommand(param => OnTurnOffView());
+            TurnOnViewCommand = new DelegateCommand(param => OnTurnOnView());
 
             SetUpTable();
         }
@@ -222,6 +226,23 @@ namespace SpaceInvaders.ViewModel
         {
             if (BestPlay != null)
                 BestPlay(this, EventArgs.Empty);
+        }        
+        // Grafika ki, be kapcsolas esemenykivaltas
+        private void OnTurnOffView()
+        {
+            if (TurnOffView != null)
+            {
+                TurnOffView(this, EventArgs.Empty);
+                _model.TurnOffView();
+            }
+        }        
+        private void OnTurnOnView()
+        {
+            if (TurnOnView != null)
+            {
+                TurnOnView(this, EventArgs.Empty);
+                _model.TurnOnView();
+            }
         }
 
         #endregion

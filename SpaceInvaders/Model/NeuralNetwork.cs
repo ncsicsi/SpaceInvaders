@@ -45,7 +45,7 @@ namespace SpaceInvaders.Model
         private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
         private double _avoidBulletsWeight = 30; 
-        private double _usedBulletssWeight = 0.1; 
+        private double _usedBulletssWeight = 0.3; 
 
         //bejovo neuronok
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
@@ -284,12 +284,12 @@ namespace SpaceInvaders.Model
                 mutation = NormalDistribution.Sample(mutationRd, 0D, 0.05D);
                 if (rd < 6)    // legjobbtol kapja a gent
                 {
-                    _weights[_worstIndividual, i] = _weights[_bestIndividual, i] + mutation;
+                    _weights[_worstIndividual, i] = Math.Abs(_weights[_bestIndividual, i] + mutation);
                 }
                 else
                 {
                     //randomtol kapja
-                    _weights[_worstIndividual, i] = _weights[_rdIndividual, i] + mutation;
+                    _weights[_worstIndividual, i] = Math.Abs(_weights[_rdIndividual, i] + mutation);
                 }
             } ;
         }

@@ -71,6 +71,8 @@ namespace SpaceInvaders
             _viewModel.LoadNetwork += new EventHandler(ViewModel_LoadNetwork);
             _viewModel.SaveNetwork += new EventHandler(ViewModel_SaveNetwork);
             _viewModel.BestPlay += new EventHandler(ViewModel_BestPlay);
+            _viewModel.TurnOffView += new EventHandler(ViewModel_TurnOffView);
+            _viewModel.TurnOnView += new EventHandler(ViewModel_TurnOnView);
 
             // nézet létrehozása
             //_view = new MainWindow();
@@ -136,6 +138,7 @@ namespace SpaceInvaders
             _view.RoundOver();
             _model.NewGame();
         }
+        //legugyesebb lejatszasa
         private void ViewModel_BestPlay(object sender, EventArgs e)
         {
             _view.RoundOver();
@@ -143,6 +146,18 @@ namespace SpaceInvaders
             _model.BestPlay();
             _view.NewGame();
         }
+        //nezet ki, be kapcsolasa
+        private void ViewModel_TurnOffView(object sender, EventArgs e)
+        {
+
+        }       
+        private void ViewModel_TurnOnView(object sender, EventArgs e)
+        {
+
+        }
+
+
+
 
         // Játékból való kilépés eseménykezelője.
         private void ViewModel_ExitGame(object sender, System.EventArgs e)
