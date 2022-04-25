@@ -117,6 +117,34 @@ namespace SpaceInvaders.Model
                     _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[_activeIndividual, s + h *_outcommingNeuronsCount + o];
                 }
             }
+
+
+            Random random = new Random();
+            double rd = random.Next(1, 1000);
+            rd = rd / 1000D;
+
+
+            double sum = 0;
+            for(int o = 0; o < _outcommingNeuronsCount; o++)
+            {
+                sum += _outcommingNeurons[o];
+            }
+
+            double intervallMin = 0;
+            double intervallMax = 0;
+            int interval = 0;
+
+            for(int o = 0; o < _outcommingNeuronsCount; o++)
+            {
+                intervallMin = intervallMax;
+                intervallMax += (_outcommingNeurons[o] / sum);
+                if(rd >= intervallMin && rd < intervallMax)
+                {
+                    interval = o;
+                }
+            }
+
+            /*
             double max = _outcommingNeurons[0];
             int maxPlace = 0;
             for (int i = 1; i < _outcommingNeuronsCount; i++)
@@ -128,8 +156,8 @@ namespace SpaceInvaders.Model
                 }
             }
 
-
-            switch (maxPlace)
+            */
+            switch (interval)
             {
                 case 0: 
                     return action.GORIGHT;
