@@ -44,7 +44,7 @@ namespace SpaceInvaders.Model
         //fittnes sulyok
         private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
-        private double _avoidBulletsWeight = 30; 
+        private double _avoidBulletsWeight = 15; 
         private double _usedBulletssWeight = 0.3; 
 
         //bejovo neuronok
@@ -120,8 +120,8 @@ namespace SpaceInvaders.Model
 
 
             Random random = new Random();
-            double rd = random.Next(1, 1000);
-            rd = rd / 1000D;
+            double rd = random.Next(1, 1000000000);
+            rd = rd / 1000000000D;
 
 
             double sum = 0;

@@ -44,8 +44,8 @@ namespace SpaceInvaders.Model
         private static int _enemyRows = 5;
         private static int _enemyDistance = 10;
         private int _bulletCount;
-        private int _enemySpeed;
-        private int _enemyBasicSpeed = 1;
+        private double _enemySpeed;
+        private double _enemyBasicSpeed = 1;
         private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
         private int _enemyBulletTimeCounter;
         private Bullet _enemyBullet;
@@ -136,7 +136,7 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = _maxenemyCount;
-            _enemySpeed++;
+            _enemySpeed+=1D;
             //_lives++;
             _direction = direction.RIGHT;
             _goLeft = false;
@@ -478,18 +478,18 @@ namespace SpaceInvaders.Model
             _enemyButtomYPos = MostLeftDown()+_enemySize;
         }
 
-        private int MostRightCoord()
+        private double MostRightCoord()
         {
             int x; int y;
             (x, y) = _mostRightEnemySerial;
-            int max = _enemys[x, y].X();
+            double max = _enemys[x, y].X();
             return max;
         }        
-        private int MostLeftCoord()
+        private double MostLeftCoord()
         {
             int x; int y;
             (x, y) = _mostLeftEnemySerial;
-            int max = _enemys[x, y].X();
+            double max = _enemys[x, y].X();
             return (max);
         }        
         private int MostLeftDown()
@@ -501,7 +501,7 @@ namespace SpaceInvaders.Model
         }
         private void MoveLeft()
         {
-            int s;
+            double s;
             for (int i = 0; i < _enemyRows; i++)
             {
                 for (int j = 0; j < _enemyColumns; j++)
@@ -513,7 +513,7 @@ namespace SpaceInvaders.Model
         }
         private void MoveRight()
         {
-            int s;
+            double s;
             for (int i = 0; i < _enemyRows; i++)
             {
                 for (int j = 0; j < _enemyColumns; j++)
@@ -537,7 +537,7 @@ namespace SpaceInvaders.Model
         }
         private void NewMostRight()
         {
-            int max = -1;
+            double max = -1;
             int maxI = 0;
             int maxJ = 0;
             for(int i = 0; i < _enemyRows; i++)
@@ -555,7 +555,7 @@ namespace SpaceInvaders.Model
         }
         private void NewMostLeft()
         {
-            int min = 1000;
+            double min = 1000;
             int minI = 0;
             int minJ = 0;
             for (int i = 0; i < _enemyRows; i++)
@@ -574,7 +574,7 @@ namespace SpaceInvaders.Model
         }
         private void NewMostDown()
         {
-            int max = 0;
+            double max = 0;
             int maxI = 0;
             int maxJ = 0;
             for (int i = 0; i < _enemyRows; i++)

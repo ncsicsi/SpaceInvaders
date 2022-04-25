@@ -9,7 +9,7 @@ namespace SpaceInvaders.Model
     public struct EnemyStruct
     {
         bool _alive;
-        int _x;
+        double _x;
         int _y;
         enyemyType _type;   // 1-3 tipus
         bool _isMostLeft;
@@ -21,9 +21,9 @@ namespace SpaceInvaders.Model
         public enyemyType Type { get { return _type; } set { _type = value; } }
 
 
-        public void X(int x) { _x = x; }
+        public void X(double x) { _x = x; }
         public void Y(int y) { _y = y; }
-        public int X() { return _x; }
+        public double X() { return _x; }
         public int Y() { return _y; }
 
 
