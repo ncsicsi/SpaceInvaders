@@ -10,13 +10,15 @@ namespace SpaceInvaders.Persistence
 {
     public struct Data
     {
-        public Data(int round ,int populationSize, int weightsSize, double [,] weights, double [] individualFittnes)
+        public Data(int round ,int populationSize, int weightsSize, double [,] weights, double [] individualFittnes, double learningTime, int[] individualScore)
         {
             _round = round;
             _populationSize = populationSize;
             _weightsSize = weightsSize;
             _weights = weights;
             _individualFittnes = individualFittnes;
+            _learningTime = learningTime;
+            _individualScore = individualScore;
         }
 
         public int _round { get; set; }
@@ -24,6 +26,8 @@ namespace SpaceInvaders.Persistence
         public int _weightsSize { get; set; }
         public double[,] _weights { get; set; }
         public double[] _individualFittnes { get; set; }
+        public double _learningTime { get; set; }
+        public int[] _individualScore { get; set; }
 
         public override string ToString() => $"({_round},{_populationSize}, {_weightsSize}, {_weights})";
     }
@@ -43,6 +47,9 @@ namespace SpaceInvaders.Persistence
                     line = await reader.ReadLineAsync(); //
                     numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
                     int populationSize = int.Parse(numbers[0]); // beolvassuk az egyedek szamat
+                    line = await reader.ReadLineAsync(); //
+                    numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
+                    double learningTime = double.Parse(numbers[0]); // beolvassuk a taulasi idot
                     line = await reader.ReadLineAsync();
                     numbers = line.Split(' ');
                     int weightsSize = int.Parse(numbers[0]); // beolvassuk a sulyok szamat
@@ -58,7 +65,7 @@ namespace SpaceInvaders.Persistence
                             weights[i, j] = double.Parse(numbers[j]);
                         }
                     }
-
+                    //fittnesek beolvasasa
                     double[] individualFittnes = new double [populationSize];
                     line = await reader.ReadLineAsync();
                     numbers = line.Split(' ');
@@ -66,7 +73,15 @@ namespace SpaceInvaders.Persistence
                     { 
                         individualFittnes[i] = double.Parse(numbers[i]);
                     }
-                    Data data=new Data(round, populationSize,weightsSize,weights, individualFittnes);
+                    //pontszamok beolvasasa
+                    int[] individualScore = new int[populationSize];
+                    line = await reader.ReadLineAsync();
+                    numbers = line.Split(' ');
+                    for (int i = 0; i < populationSize; i++)
+                    {
+                        individualScore[i] = int.Parse(numbers[i]);
+                    }
+                    Data data=new Data(round, populationSize,weightsSize,weights, individualFittnes, learningTime, individualScore);
                     return data;
                 }
             //}
@@ -77,7 +92,7 @@ namespace SpaceInvaders.Persistence
         }
 
         // Mentes
-        public async Task SaveAsync(String path, int round, int populationSize, int weightsSize, double[,] weights, double[] individualFittnes)
+        public async Task SaveAsync(String path, int round, int populationSize, int weightsSize, double[,] weights, double[] individualFittnes, double learningTime, int[] individualScore)
         {
             //try
             //{
@@ -87,6 +102,8 @@ namespace SpaceInvaders.Persistence
                     writer.Write(round); // kiírjuk a korok szamat
                     await writer.WriteLineAsync(); //uj sor
                     writer.Write(populationSize); // kiírjuk az egyedek szamat
+                    await writer.WriteLineAsync(); //uj sor
+                    writer.Write(learningTime); // kiírjuk a tanulasi idot
                     await writer.WriteLineAsync(); //uj sor
                     writer.Write(weightsSize); // kiírjuk a sulyok szamat
                     await writer.WriteLineAsync(); //uj sor
@@ -103,6 +120,12 @@ namespace SpaceInvaders.Persistence
                     for (int i=0; i < populationSize; i++)
                     {
                         await writer.WriteAsync(individualFittnes[i] + " ");
+                    }
+                    await writer.WriteLineAsync();
+                //kiirjuk a potszamokat 
+                    for (int i=0;  i < populationSize; i++)
+                    {
+                        await writer.WriteAsync(individualScore[i] + " ");
                     }
 
                 }

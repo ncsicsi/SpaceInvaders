@@ -11,7 +11,7 @@ namespace SpaceInvaders.Persistence
         //fájl betoltese
     Task<Data> LoadAsync(String path);
     //fájl mentese
-    Task SaveAsync(String path, int round, int populationSize, int weightsSize, double [,] weights, double[] individualFittnes);
+    Task SaveAsync(String path, int round, int populationSize, int weightsSize, double [,] weights, double[] individualFittnes, double learningTime, int[] individualScore);
     }
     
 }

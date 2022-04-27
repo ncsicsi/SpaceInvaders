@@ -17,7 +17,7 @@ namespace SpaceInvaders.Model
     {
         #region Fields
         private NeuralNetwork _network;
-        private int _populationSize = 20;
+        private int _populationSize = 10;
         private int _hiddenNeuronSize = 25;
         private IGameDataAccess _dataAccess; //adateleres
         private int _score;
@@ -57,6 +57,7 @@ namespace SpaceInvaders.Model
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
         private int _rounds;
+        
         private enum direction {RIGHT, LEFT, DOWN};
         private direction _direction;
         private bool _viewOn;
@@ -136,7 +137,7 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _bulletCount = 0;
             _enemysCount = _maxenemyCount;
-            _enemySpeed+=1D;
+            //_enemySpeed =_enemySpeed + 1;
             //_lives++;
             _direction = direction.RIGHT;
             _goLeft = false;
@@ -172,7 +173,7 @@ namespace SpaceInvaders.Model
             if (_dataAccess == null)
                 throw new InvalidOperationException("No data access is provided.");
 
-            await _dataAccess.SaveAsync(path, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes);
+            await _dataAccess.SaveAsync(path, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes, _network.LearningTime, _network.IndividualScore);
         }
 
         public void stopTimer()
@@ -226,6 +227,7 @@ namespace SpaceInvaders.Model
                 {
                     OnGameOver(_win);
                 }
+                System.Threading.Thread.Sleep(2000);
             }
         }
 

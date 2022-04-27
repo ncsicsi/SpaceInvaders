@@ -38,14 +38,16 @@ namespace SpaceInvaders.Model
         private int _worstIndividual = 9;
         private int _rdIndividual = 0;
         private double[] _individualFittnes;
+        private int[] _individualScore;
         private int _roundCounter;
+        private double _learningTime = 0;
 
 
         //fittnes sulyok
         private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
         private double _avoidBulletsWeight = 15; 
-        private double _usedBulletssWeight = 0.3; 
+        private double _usedBulletssWeight = 1; 
 
         //bejovo neuronok
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
@@ -74,6 +76,8 @@ namespace SpaceInvaders.Model
         public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
         public double UsedBullets { get { return _usedBullets; } set { _usedBullets = value; } }
         public int ActiveIndividual { get { return _activeIndividual; } }
+        public double LearningTime { get { return _learningTime; } }
+        public int[] IndividualScore { get { return _individualScore; } }
         #endregion
 
         #region Constructor
@@ -189,6 +193,8 @@ namespace SpaceInvaders.Model
             _activeIndividual = _worstIndividual;
             _roundCounter = data._round;
             ReSetFittnes();
+            _learningTime = data._learningTime;
+            _individualScore = data._individualScore;
         }
         public void BestPlay()
         {
@@ -255,6 +261,7 @@ namespace SpaceInvaders.Model
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _individualCount = individualCount;
             _individualFittnes = new double[_individualCount];
+            _individualScore = new int[_individualCount];
             _roundCounter = 0;
             _weights = new double[_individualCount, (_incommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
@@ -374,7 +381,9 @@ namespace SpaceInvaders.Model
         {
             if (!win)
             {
+                _learningTime += (_elapsedTime/3600D);
                 _score = score;
+                _individualScore[_activeIndividual] = score;
                 CalculateFittnes();
                 if (_activeIndividual < _individualCount-1 && _roundCounter < _individualCount - 1)
                 {
