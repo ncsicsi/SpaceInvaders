@@ -248,8 +248,10 @@ namespace SpaceInvaders.Model
             if (_network.EvolutionType != NeuralNetwork.evolution.SIMPLE)
             {
                 _network.EvolutionType = NeuralNetwork.evolution.SIMPLE;
+                _network.LearningTime = 0;
+                _network.ActiveIndividual = 0;
+                _rounds = _network.Round;
                 OnGameOver(false);
-                NewGame();
             }
         }
         public void TurnRedQueenEvolution()
@@ -257,8 +259,10 @@ namespace SpaceInvaders.Model
             if (_network.EvolutionType != NeuralNetwork.evolution.REDQUEEN)
             {
                 _network.EvolutionType = NeuralNetwork.evolution.REDQUEEN;
+                _network.LearningTime = 0;
+                _network.ActiveIndividual = 0;
+                _rounds = _network.Round;
                 OnGameOver(false);
-                NewGame();
             }
         }
 

@@ -45,7 +45,8 @@ namespace SpaceInvaders.Model
         private int _rdIndividual = 0;
         private double[] _individualFittnes;
         private int[] _individualScore;
-        private int _roundCounter;
+        private int _simpleRoundCounter;
+        private int _redQueenRoundCounter;
         private double _learningTime = 0;
 
 
@@ -81,10 +82,11 @@ namespace SpaceInvaders.Model
         public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
         public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
         public double UsedBullets { get { return _usedBullets; } set { _usedBullets = value; } }
-        public int ActiveIndividual { get { return _activeIndividual; } }
-        public double LearningTime { get { return _learningTime; } }
+        public int ActiveIndividual { get { return _activeIndividual; } set { _activeIndividual = value; } }
+        public double LearningTime { get { return _learningTime; } set { _learningTime = value; } }
         public int[] IndividualScore { get { return _individualScore; } }
         public evolution EvolutionType { get { return _evolutionType; } set { _evolutionType = value; } }
+        public int Round { get { if (_evolutionType == evolution.SIMPLE) { return _simpleRoundCounter; } else return _redQueenRoundCounter; } set { if (_evolutionType == evolution.SIMPLE) { _simpleRoundCounter = value;  } else _redQueenRoundCounter = value; } }
         #endregion
 
         #region Constructor
@@ -175,6 +177,7 @@ namespace SpaceInvaders.Model
             if (data._evolutionType == 0)
             {
                 _evolutionType = evolution.SIMPLE;
+                _simpleRoundCounter = data._round;
                 for (int i = 0; i < _individualCount; i++)
                 {
                     for (int j = 0; j < data._weightsSize; j++)
@@ -187,6 +190,7 @@ namespace SpaceInvaders.Model
             else
             {
                 _evolutionType = evolution.REDQUEEN;
+                _redQueenRoundCounter = data._round;
                 for (int i = 0; i < _individualCount; i++)
                 {
                     for (int j = 0; j < data._weightsSize; j++)
@@ -198,7 +202,7 @@ namespace SpaceInvaders.Model
             }
             RoundResults();
             _activeIndividual = _worstIndividual;
-            _roundCounter = data._round;
+            
             ReSetFittnes();
             _learningTime = data._learningTime;
             _individualScore = data._individualScore;
@@ -418,7 +422,8 @@ namespace SpaceInvaders.Model
             _individualCount = individualCount;
             _individualFittnes = new double[_individualCount];
             _individualScore = new int[_individualCount];
-            _roundCounter = 0;
+            _simpleRoundCounter = 0;
+            _redQueenRoundCounter = 0;
             _simpleWeights = new double[_individualCount, (_simpleIncommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
             _redQueenWeights = new double[_individualCount, (_redQueenIncommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
@@ -585,18 +590,37 @@ namespace SpaceInvaders.Model
                 _score = score;
                 _individualScore[_activeIndividual] = score;
                 CalculateFittnes();
-                if (_activeIndividual < _individualCount-1 && _roundCounter < _individualCount - 1)
+                if (_evolutionType == evolution.SIMPLE)
                 {
-                    _activeIndividual++;
-                    ReSetFittnes();
-                    _roundCounter++;
+                    if (_activeIndividual < _individualCount - 1 && _simpleRoundCounter < _individualCount - 1)
+                    {
+                        _activeIndividual++;
+                        ReSetFittnes();
+                        _simpleRoundCounter++;
+                    }
+                    else
+                    {
+                        RoundResults();
+                        _activeIndividual = _worstIndividual;
+                        EvolutePopulation();
+                        ReSetFittnes();
+                    }
                 }
                 else
                 {
-                    RoundResults();
-                    _activeIndividual = _worstIndividual;
-                    EvolutePopulation();
-                    ReSetFittnes();
+                    if (_activeIndividual < _individualCount - 1 && _redQueenRoundCounter < _individualCount - 1)
+                    {
+                        _activeIndividual++;
+                        ReSetFittnes();
+                        _redQueenRoundCounter++;
+                    }
+                    else
+                    {
+                        RoundResults();
+                        _activeIndividual = _worstIndividual;
+                        EvolutePopulation();
+                        ReSetFittnes();
+                    }
                 }
             }
         }

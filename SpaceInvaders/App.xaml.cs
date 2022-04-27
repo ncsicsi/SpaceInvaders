@@ -159,10 +159,12 @@ namespace SpaceInvaders
         }        
         private void ViewModel_TurnSimpleEvolution(object sender, EventArgs e)
         {
+            //_model.stopTimer();
             //_view.RoundOver();
         }        
         private void ViewModel_TurnRedQueenEvolution(object sender, EventArgs e)
         {
+            _model.stopTimer();
             //_view.RoundOver();
         }
 
