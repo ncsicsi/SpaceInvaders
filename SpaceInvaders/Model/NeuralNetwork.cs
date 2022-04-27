@@ -121,59 +121,13 @@ namespace SpaceInvaders.Model
                     _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[_activeIndividual, s + h *_outcommingNeuronsCount + o];
                 }
             }
+            action returnAction;
+            
+            //returnAction = MaxResult();
+            //returnAction = RandomMaxResult();
+            returnAction = SoftMaxRsul();
 
-
-            Random random = new Random();
-            double rd = random.Next(1, 1000000000);
-            rd = rd / 1000000000D;
-
-
-            double sum = 0;
-            for(int o = 0; o < _outcommingNeuronsCount; o++)
-            {
-                sum += _outcommingNeurons[o];
-            }
-
-            double intervallMin = 0;
-            double intervallMax = 0;
-            int interval = 0;
-
-            for(int o = 0; o < _outcommingNeuronsCount; o++)
-            {
-                intervallMin = intervallMax;
-                intervallMax += (_outcommingNeurons[o] / sum);
-                if(rd >= intervallMin && rd < intervallMax)
-                {
-                    interval = o;
-                }
-            }
-
-            /*
-            double max = _outcommingNeurons[0];
-            int maxPlace = 0;
-            for (int i = 1; i < _outcommingNeuronsCount; i++)
-            {
-                if(_outcommingNeurons[i] > max)
-                {
-                    max = _outcommingNeurons[i];
-                    maxPlace = i;
-                }
-            }
-
-            */
-            switch (interval)
-            {
-                case 0: 
-                    return action.GORIGHT;
-                    break;
-                case 1: 
-                    return action.GOLEFT;
-                    break;
-                case 2:
-                    return action.SHOT;
-                    break;
-            }
-            return action.SHOT;
+            return returnAction;
         }
 
         public void LoadNetwork(Data data)
@@ -205,6 +159,122 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Network Private Methods 
+
+        private action MaxResult()
+        {
+            double max = _outcommingNeurons[0];
+            int maxPlace = 0;
+            for (int i = 1; i < _outcommingNeuronsCount; i++)
+            {
+                if (_outcommingNeurons[i] > max)
+                {
+                    max = _outcommingNeurons[i];
+                    maxPlace = i;
+                }
+            }
+                      
+            switch (maxPlace)
+            {
+                case 0:
+                    return action.GORIGHT;
+                    break;
+                case 1:
+                    return action.GOLEFT;
+                    break;
+                case 2:
+                    return action.SHOT;
+                    break;
+            }
+            return action.SHOT;
+        }
+
+        private action RandomMaxResult()
+        {
+
+            Random random = new Random();
+            double rd = random.Next(1, 1000000000);
+            rd = rd / 1000000000D;
+
+
+            double sum = 0;
+            for (int o = 0; o < _outcommingNeuronsCount; o++)
+            {
+                sum += _outcommingNeurons[o];
+            }
+
+            double intervallMin = 0;
+            double intervallMax = 0;
+            int interval = 0;
+
+            for (int o = 0; o < _outcommingNeuronsCount; o++)
+            {
+                intervallMin = intervallMax;
+                intervallMax += (_outcommingNeurons[o] / sum);
+                if (rd >= intervallMin && rd < intervallMax)
+                {
+                    interval = o;
+                }
+            }
+
+            switch (interval)
+            {
+                case 0:
+                    return action.GORIGHT;
+                    break;
+                case 1:
+                    return action.GOLEFT;
+                    break;
+                case 2:
+                    return action.SHOT;
+                    break;
+            }
+            return action.SHOT;
+        }
+
+        private action SoftMaxRsul()
+        {
+
+            Random random = new Random();
+            double rd = random.Next(1, 1000000000);
+            rd = rd / 1000000000D;
+
+            double intervallMin = 0;
+            double intervallMax = 0;
+            int interval = 0;
+
+            double sum = 0;
+            double []p =new double [_outcommingNeuronsCount];
+            for(int i=0; i < _outcommingNeuronsCount; i++)
+            {
+                sum += Math.Exp(_outcommingNeurons[i]);
+            }
+
+            for (int o = 0; o < _outcommingNeuronsCount; o++)
+            {
+                intervallMin = intervallMax;
+                intervallMax += (Math.Exp(_outcommingNeurons[o]) / sum);
+                p[o] = (Math.Exp(_outcommingNeurons[o]) / sum);
+                if (rd >= intervallMin && rd < intervallMax)
+                {
+                    interval = o;
+                }
+            }
+
+
+            switch (interval)
+            {
+                case 0:
+                    return action.GORIGHT;
+                    break;
+                case 1:
+                    return action.GOLEFT;
+                    break;
+                case 2:
+                    return action.SHOT;
+                    break;
+            }
+            return action.SHOT;
+        }
 
         private void RefreshIncomingNeurons()
         {
