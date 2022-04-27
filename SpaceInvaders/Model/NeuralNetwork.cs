@@ -13,19 +13,25 @@ namespace SpaceInvaders.Model
     public class NeuralNetwork
     {
         #region Fields
-        private IGameDataAccess _dataAccess; //adateleres
+        //private IGameDataAccess _dataAccess; //adateleres
         //network
+        public enum evolution { SIMPLE, REDQUEEN};
+        public evolution _evolutionType = evolution.SIMPLE;
         public bool _networkOn;
         public enum action { GORIGHT, GOLEFT, SHOT };
         private double[] _hiddenNeurons;
-        private double[] _incommingNeurons;
+        private double[] _simpleIncommingNeurons;
+        private double[] _redQueenIncommingNeurons;
         private double[] _outcommingNeurons;
         private double _incomingBiasNeuron = 1;
         private double _hiddenBiasNeuron = 1;
         private int _hiddenNeuronsCount;
         private int _incommingNeuronsCount = 12;
+        private int _simpleIncommingNeuronsCount = 12;
+        private int _redQueenIncommingNeuronsCount = 14;
         private int _outcommingNeuronsCount = 3;
-        private double[,] _weights;
+        private double[,] _simpleWeights;
+        private double[,] _redQueenWeights;
         private double _score;
         private double _elapsedTime;
         private double _avoidBullets;
@@ -68,7 +74,7 @@ namespace SpaceInvaders.Model
 
         #region Properties
         public bool NetworkOn { get { return _networkOn; } set { _networkOn = value; } }
-        public double[,] Weights { get {return _weights; } }
+        public double[,] Weights { get { if (_evolutionType == evolution.SIMPLE) { return _simpleWeights; } else return _redQueenWeights; } }
         public double[] IndividualFittnes { get {return _individualFittnes; } }
         public int WeightsCount { get {return (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount; } }
         public double Score { get { return _score; } set { _score = value; } }
@@ -78,6 +84,7 @@ namespace SpaceInvaders.Model
         public int ActiveIndividual { get { return _activeIndividual; } }
         public double LearningTime { get { return _learningTime; } }
         public int[] IndividualScore { get { return _individualScore; } }
+        public evolution EvolutionType { get { return _evolutionType; } set { _evolutionType = value; } }
         #endregion
 
         #region Constructor
@@ -87,7 +94,6 @@ namespace SpaceInvaders.Model
         }
         #endregion
 
-
         #region Public methods
 
         public action NextAction()
@@ -95,30 +101,62 @@ namespace SpaceInvaders.Model
             RefreshIncomingNeurons();
             ReSetNeurons();
             //hidden neuronok szamitasa
-            for (int h = 0; h < _hiddenNeuronsCount; h++)
+            if (_evolutionType == evolution.SIMPLE)
             {
-                for (int i = 0; i < _incommingNeuronsCount ; i++)
+                for (int h = 0; h < _hiddenNeuronsCount; h++)
                 {
-                    _hiddenNeurons[h] += _incommingNeurons[i] * _weights[_activeIndividual, i * _hiddenNeuronsCount + h];
+                    for (int i = 0; i < _incommingNeuronsCount; i++)
+                    {
+                        _hiddenNeurons[h] += _simpleIncommingNeurons[i] * _simpleWeights[_activeIndividual, i * _hiddenNeuronsCount + h];
+                    }
+                    _hiddenNeurons[h] = 1 / (1 + Math.Exp(-_hiddenNeurons[h]));
+                    if (_hiddenNeurons[h] == 1)
+                    {
+                        int bug = 1;
+                    }
                 }
-                _hiddenNeurons[h] =1/(1+ Math.Exp(-_hiddenNeurons[h]));
-                if (_hiddenNeurons[h] == 1)
+                //kimeneti neuronok szamitasa
+                int s = _incommingNeuronsCount * _hiddenNeuronsCount;
+                for (int o = 0; o < _outcommingNeuronsCount; o++)
                 {
-                    int bug = 1;
+                    _outcommingNeurons[o] += _hiddenBiasNeuron * _simpleWeights[_activeIndividual, s + o];
+                }
+                s = _incommingNeuronsCount * _hiddenNeuronsCount + _outcommingNeuronsCount;
+                for (int o = 0; o < _outcommingNeuronsCount; o++)
+                {
+                    for (int h = 0; h < _hiddenNeuronsCount; h++)
+                    {
+                        _outcommingNeurons[o] += _hiddenNeurons[h] * _simpleWeights[_activeIndividual, s + h * _outcommingNeuronsCount + o];
+                    }
                 }
             }
-            //kimeneti neuronok szamitasa
-            int s = _incommingNeuronsCount * _hiddenNeuronsCount;
-            for (int o = 0; o < _outcommingNeuronsCount; o++)
+            else
             {
-                _outcommingNeurons[o] += _hiddenBiasNeuron * _weights[_activeIndividual, s + o];
-            }
-            s = _incommingNeuronsCount * _hiddenNeuronsCount + _outcommingNeuronsCount;
-            for (int o = 0; o < _outcommingNeuronsCount; o++)
-            {
-                for(int h= 0; h < _hiddenNeuronsCount; h++)
+                for (int h = 0; h < _hiddenNeuronsCount; h++)
                 {
-                    _outcommingNeurons[o] += _hiddenNeurons[h] * _weights[_activeIndividual, s + h *_outcommingNeuronsCount + o];
+                    for (int i = 0; i < _incommingNeuronsCount; i++)
+                    {
+                        _hiddenNeurons[h] += _redQueenIncommingNeurons[i] * _redQueenWeights[_activeIndividual, i * _hiddenNeuronsCount + h];
+                    }
+                    _hiddenNeurons[h] = 1 / (1 + Math.Exp(-_hiddenNeurons[h]));
+                    if (_hiddenNeurons[h] == 1)
+                    {
+                        int bug = 1;
+                    }
+                }
+                //kimeneti neuronok szamitasa
+                int s = _incommingNeuronsCount * _hiddenNeuronsCount;
+                for (int o = 0; o < _outcommingNeuronsCount; o++)
+                {
+                    _outcommingNeurons[o] += _hiddenBiasNeuron * _redQueenWeights[_activeIndividual, s + o];
+                }
+                s = _incommingNeuronsCount * _hiddenNeuronsCount + _outcommingNeuronsCount;
+                for (int o = 0; o < _outcommingNeuronsCount; o++)
+                {
+                    for (int h = 0; h < _hiddenNeuronsCount; h++)
+                    {
+                        _outcommingNeurons[o] += _hiddenNeurons[h] * _redQueenWeights[_activeIndividual, s + h * _outcommingNeuronsCount + o];
+                    }
                 }
             }
             action returnAction;
@@ -134,15 +172,30 @@ namespace SpaceInvaders.Model
         {
             //_hiddenNeuronsCount = data._weightsSize;
             _individualCount = data._populationSize;
-            for(int i = 0; i < _individualCount; i++)
+            if (data._evolutionType == 0)
             {
-                for(int j=0; j< data._weightsSize; j++)
+                _evolutionType = evolution.SIMPLE;
+                for (int i = 0; i < _individualCount; i++)
                 {
-                    _weights[i,j] = data._weights[i, j];
+                    for (int j = 0; j < data._weightsSize; j++)
+                    {
+                        _simpleWeights[i, j] = data._weights[i, j];
+                    }
+                    _individualFittnes[i] = data._individualFittnes[i];
                 }
-                _individualFittnes[i] = data._individualFittnes[i];
             }
-
+            else
+            {
+                _evolutionType = evolution.REDQUEEN;
+                for (int i = 0; i < _individualCount; i++)
+                {
+                    for (int j = 0; j < data._weightsSize; j++)
+                    {
+                        _redQueenWeights[i, j] = data._weights[i, j];
+                    }
+                    _individualFittnes[i] = data._individualFittnes[i];
+                }
+            }
             RoundResults();
             _activeIndividual = _worstIndividual;
             _roundCounter = data._round;
@@ -159,7 +212,7 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Network Private Methods 
-
+        //Kiertekeo fuggvenyek
         private action MaxResult()
         {
             double max = _outcommingNeurons[0];
@@ -233,7 +286,6 @@ namespace SpaceInvaders.Model
 
         private action SoftMaxRsul()
         {
-
             Random random = new Random();
             double rd = random.Next(1, 1000000000);
             rd = rd / 1000000000D;
@@ -260,7 +312,6 @@ namespace SpaceInvaders.Model
                 }
             }
 
-
             switch (interval)
             {
                 case 0:
@@ -278,21 +329,40 @@ namespace SpaceInvaders.Model
 
         private void RefreshIncomingNeurons()
         {
-            _incommingNeurons[0] = _incomingBiasNeuron;
-            _incommingNeurons[1] = _bulletDistance;
-            _incommingNeurons[2] = _bulletXRightDistance;
-            _incommingNeurons[3] = _bulletXLeftDistance;
-            _incommingNeurons[4] = _enemyCount;      //enemyk szama  0-50
-            _incommingNeurons[5] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
-            _incommingNeurons[6] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
-            _incommingNeurons[7] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
-            _incommingNeurons[8] = _lives;  //eletpontok szama
-            _incommingNeurons[9] = _leftDistanc;  //hajo mennnyit tud meg balra menni
-            _incommingNeurons[10] = _rightDistanc;  //hajo mennnyit tud meg jobbra menni
-            _incommingNeurons[11] = _rightEnemyCount;    //jobbra levo enemyk szama
-            _incommingNeurons[12] = _leftEnemyCount;    //balra levo enemyk szama
-
-
+            if (_evolutionType == evolution.SIMPLE)
+            {
+                _simpleIncommingNeurons[0] = _incomingBiasNeuron;
+                _simpleIncommingNeurons[1] = _bulletDistance;
+                _simpleIncommingNeurons[2] = _bulletXRightDistance;
+                _simpleIncommingNeurons[3] = _bulletXLeftDistance;
+                _simpleIncommingNeurons[4] = _enemyCount;      //enemyk szama  0-50
+                _simpleIncommingNeurons[5] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
+                _simpleIncommingNeurons[6] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
+                _simpleIncommingNeurons[7] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
+                _simpleIncommingNeurons[8] = _lives;  //eletpontok szama
+                _simpleIncommingNeurons[9] = _leftDistanc;  //hajo mennnyit tud meg balra menni
+                _simpleIncommingNeurons[10] = _rightDistanc;  //hajo mennnyit tud meg jobbra menni
+                _simpleIncommingNeurons[11] = _rightEnemyCount;    //jobbra levo enemyk szama
+                _simpleIncommingNeurons[12] = _leftEnemyCount;    //balra levo enemyk szama
+            }
+            else
+            {
+                _redQueenIncommingNeurons[0] = _incomingBiasNeuron;
+                _redQueenIncommingNeurons[1] = _bulletDistance;
+                _redQueenIncommingNeurons[2] = _bulletXRightDistance;
+                _redQueenIncommingNeurons[3] = _bulletXLeftDistance;
+                _redQueenIncommingNeurons[4] = _enemyCount;      //enemyk szama  0-50
+                _redQueenIncommingNeurons[5] = _closestEnemyYDistance;   //lealsobb enemy_network._closestEnemyDirection = 0; tavosaga y szerint 0-70
+                _redQueenIncommingNeurons[6] = _closestEnemyXDistance;   // legalsobb enemy tavolsaga x szerint 0-70
+                _redQueenIncommingNeurons[7] = _closestEnemyDirection;   //jobbra vagy balra van az enemy
+                _redQueenIncommingNeurons[8] = _lives;  //eletpontok szama
+                _redQueenIncommingNeurons[9] = _leftDistanc;  //hajo mennnyit tud meg balra menni
+                _redQueenIncommingNeurons[10] = _rightDistanc;  //hajo mennnyit tud meg jobbra menni
+                _redQueenIncommingNeurons[11] = _rightEnemyCount;    //jobbra levo enemyk szama
+                _redQueenIncommingNeurons[12] = _leftEnemyCount;    //balra levo enemyk szama
+                _redQueenIncommingNeurons[13] = _enemySpeed;    // Ellenseg gyorsasaga
+                _redQueenIncommingNeurons[14] = _enemyMoveDirection;    // Ellenseg mozgasanak iranya
+            }
         }
         private void ReSetNeurons()
         {
@@ -308,14 +378,29 @@ namespace SpaceInvaders.Model
         //sulyok elsonek legyenek gauss szerint random szamok szamok
         private void ResetNetrowkWeights()
         {
-            int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
-            for (int i = 0; i < s; i++)
+            if (_evolutionType == evolution.SIMPLE)
             {
-                double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
-                double stddev = Math.Sqrt(varienece);
-                var random = new Random();
-                double sample = Math.Abs( NormalDistribution.Sample(random, 0D, stddev));
-                _weights[_activeIndividual, i] = sample;
+                int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
+                for (int i = 0; i < s; i++)
+                {
+                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double stddev = Math.Sqrt(varienece);
+                    var random = new Random();
+                    double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
+                    _simpleWeights[_activeIndividual, i] = sample;
+                }
+            }
+            else
+            {
+                int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
+                for (int i = 0; i < s; i++)
+                {
+                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double stddev = Math.Sqrt(varienece);
+                    var random = new Random();
+                    double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
+                    _redQueenWeights[_activeIndividual, i] = sample;
+                }
             }
         }
 
@@ -327,18 +412,27 @@ namespace SpaceInvaders.Model
         {
             _hiddenNeuronsCount = hiddenNeuronsCount;
             _hiddenNeurons = new double[hiddenNeuronsCount];
-            _incommingNeurons = new double[_incommingNeuronsCount + 1]; ;
+            _simpleIncommingNeurons = new double[_simpleIncommingNeuronsCount + 1];
+            _redQueenIncommingNeurons = new double[_redQueenIncommingNeuronsCount + 1];
             _outcommingNeurons = new double[_outcommingNeuronsCount];
             _individualCount = individualCount;
             _individualFittnes = new double[_individualCount];
             _individualScore = new int[_individualCount];
             _roundCounter = 0;
-            _weights = new double[_individualCount, (_incommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
+            _simpleWeights = new double[_individualCount, (_simpleIncommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
+            _redQueenWeights = new double[_individualCount, (_redQueenIncommingNeuronsCount + 1)* _hiddenNeuronsCount + (_hiddenNeuronsCount + 1)* _outcommingNeuronsCount];
             for(int i=0; i< _individualCount; i++)
             {
                 _activeIndividual = i;
                 ResetNetrowkWeights();
             }
+            _evolutionType = evolution.REDQUEEN;
+            for (int i = 0; i < _individualCount; i++)
+            {
+                _activeIndividual = i;
+                ResetNetrowkWeights();
+            }
+            _evolutionType = evolution.SIMPLE;
             _activeIndividual = 0;
         }
 
@@ -380,23 +474,45 @@ namespace SpaceInvaders.Model
             {
                 rd = random.Next(0, _individualCount-1);
             }
-            _rdIndividual = rd; 
-            for (int i=0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
+            _rdIndividual = rd;
+            if (_evolutionType == evolution.SIMPLE)
             {
-                rd = random.Next(1,10);
-                /*mutation = random.Next(0,1000);
-                mutation = mutation / 1000000D;*/
-                mutation = NormalDistribution.Sample(mutationRd, 0D, 0.05D);
-                if (rd < 6)    // legjobbtol kapja a gent
+                for (int i = 0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
                 {
-                    _weights[_worstIndividual, i] = Math.Abs(_weights[_bestIndividual, i] + mutation);
+                    rd = random.Next(1, 10);
+                    /*mutation = random.Next(0,1000);
+                    mutation = mutation / 1000000D;*/
+                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.05D);
+                    if (rd < 6)    // legjobbtol kapja a gent
+                    {
+                        _simpleWeights[_worstIndividual, i] = Math.Abs(_simpleWeights[_bestIndividual, i] + mutation);
+                    }
+                    else
+                    {
+                        //randomtol kapja
+                        _simpleWeights[_worstIndividual, i] = Math.Abs(_simpleWeights[_rdIndividual, i] + mutation);
+                    }
                 }
-                else
+            }
+            else
+            {
+                for (int i = 0; i < _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount; i++)
                 {
-                    //randomtol kapja
-                    _weights[_worstIndividual, i] = Math.Abs(_weights[_rdIndividual, i] + mutation);
+                    rd = random.Next(1, 10);
+                    /*mutation = random.Next(0,1000);
+                    mutation = mutation / 1000000D;*/
+                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.05D);
+                    if (rd < 6)    // legjobbtol kapja a gent
+                    {
+                        _redQueenWeights[_worstIndividual, i] = Math.Abs(_redQueenWeights[_bestIndividual, i] + mutation);
+                    }
+                    else
+                    {
+                        //randomtol kapja
+                        _redQueenWeights[_worstIndividual, i] = Math.Abs(_redQueenWeights[_rdIndividual, i] + mutation);
+                    }
                 }
-            } ;
+            }
         }
         private bool Deadlock()
         {
@@ -421,13 +537,27 @@ namespace SpaceInvaders.Model
             Random randomIndividual = new Random();
             int rd = randomIndividual.Next(0, _individualCount);
             int s = _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount;
-            for (int i = 0; i < s; i++)
+            if (_evolutionType == evolution.SIMPLE)
             {
-                double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
-                double stddev = Math.Sqrt(varienece);
-                var random = new Random();
-                double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
-                _weights[rd, i] = sample;
+                for (int i = 0; i < s; i++)
+                {
+                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double stddev = Math.Sqrt(varienece);
+                    var random = new Random();
+                    double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
+                    _simpleWeights[rd, i] = sample;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < s; i++)
+                {
+                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double stddev = Math.Sqrt(varienece);
+                    var random = new Random();
+                    double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
+                    _redQueenWeights[rd, i] = sample;
+                }
             }
             _activeIndividual = rd;
         }

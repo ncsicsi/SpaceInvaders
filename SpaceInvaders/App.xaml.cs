@@ -73,6 +73,8 @@ namespace SpaceInvaders
             _viewModel.BestPlay += new EventHandler(ViewModel_BestPlay);
             _viewModel.TurnOffView += new EventHandler(ViewModel_TurnOffView);
             _viewModel.TurnOnView += new EventHandler(ViewModel_TurnOnView);
+            _viewModel.TurnSimpleEvolution += new EventHandler(ViewModel_TurnSimpleEvolution);
+            _viewModel.TurnRedQueenEvolution += new EventHandler(ViewModel_TurnRedQueenEvolution);
 
             // nézet létrehozása
             //_view = new MainWindow();
@@ -154,6 +156,14 @@ namespace SpaceInvaders
         private void ViewModel_TurnOnView(object sender, EventArgs e)
         {
 
+        }        
+        private void ViewModel_TurnSimpleEvolution(object sender, EventArgs e)
+        {
+            //_view.RoundOver();
+        }        
+        private void ViewModel_TurnRedQueenEvolution(object sender, EventArgs e)
+        {
+            //_view.RoundOver();
         }
 
 

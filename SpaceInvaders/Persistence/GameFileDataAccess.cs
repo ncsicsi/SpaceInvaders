@@ -10,7 +10,7 @@ namespace SpaceInvaders.Persistence
 {
     public struct Data
     {
-        public Data(int round ,int populationSize, int weightsSize, double [,] weights, double [] individualFittnes, double learningTime, int[] individualScore)
+        public Data(int evolutionType, int round ,int populationSize, int weightsSize, double [,] weights, double [] individualFittnes, double learningTime, int[] individualScore)
         {
             _round = round;
             _populationSize = populationSize;
@@ -19,6 +19,7 @@ namespace SpaceInvaders.Persistence
             _individualFittnes = individualFittnes;
             _learningTime = learningTime;
             _individualScore = individualScore;
+            _evolutionType = evolutionType;
         }
 
         public int _round { get; set; }
@@ -28,6 +29,7 @@ namespace SpaceInvaders.Persistence
         public double[] _individualFittnes { get; set; }
         public double _learningTime { get; set; }
         public int[] _individualScore { get; set; }
+        public int _evolutionType { get; set; }
 
         public override string ToString() => $"({_round},{_populationSize}, {_weightsSize}, {_weights})";
     }
@@ -43,6 +45,17 @@ namespace SpaceInvaders.Persistence
                 {
                     String line = await reader.ReadLineAsync(); //
                     String[] numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
+                    int evolutionType;
+                    if(numbers[0]== "Simple evolution")
+                    {
+                        evolutionType = 0;
+                    }
+                    else
+                    {
+                        evolutionType = 1;
+                    }
+                    line = await reader.ReadLineAsync(); //
+                    numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
                     int round = int.Parse(numbers[0]); // beolvassuk a korok szamat
                     line = await reader.ReadLineAsync(); //
                     numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
@@ -81,7 +94,7 @@ namespace SpaceInvaders.Persistence
                     {
                         individualScore[i] = int.Parse(numbers[i]);
                     }
-                    Data data=new Data(round, populationSize,weightsSize,weights, individualFittnes, learningTime, individualScore);
+                    Data data=new Data(evolutionType,round, populationSize,weightsSize,weights, individualFittnes, learningTime, individualScore);
                     return data;
                 }
             //}
@@ -92,13 +105,22 @@ namespace SpaceInvaders.Persistence
         }
 
         // Mentes
-        public async Task SaveAsync(String path, int round, int populationSize, int weightsSize, double[,] weights, double[] individualFittnes, double learningTime, int[] individualScore)
+        public async Task SaveAsync(String path, int evolutionType, int round, int populationSize, int weightsSize, double[,] weights, double[] individualFittnes, double learningTime, int[] individualScore)
         {
             //try
             //{
                 using (StreamWriter writer = new StreamWriter(path)) // fájl megnyitása
                 {
-                    
+                    if (evolutionType == 0)
+                    {
+                        writer.Write("Simple evolution"); // kiírjuk a korok szamat
+                        await writer.WriteLineAsync(); //uj sor
+                    }
+                    else
+                    {
+                        writer.Write("Red Queen evolution"); // kiírjuk a korok szamat
+                        await writer.WriteLineAsync(); //uj sor
+                    }
                     writer.Write(round); // kiírjuk a korok szamat
                     await writer.WriteLineAsync(); //uj sor
                     writer.Write(populationSize); // kiírjuk az egyedek szamat

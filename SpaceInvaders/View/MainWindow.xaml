@@ -37,6 +37,10 @@
                 <MenuItem Header="Turn Off" Command="{Binding TurnOffViewCommand}"/>
                 <MenuItem Header="Turn On" Command="{Binding TurnOnViewCommand}"/>
             </MenuItem>
+            <MenuItem Header="Evolution">
+                <MenuItem Header="Simple" Command="{Binding SimpleEvolutionCommand}"/>
+                <MenuItem Header="Red queen" Command="{Binding RedQueenEvolutionCommand}"/>
+            </MenuItem>
         </Menu>
         <StatusBar Grid.Row="1" Name="Label"  Background="Black" Grid.ColumnSpan="2">
             <StatusBarItem >

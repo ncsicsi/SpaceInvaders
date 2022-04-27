@@ -42,6 +42,8 @@ namespace SpaceInvaders.ViewModel
         public DelegateCommand BestPlayCommand { get; private set; }
         public DelegateCommand TurnOffViewCommand { get; private set; }
         public DelegateCommand TurnOnViewCommand { get; private set; }
+        public DelegateCommand SimpleEvolutionCommand { get; private set; }
+        public DelegateCommand RedQueenEvolutionCommand { get; private set; }
 
         // Eletek lekerdezese
         public Int32 GameLives { get {return _model.Lives;} }
@@ -66,6 +68,8 @@ namespace SpaceInvaders.ViewModel
         public event EventHandler BestPlay;
         public event EventHandler TurnOffView;
         public event EventHandler TurnOnView;
+        public event EventHandler TurnSimpleEvolution;
+        public event EventHandler TurnRedQueenEvolution;
 
         public event EventHandler<GameEventArgs> GameAdvanced;
         public event EventHandler<EnemyEventArgs> GameCreated;
@@ -88,6 +92,8 @@ namespace SpaceInvaders.ViewModel
             ExitCommand = new DelegateCommand(param => OnExitGame());
             TurnOffViewCommand = new DelegateCommand(param => OnTurnOffView());
             TurnOnViewCommand = new DelegateCommand(param => OnTurnOnView());
+            SimpleEvolutionCommand = new DelegateCommand(param => OnTurnSimpleEvolution());
+            RedQueenEvolutionCommand = new DelegateCommand(param => OnTurnRedQueenEvolution());
 
             SetUpTable();
         }
@@ -242,6 +248,23 @@ namespace SpaceInvaders.ViewModel
             {
                 TurnOnView(this, EventArgs.Empty);
                 _model.TurnOnView();
+            }
+        }  
+        //Evolucio valtoztatasa
+        private void OnTurnSimpleEvolution()
+        {
+            if (TurnSimpleEvolution != null)
+            {
+                TurnSimpleEvolution(this, EventArgs.Empty);
+                _model.TurnSimpleEvolution();
+            }
+        }        
+        private void OnTurnRedQueenEvolution()
+        {
+            if (TurnRedQueenEvolution != null)
+            {
+                TurnRedQueenEvolution(this, EventArgs.Empty);
+                _model.TurnRedQueenEvolution();
             }
         }
 

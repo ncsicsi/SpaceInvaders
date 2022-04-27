@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpaceInvaders.Model;
 
 namespace SpaceInvaders.Persistence
 {
@@ -11,7 +12,7 @@ namespace SpaceInvaders.Persistence
         //fájl betoltese
     Task<Data> LoadAsync(String path);
     //fájl mentese
-    Task SaveAsync(String path, int round, int populationSize, int weightsSize, double [,] weights, double[] individualFittnes, double learningTime, int[] individualScore);
+    Task SaveAsync(String path,int evolutionType, int round, int populationSize, int weightsSize, double [,] weights, double[] individualFittnes, double learningTime, int[] individualScore);
     }
     
 }
