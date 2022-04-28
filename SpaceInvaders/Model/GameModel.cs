@@ -17,7 +17,7 @@ namespace SpaceInvaders.Model
     {
         #region Fields
         private NeuralNetwork _network;
-        private int _populationSize = 10;
+        private int _populationSize = 20;
         private int _hiddenNeuronSize = 25;
         private IGameDataAccess _dataAccess; //adateleres
         private int _score;
@@ -247,10 +247,9 @@ namespace SpaceInvaders.Model
         {
             if (_network.EvolutionType != NeuralNetwork.evolution.SIMPLE)
             {
-                _network.EvolutionType = NeuralNetwork.evolution.SIMPLE;
-                _network.LearningTime = 0;
-                _network.ActiveIndividual = 0;
+                _network.TurnSimpleEvolution();
                 _rounds = _network.Round;
+                
                 OnGameOver(false);
             }
         }
@@ -258,9 +257,7 @@ namespace SpaceInvaders.Model
         {
             if (_network.EvolutionType != NeuralNetwork.evolution.REDQUEEN)
             {
-                _network.EvolutionType = NeuralNetwork.evolution.REDQUEEN;
-                _network.LearningTime = 0;
-                _network.ActiveIndividual = 0;
+                _network.TurnRedQueenEvolution();
                 _rounds = _network.Round;
                 OnGameOver(false);
             }

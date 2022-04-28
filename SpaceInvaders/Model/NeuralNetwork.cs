@@ -48,6 +48,8 @@ namespace SpaceInvaders.Model
         private int _simpleRoundCounter;
         private int _redQueenRoundCounter;
         private double _learningTime = 0;
+        private double _simpleLearningTime = 0;
+        private double _redQueenLearningTime = 0;
 
 
         //fittnes sulyok
@@ -212,6 +214,22 @@ namespace SpaceInvaders.Model
             _activeIndividual = _bestIndividual;
         }
 
+        public void TurnSimpleEvolution()
+        {
+            EvolutionType = NeuralNetwork.evolution.SIMPLE;
+            _redQueenLearningTime = _learningTime;
+            LearningTime = _simpleLearningTime;
+            ActiveIndividual = 0;
+            _incommingNeuronsCount = _simpleIncommingNeuronsCount;
+        }        
+        public void TurnRedQueenEvolution()
+        {
+            EvolutionType = NeuralNetwork.evolution.REDQUEEN;
+            _simpleLearningTime = _learningTime;
+            LearningTime = _redQueenLearningTime;
+            ActiveIndividual = 0;
+            _incommingNeuronsCount = _redQueenIncommingNeuronsCount;
+        }
 
         #endregion
 
@@ -384,10 +402,10 @@ namespace SpaceInvaders.Model
         {
             if (_evolutionType == evolution.SIMPLE)
             {
-                int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
+                int s = (_simpleIncommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
                 for (int i = 0; i < s; i++)
                 {
-                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double varienece = 2.0D / (_simpleIncommingNeuronsCount + _hiddenNeuronsCount);
                     double stddev = Math.Sqrt(varienece);
                     var random = new Random();
                     double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
@@ -396,10 +414,10 @@ namespace SpaceInvaders.Model
             }
             else
             {
-                int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
+                int s = (_redQueenIncommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
                 for (int i = 0; i < s; i++)
                 {
-                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double varienece = 2.0D / (_redQueenIncommingNeuronsCount + _hiddenNeuronsCount);
                     double stddev = Math.Sqrt(varienece);
                     var random = new Random();
                     double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
