@@ -18,7 +18,7 @@ namespace SpaceInvaders.Model
         #region Fields
         private NeuralNetwork _network;
         private int _populationSize = 20;
-        private int _hiddenNeuronSize = 25;
+        private int _hiddenNeuronSize = 20;
         private IGameDataAccess _dataAccess; //adateleres
         private int _score;
         private int _lives;
@@ -109,7 +109,7 @@ namespace SpaceInvaders.Model
             ReSetEnemyTable();
             ReSetBulletTable();
             _score = 0;
-            _lives = 2;
+            _lives = 1;
             _shipXPos = 312;
             _bullet = false;
             _bulletCount = 0;
