@@ -33,6 +33,7 @@ namespace SpaceInvaders.Model
         private bool _goRight;
         private bool _bullet;
         private static System.Timers.Timer _timer;
+        private static System.Timers.Timer _timerOffView;
         private static int _windowWidth = 700;
         private static int _windowHeight = 700;
         private static int _windowBorder = 10;
@@ -93,11 +94,17 @@ namespace SpaceInvaders.Model
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             _dataAccess = dataAccess;
+            _viewOn = true;
             ReSetBulletTable();
             _timer = new System.Timers.Timer(20);
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
+            _timerOffView = new System.Timers.Timer(1);
+            _timerOffView.Elapsed += _timerOffView_Elapsed;
+            _timerOffView.AutoReset = true;
+            _timerOffView.Enabled = true;
+            _timerOffView.Stop();
             _rounds = 0;
         }
         #endregion
@@ -125,8 +132,11 @@ namespace SpaceInvaders.Model
             _network.NetworkOn = true;
             _rounds++;
             OnGameCreated();
-            _timer.Start();
-            
+            if (_viewOn)
+            {
+                _timer.Start();
+            }
+
         }
         public void NewRound()
         {
@@ -148,7 +158,10 @@ namespace SpaceInvaders.Model
             //_timer.Elapsed += _timer_Elapsed;
             //_timer.AutoReset = true;
             //_timer.Enabled = true;
-            _timer.Start();
+            if (_viewOn)
+            {
+                _timer.Start();
+            }
         }
 
         // Jatek betoltese
@@ -189,7 +202,10 @@ namespace SpaceInvaders.Model
         }
         public void startTimer()
         {
-            _timer.Start();
+            if (_viewOn)
+            {
+                _timer.Start();
+            }
         }
         public void ChangeManual()
         {
@@ -215,7 +231,8 @@ namespace SpaceInvaders.Model
         {
             _timer.Stop();
             _viewOn = false;
-            while (!_viewOn)
+            _timerOffView.Start();
+            /*while (!_viewOn)
             {
                 NetworkAction();
                 ShipMove();
@@ -229,17 +246,19 @@ namespace SpaceInvaders.Model
                 EnemyMove();
                 BulletMove();
                 CreateBullet();
+                //OnGameAdvanced();
                 _network.ElapsedTime += 0.02D;
                 if (GameOverIs())
                 {
                     OnGameOver(_win);
                 }
                 System.Threading.Thread.Sleep(2000);
-            }
+            }*/
         }
 
         public void TurnOnView()
         {
+            _timerOffView.Stop();
             _timer.Start();
             _viewOn = true;
         }        
@@ -297,6 +316,28 @@ namespace SpaceInvaders.Model
             BulletMove();
             CreateBullet();
             OnGameAdvanced();
+            _network.ElapsedTime+=0.02D;
+            if (GameOverIs())
+            {
+                OnGameOver(_win);
+            }
+
+        }        
+        private void _timerOffView_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            NetworkAction();
+            ShipMove();
+            _enemyBulletTimeCounter++;
+            EnemyBulletMove();
+            if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
+            {
+                _enemyBulletTimeCounter = 0;
+                CreateEnemyBullet();
+            }
+            EnemyMove();
+            BulletMove();
+            CreateBullet();
+            //OnGameAdvanced();
             _network.ElapsedTime+=0.02D;
             if (GameOverIs())
             {
