@@ -405,7 +405,7 @@ namespace SpaceInvaders.Model
                 int s = (_simpleIncommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
                 for (int i = 0; i < s; i++)
                 {
-                    double varienece = 2.0D / (_simpleIncommingNeuronsCount + _hiddenNeuronsCount);
+                    double varienece = 2.0D / (_simpleIncommingNeuronsCount + _hiddenNeuronsCount+2);
                     double stddev = Math.Sqrt(varienece);
                     var random = new Random();
                     double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
@@ -417,7 +417,7 @@ namespace SpaceInvaders.Model
                 int s = (_redQueenIncommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
                 for (int i = 0; i < s; i++)
                 {
-                    double varienece = 2.0D / (_redQueenIncommingNeuronsCount + _hiddenNeuronsCount);
+                    double varienece = 2.0D / (_redQueenIncommingNeuronsCount + _hiddenNeuronsCount+2);
                     double stddev = Math.Sqrt(varienece);
                     var random = new Random();
                     double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
@@ -493,7 +493,7 @@ namespace SpaceInvaders.Model
             double mutation;
             int rd = _bestIndividual;
             Random mutationRd = new Random();
-            int weightCount= (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
+            int weightCount = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
             while ( rd == _bestIndividual || rd == _worstIndividual)
             {
                 rd = random.Next(0, _individualCount-1);
@@ -506,7 +506,7 @@ namespace SpaceInvaders.Model
                     rd = random.Next(1, 100);
                     /*mutation = random.Next(0,1000);
                     mutation = mutation / 1000000D;*/
-                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.001D);
+                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.01D);
                     if (rd < 60)    // legjobbtol kapja a gent
                     {
                         _simpleWeights[_worstIndividual, i] = Math.Abs(_simpleWeights[_bestIndividual, i] + mutation);
@@ -560,12 +560,12 @@ namespace SpaceInvaders.Model
         {
             Random randomIndividual = new Random();
             int rd = randomIndividual.Next(0, _individualCount);
-            int s = _incommingNeuronsCount * _hiddenNeuronsCount + _hiddenNeuronsCount * _outcommingNeuronsCount;
+            int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
             if (_evolutionType == evolution.SIMPLE)
             {
                 for (int i = 0; i < s; i++)
                 {
-                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount+2);
                     double stddev = Math.Sqrt(varienece);
                     var random = new Random();
                     double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
@@ -576,7 +576,7 @@ namespace SpaceInvaders.Model
             {
                 for (int i = 0; i < s; i++)
                 {
-                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount);
+                    double varienece = 2.0D / (_incommingNeuronsCount + _hiddenNeuronsCount+2);
                     double stddev = Math.Sqrt(varienece);
                     var random = new Random();
                     double sample = Math.Abs(NormalDistribution.Sample(random, 0D, stddev));
