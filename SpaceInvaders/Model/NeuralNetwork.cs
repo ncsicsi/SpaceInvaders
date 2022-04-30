@@ -212,6 +212,7 @@ namespace SpaceInvaders.Model
         public void BestPlay()
         {
             _activeIndividual = _bestIndividual;
+            ReSetFittnes();
         }
 
         public void TurnSimpleEvolution()

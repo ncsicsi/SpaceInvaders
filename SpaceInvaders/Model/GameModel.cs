@@ -17,7 +17,7 @@ namespace SpaceInvaders.Model
     {
         #region Fields
         private NeuralNetwork _network;
-        private int _populationSize = 20;
+        private int _populationSize = 5;
         private int _hiddenNeuronSize = 20;
         private IGameDataAccess _dataAccess; //adateleres
         private int _score;
@@ -358,7 +358,7 @@ namespace SpaceInvaders.Model
         private void ReSetEnemyTable()
         {
             int enemyColumn = 0;
-            int s = _windowWidth - ((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance));
+            //int s = _windowWidth - ((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance));
             int border =_windowWidth - (_windowWidth-((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance))) / 2 - _enemySize;
             int left = border;
             for (int i = 0; i < _enemys.Length; i++)
