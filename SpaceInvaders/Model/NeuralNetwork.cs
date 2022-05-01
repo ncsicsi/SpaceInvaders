@@ -57,7 +57,7 @@ namespace SpaceInvaders.Model
         private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
         private double _avoidBulletsWeight = 15; 
-        private double _usedBulletssWeight = 0.6;
+        private double _usedBulletssWeight = 0.8;
 
 
 
@@ -182,6 +182,7 @@ namespace SpaceInvaders.Model
             if (data._evolutionType == 0)
             {
                 _evolutionType = evolution.SIMPLE;
+                _incommingNeuronsCount = _simpleIncommingNeuronsCount;
                 _simpleRoundCounter = data._round;
                 for (int i = 0; i < _individualCount; i++)
                 {
@@ -195,6 +196,7 @@ namespace SpaceInvaders.Model
             else
             {
                 _evolutionType = evolution.REDQUEEN;
+                _incommingNeuronsCount = _redQueenIncommingNeuronsCount;
                 _redQueenRoundCounter = data._round;
                 for (int i = 0; i < _individualCount; i++)
                 {
@@ -225,6 +227,7 @@ namespace SpaceInvaders.Model
             LearningTime = _simpleLearningTime;
             ActiveIndividual = 0;
             _incommingNeuronsCount = _simpleIncommingNeuronsCount;
+            ReSetFittnes();
         }        
         public void TurnRedQueenEvolution()
         {
@@ -233,6 +236,7 @@ namespace SpaceInvaders.Model
             LearningTime = _redQueenLearningTime;
             ActiveIndividual = 0;
             _incommingNeuronsCount = _redQueenIncommingNeuronsCount;
+            ReSetFittnes();
         }
 
         #endregion
@@ -510,7 +514,7 @@ namespace SpaceInvaders.Model
                     rd = random.Next(1, 100);
                     /*mutation = random.Next(0,1000);
                     mutation = mutation / 1000000D;*/
-                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.01D);
+                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.02D);
                     if (rd < 60)    // legjobbtol kapja a gent
                     {
                         _simpleWeights[_worstIndividual, i] = Math.Abs(_simpleWeights[_bestIndividual, i] + mutation);
@@ -529,7 +533,7 @@ namespace SpaceInvaders.Model
                     rd = random.Next(1, 10);
                     /*mutation = random.Next(0,1000);
                     mutation = mutation / 1000000D;*/
-                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.001D);
+                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.02D);
                     if (rd < 6)    // legjobbtol kapja a gent
                     {
                         _redQueenWeights[_worstIndividual, i] = Math.Abs(_redQueenWeights[_bestIndividual, i] + mutation);

@@ -18,8 +18,8 @@ namespace SpaceInvaders.Model
         #region Fields
         //network
         private NeuralNetwork _network;
-        private int _populationSize = 20;
-        private int _hiddenNeuronSize = 20;
+        private int _populationSize = 15;
+        private int _hiddenNeuronSize = 25;
         //game param
         private int _enemysCount = 50;
         private static int _maxenemyCount=50;
