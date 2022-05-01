@@ -161,7 +161,7 @@ namespace SpaceInvaders.View
         {
             for (int i = 0; i < bullets.Length; i++)
             {
-                if (bullets[i].Alive && bullets[i].IsNewBullet)
+                if (bullets[i].Alive && bullets[i].IsNewBullet && _bulletsRectangles[i] == null)
                 {
                         _bulletsRectangles[i] = new Rectangle
                         {
@@ -183,6 +183,7 @@ namespace SpaceInvaders.View
                 else
                 {
                     GameCanvas.Children.Remove(_bulletsRectangles[i]);
+                    _bulletsRectangles[i] = null;
                 }
             }
         }
