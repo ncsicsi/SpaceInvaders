@@ -16,53 +16,58 @@ namespace SpaceInvaders.Model
     internal class GameModel
     {
         #region Fields
+        //network
         private NeuralNetwork _network;
         private int _populationSize = 20;
         private int _hiddenNeuronSize = 20;
-        private IGameDataAccess _dataAccess; //adateleres
-        private int _score;
-        private int _lives;
+        //game param
         private int _enemysCount = 50;
         private static int _maxenemyCount=50;
-        private EnemyStruct[,] _enemys;
         private static int _maxBullet = 120;
-        private Bullet[] _bullets;
-        private int _shipXPos;
-        private int _shipYPos = 590;
-        private bool _goLeft;
-        private bool _goRight;
-        private bool _bullet;
-        private static System.Timers.Timer _timer;
-        private static System.Timers.Timer _timerOffView;
         private static int _windowWidth = 700;
         private static int _windowHeight = 700;
         private static int _windowBorder = 10;
         private static int _shipWidth = 60;
-        private static int _shipHeight = 30;
         private static int _shipSpeed = 5;
         private static int _enemySize = 45;
         private static int _enemyColumns = 10;
         private static int _enemyRows = 5;
         private static int _enemyDistance = 10;
-        private int _bulletCount;
-        private double _enemySpeed;
         private double _enemyBasicSpeed = 1;
         private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
-        private int _enemyBulletTimeCounter;
-        private Bullet _enemyBullet;
         private int _bulletHight = 20;
-        private bool _win;
         private int _bulletspeed = 5;
-        private int _enemyButtomYPos;
+        private int _shipYPos = 590;
+        private EnemyStruct[,] _enemys;
+        private Bullet[] _bullets;
+        private Bullet _enemyBullet;
+        private int _shipXPos;
+        private bool _goLeft;
+        private bool _goRight;
+        private bool _bullet;
+        //private static int _shipHeight = 30;
+        private int _bulletCount;
+        private double _enemySpeed;
+        private int _enemyBulletTimeCounter;
+        private bool _win;
+        private int _enemyButtomYPos;   //legalso enemy helyzete x szerint
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
+        private bool _viewOn;
         private int _rounds;
-        
+        private int _score;
+        private int _lives;
+
+        private static System.Timers.Timer _timer;
+        private static System.Timers.Timer _timerOffView;
+
+        private IGameDataAccess _dataAccess; //adateleres
+
         private enum direction {RIGHT, LEFT, DOWN};
         private direction _direction;
-        private bool _viewOn;
-        
+
+
 
         #endregion
 
@@ -113,6 +118,7 @@ namespace SpaceInvaders.Model
         public void NewGame()
         {
             _timer.Stop();
+            _timerOffView.Stop();
             ReSetEnemyTable();
             ReSetBulletTable();
             _score = 0;
@@ -158,10 +164,6 @@ namespace SpaceInvaders.Model
             _goRight = false;
             _bullet = false;
             OnGameCreated();
-            //_timer = new System.Timers.Timer(20);
-            //_timer.Elapsed += _timer_Elapsed;
-            //_timer.AutoReset = true;
-            //_timer.Enabled = true;
             if (_viewOn)
             {
                 _timer.Start();

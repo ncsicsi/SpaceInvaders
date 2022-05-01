@@ -18,24 +18,21 @@ namespace SpaceInvaders.Model
         public enum evolution { SIMPLE, REDQUEEN};
         public evolution _evolutionType = evolution.SIMPLE;
         public bool _networkOn;
-        public enum action { GORIGHT, GOLEFT, SHOT };
-        private double[] _hiddenNeurons;
-        private double[] _simpleIncommingNeurons;
-        private double[] _redQueenIncommingNeurons;
-        private double[] _outcommingNeurons;
+
         private double _incomingBiasNeuron = 1;
         private double _hiddenBiasNeuron = 1;
-        private int _hiddenNeuronsCount;
         private int _incommingNeuronsCount = 12;
         private int _simpleIncommingNeuronsCount = 12;
         private int _redQueenIncommingNeuronsCount = 14;
         private int _outcommingNeuronsCount = 3;
+        private int _hiddenNeuronsCount;
+        private double[] _hiddenNeurons;
+        private double[] _simpleIncommingNeurons;
+        private double[] _redQueenIncommingNeurons;
+        private double[] _outcommingNeurons;
         private double[,] _simpleWeights;
         private double[,] _redQueenWeights;
-        private double _score;
-        private double _elapsedTime;
-        private double _avoidBullets;
-        private double _usedBullets = 0;
+        public enum action { GORIGHT, GOLEFT, SHOT };
 
         //evolucio
         private int _individualCount;
@@ -51,12 +48,18 @@ namespace SpaceInvaders.Model
         private double _simpleLearningTime = 0;
         private double _redQueenLearningTime = 0;
 
-
+        //fittnes
+        private double _score = 0;
+        private double _elapsedTime = 0;
+        private double _avoidBullets = 0;
+        private double _usedBullets = 0;
         //fittnes sulyok
         private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
         private double _avoidBulletsWeight = 15; 
-        private double _usedBulletssWeight = 0.6; 
+        private double _usedBulletssWeight = 0.6;
+
+
 
         //bejovo neuronok
         public double _bulletDistance = 0; // enemy bullet tavolsaga kozott 0-700
