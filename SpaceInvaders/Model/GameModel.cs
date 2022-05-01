@@ -136,6 +136,10 @@ namespace SpaceInvaders.Model
             {
                 _timer.Start();
             }
+            else
+            {
+                _timerOffView.Start();
+            }
 
         }
         public void NewRound()
@@ -161,6 +165,10 @@ namespace SpaceInvaders.Model
             if (_viewOn)
             {
                 _timer.Start();
+            }
+            else
+            {
+                _timerOffView.Start();
             }
         }
 
@@ -198,13 +206,24 @@ namespace SpaceInvaders.Model
 
         public void stopTimer()
         {
-            _timer.Stop();
+            if (_viewOn)
+            {
+                _timer.Stop();
+            }
+            else
+            {
+                _timerOffView.Stop();
+            }
         }
         public void startTimer()
         {
             if (_viewOn)
             {
                 _timer.Start();
+            }
+            else
+            {
+                _timerOffView.Start();
             }
         }
         public void ChangeManual()

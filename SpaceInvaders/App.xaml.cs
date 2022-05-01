@@ -164,7 +164,7 @@ namespace SpaceInvaders
         }        
         private void ViewModel_TurnRedQueenEvolution(object sender, EventArgs e)
         {
-            _model.stopTimer();
+            //_model.stopTimer();
             //_view.RoundOver();
         }
 
