@@ -46,7 +46,7 @@ namespace SpaceInvaders.Persistence
                     String line = await reader.ReadLineAsync(); //
                     String[] numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
                     int evolutionType;
-                    if(numbers[0]== "Simple evolution")
+                    if(numbers[0]== "Simple")
                     {
                         evolutionType = 0;
                     }
