@@ -49,10 +49,10 @@ namespace SpaceInvaders.Model
         private double _redQueenLearningTime = 0;
 
         //fittnes
-        private double _score = 0;
-        private double _elapsedTime = 0;
-        private double _avoidBullets = 0;
-        private double _usedBullets = 0;
+        public double _score = 0;
+        public double _elapsedTime = 0;
+        public double _avoidBullets = 0;
+        public double _usedBullets = 0;
         //fittnes sulyok
         private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
@@ -79,14 +79,13 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Properties
-        public bool NetworkOn { get { return _networkOn; } set { _networkOn = value; } }
         public double[,] Weights { get { if (_evolutionType == evolution.SIMPLE) { return _simpleWeights; } else return _redQueenWeights; } }
         public double[] IndividualFittnes { get {return _individualFittnes; } }
         public int WeightsCount { get {return (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount; } }
-        public double Score { get { return _score; } set { _score = value; } }
-        public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
-        public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
-        public double UsedBullets { get { return _usedBullets; } set { _usedBullets = value; } }
+        //public double Score { get { return _score; } set { _score = value; } }
+        //public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
+        //public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
+        //public double UsedBullets { get { return _usedBullets; } set { _usedBullets = value; } }
         public int ActiveIndividual { get { return _activeIndividual; } set { _activeIndividual = value; } }
         public double LearningTime { get { return _learningTime; } set { _learningTime = value; } }
         public int[] IndividualScore { get { return _individualScore; } }
@@ -597,7 +596,11 @@ namespace SpaceInvaders.Model
         {
             _individualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight - _usedBullets*_usedBulletssWeight; 
         }
-        private void ReSetFittnes()
+        #endregion
+
+        #region Evolution Public Methods
+
+        public void ReSetFittnes()
         {
             _elapsedTime = 0;
             _score = 0;
@@ -605,9 +608,6 @@ namespace SpaceInvaders.Model
             _usedBullets = 0;
         }
 
-        #endregion
-
-        #region Evolution Public Methods
 
         public void GameOver(int score, bool win)
         {

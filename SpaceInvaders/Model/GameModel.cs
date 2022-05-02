@@ -87,7 +87,7 @@ namespace SpaceInvaders.Model
         public void GoRight(bool goRight) { _goRight = goRight; }
         //bullet
         public void BulletOn(bool bullet) { _bullet = bullet; }
-        public bool NetworkOn { get { return _network.NetworkOn; } set { _network.NetworkOn = value; } }
+        public bool NetworkOn { get { return _network._networkOn; } set { _network._networkOn = value; } }
 
 
         #endregion
@@ -135,7 +135,7 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
-            _network.NetworkOn = true;
+            _network._networkOn = true;
             _rounds++;
             OnGameCreated();
             if (_viewOn)
@@ -185,7 +185,7 @@ namespace SpaceInvaders.Model
             _populationSize = data._populationSize;
             //_hiddenNeuronSize = data._weightsSize;
             _network.LoadNetwork(data);
-            GameOver(this, new GameOverEventArgs(false, _network.NetworkOn));
+            GameOver(this, new GameOverEventArgs(false, _network._networkOn));
             //NewGame();
             NetworkLoaded?.Invoke(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
         }
@@ -337,7 +337,7 @@ namespace SpaceInvaders.Model
             BulletMove();
             CreateBullet();
             OnGameAdvanced();
-            _network.ElapsedTime+=0.02D;
+            _network._elapsedTime += 0.02D;
             if (GameOverIs())
             {
                 OnGameOver(_win);
@@ -359,7 +359,7 @@ namespace SpaceInvaders.Model
             BulletMove();
             CreateBullet();
             //OnGameAdvanced();
-            _network.ElapsedTime+=0.02D;
+            _network._elapsedTime += 0.02D;
             if (GameOverIs())
             {
                 OnGameOver(_win);
@@ -441,7 +441,7 @@ namespace SpaceInvaders.Model
                 {
                     _bulletCount = 0;
                 }
-                _network.UsedBullets++;
+                _network._usedBullets++;
             }
         }
 
@@ -466,7 +466,7 @@ namespace SpaceInvaders.Model
                     _enemyBullet.Alive = false;
                 }else if(_enemyBullet.Y + _bulletHight >= _windowHeight){
                     _enemyBullet.Alive = false;
-                    _network.AvoidBullets++;
+                    _network._avoidBullets++;
                 }
             }
         }
@@ -683,7 +683,7 @@ namespace SpaceInvaders.Model
         }
         private void NetworkAction()
         {
-            if (_network.NetworkOn)
+            if (_network._networkOn)
             {
                 SetNetwork();
                 NeuralNetwork.action nextAction = _network.NextAction();
@@ -829,7 +829,7 @@ namespace SpaceInvaders.Model
             _timer.Stop();
             _network.GameOver(_score, win);
                 if (GameOver != null)
-                GameOver(this, new GameOverEventArgs(win, _network.NetworkOn));
+                GameOver(this, new GameOverEventArgs(win, _network._networkOn));
         }
 
         #endregion
