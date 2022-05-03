@@ -146,7 +146,10 @@ namespace SpaceInvaders.Model
             {
                 _timerOffView.Start();
             }
-
+            if (_network._networkOn)
+            {
+                _network.ReSetFittnes();
+            }
         }
         public void NewRound()
         {
@@ -197,11 +200,11 @@ namespace SpaceInvaders.Model
                 throw new InvalidOperationException("No data access is provided.");
             if (_network.EvolutionType == NeuralNetwork.evolution.SIMPLE)
             {
-                await _dataAccess.SaveAsync(path, 0, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes, _network.LearningTime, _network.IndividualScore);
+                await _dataAccess.SaveAsync(path, 0, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes, _network.LearningTime, _network.IndividualScore, _network.EvolutionParameters);
             }
             else
             {
-                await _dataAccess.SaveAsync(path, 1, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes, _network.LearningTime, _network.IndividualScore);
+                await _dataAccess.SaveAsync(path, 1, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes, _network.LearningTime, _network.IndividualScore, _network.EvolutionParameters);
             }
             
         }

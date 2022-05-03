@@ -10,7 +10,6 @@ namespace SpaceInvaders.Model
     {
         private int _bulletX;
         private int _bulletY;
-        //private bool _bullet;
         private bool _bulletAlive;
         private bool _isNewBullet;
         public int X { get { return _bulletX; } set { _bulletX = value; } }

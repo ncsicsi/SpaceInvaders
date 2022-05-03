@@ -47,6 +47,7 @@ namespace SpaceInvaders.Model
         private double _learningTime = 0;
         private double _simpleLearningTime = 0;
         private double _redQueenLearningTime = 0;
+        private double _mutation = 0.02D;
 
         //fittnes
         public double _score = 0;
@@ -58,6 +59,7 @@ namespace SpaceInvaders.Model
         private double _elapsedTimeWeighht = 2;
         private double _avoidBulletsWeight = 15; 
         private double _usedBulletssWeight = 0.8;
+        private double[] _evolutionParameters = new double[5];
 
 
 
@@ -91,12 +93,18 @@ namespace SpaceInvaders.Model
         public int[] IndividualScore { get { return _individualScore; } }
         public evolution EvolutionType { get { return _evolutionType; } set { _evolutionType = value; } }
         public int Round { get { if (_evolutionType == evolution.SIMPLE) { return _simpleRoundCounter; } else return _redQueenRoundCounter; } set { if (_evolutionType == evolution.SIMPLE) { _simpleRoundCounter = value;  } else _redQueenRoundCounter = value; } }
+        public double[] EvolutionParameters { get { return _evolutionParameters; } set { _evolutionParameters = value;  } }
         #endregion
 
         #region Constructor
         public NeuralNetwork(int hiddenNeuronsCount, int individualCount)
         {
             CreatePopulation(hiddenNeuronsCount, individualCount);
+            _evolutionParameters[0] = _mutation;
+            _evolutionParameters[1] = _scoreWeight;
+            _evolutionParameters[2] = _elapsedTimeWeighht;
+            _evolutionParameters[3] = _avoidBulletsWeight;
+            _evolutionParameters[4] = _usedBulletssWeight;
         }
         #endregion
 
@@ -178,6 +186,11 @@ namespace SpaceInvaders.Model
         {
             //_hiddenNeuronsCount = data._weightsSize;
             _individualCount = data._populationSize;
+            data._evolutionParameters[0] = _evolutionParameters[0] = _mutation;
+            data._evolutionParameters[1] = _evolutionParameters[1] = _scoreWeight;
+            data._evolutionParameters[2] = _evolutionParameters[2] = _elapsedTimeWeighht;
+            data._evolutionParameters[3] = _evolutionParameters[3] = _avoidBulletsWeight;
+            data._evolutionParameters[4] = _evolutionParameters[4] = _usedBulletssWeight;
             if (data._evolutionType == 0)
             {
                 _evolutionType = evolution.SIMPLE;
@@ -513,7 +526,7 @@ namespace SpaceInvaders.Model
                     rd = random.Next(1, 100);
                     /*mutation = random.Next(0,1000);
                     mutation = mutation / 1000000D;*/
-                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.02D);
+                    mutation = NormalDistribution.Sample(mutationRd, 0D, _mutation);
                     if (rd < 60)    // legjobbtol kapja a gent
                     {
                         _simpleWeights[_worstIndividual, i] = Math.Abs(_simpleWeights[_bestIndividual, i] + mutation);
@@ -532,7 +545,7 @@ namespace SpaceInvaders.Model
                     rd = random.Next(1, 10);
                     /*mutation = random.Next(0,1000);
                     mutation = mutation / 1000000D;*/
-                    mutation = NormalDistribution.Sample(mutationRd, 0D, 0.02D);
+                    mutation = NormalDistribution.Sample(mutationRd, 0D, _mutation);
                     if (rd < 6)    // legjobbtol kapja a gent
                     {
                         _redQueenWeights[_worstIndividual, i] = Math.Abs(_redQueenWeights[_bestIndividual, i] + mutation);
@@ -622,7 +635,7 @@ namespace SpaceInvaders.Model
                     if (_activeIndividual < _individualCount - 1 && _simpleRoundCounter < _individualCount - 1)
                     {
                         _activeIndividual++;
-                        ReSetFittnes();
+                        //ReSetFittnes();
                         _simpleRoundCounter++;
                     }
                     else
@@ -630,7 +643,7 @@ namespace SpaceInvaders.Model
                         RoundResults();
                         _activeIndividual = _worstIndividual;
                         EvolutePopulation();
-                        ReSetFittnes();
+                        //ReSetFittnes();
                     }
                 }
                 else
@@ -638,7 +651,7 @@ namespace SpaceInvaders.Model
                     if (_activeIndividual < _individualCount - 1 && _redQueenRoundCounter < _individualCount - 1)
                     {
                         _activeIndividual++;
-                        ReSetFittnes();
+                        //ReSetFittnes();
                         _redQueenRoundCounter++;
                     }
                     else
@@ -646,7 +659,7 @@ namespace SpaceInvaders.Model
                         RoundResults();
                         _activeIndividual = _worstIndividual;
                         EvolutePopulation();
-                        ReSetFittnes();
+                        //ReSetFittnes();
                     }
                 }
             }
