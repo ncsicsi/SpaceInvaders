@@ -56,10 +56,10 @@ namespace SpaceInvaders.Persistence
                     {
                         evolutionType = 1;
                     }
-                    double[] evolutionParameters = new double[5];
+                    double[] evolutionParameters = new double[6];
                     line = await reader.ReadLineAsync();
                     numbers = line.Split(' ');
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 6; i++)
                     {
                         evolutionParameters[i] = double.Parse(numbers[i]);
                     }
@@ -131,7 +131,7 @@ namespace SpaceInvaders.Persistence
                         await writer.WriteLineAsync(); //uj sor
                     }
                     //Kiirjuk az evolucio parametereit
-                    for (Int32 i = 0; i < 5; i++)
+                    for (Int32 i = 0; i < 6; i++)
                     {
                         await writer.WriteAsync(evolutionParameters[i] + " ");
                     }

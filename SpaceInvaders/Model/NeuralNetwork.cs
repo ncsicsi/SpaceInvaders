@@ -47,19 +47,24 @@ namespace SpaceInvaders.Model
         private double _learningTime = 0;
         private double _simpleLearningTime = 0;
         private double _redQueenLearningTime = 0;
-        private double _mutation = 0.02D;
+        private double _mutation = 0.01D;
 
         //fittnes
         public double _score = 0;
         public double _elapsedTime = 0;
         public double _avoidBullets = 0;
         public double _usedBullets = 0;
+        public bool _goLeft = false;    // ha egy egyed egy körön belül, balra és jobbra is megy, akkor azt nagyy jutalomban reszesitjuk
+        public bool _goRight = false;
+        public double _goLeftAndRight = 0;
         //fittnes sulyok
+        private int _fittnesComponentCount = 6;
         private double _scoreWeight = 2;
         private double _elapsedTimeWeighht = 2;
         private double _avoidBulletsWeight = 15; 
-        private double _usedBulletssWeight = 0.8;
-        private double[] _evolutionParameters = new double[5];
+        private double _usedBulletssWeight = 0.6D;
+        private double _goLeftAndRightWeight = 500D;
+        private double[] _evolutionParameters;
 
 
 
@@ -100,11 +105,13 @@ namespace SpaceInvaders.Model
         public NeuralNetwork(int hiddenNeuronsCount, int individualCount)
         {
             CreatePopulation(hiddenNeuronsCount, individualCount);
+            _evolutionParameters = new double[_fittnesComponentCount];
             _evolutionParameters[0] = _mutation;
             _evolutionParameters[1] = _scoreWeight;
             _evolutionParameters[2] = _elapsedTimeWeighht;
             _evolutionParameters[3] = _avoidBulletsWeight;
             _evolutionParameters[4] = _usedBulletssWeight;
+            _evolutionParameters[5] = _goLeftAndRightWeight;
         }
         #endregion
 
@@ -191,6 +198,7 @@ namespace SpaceInvaders.Model
             data._evolutionParameters[2] = _evolutionParameters[2] = _elapsedTimeWeighht;
             data._evolutionParameters[3] = _evolutionParameters[3] = _avoidBulletsWeight;
             data._evolutionParameters[4] = _evolutionParameters[4] = _usedBulletssWeight;
+            data._evolutionParameters[5] = _evolutionParameters[5] = _goLeftAndRightWeight;
             if (data._evolutionType == 0)
             {
                 _evolutionType = evolution.SIMPLE;
@@ -607,7 +615,11 @@ namespace SpaceInvaders.Model
         }
         private void CalculateFittnes()
         {
-            _individualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight - _usedBullets*_usedBulletssWeight; 
+            if(_goLeft && _goRight)
+            {
+                _goLeftAndRight = 1;
+            }
+            _individualFittnes[_activeIndividual] = _score * _scoreWeight + _elapsedTime * _elapsedTimeWeighht + _avoidBullets * _avoidBulletsWeight - _usedBullets*_usedBulletssWeight + _goLeftAndRight*_goLeftAndRightWeight; 
         }
         #endregion
 
@@ -619,6 +631,9 @@ namespace SpaceInvaders.Model
             _score = 0;
             _avoidBullets = 0;
             _usedBullets = 0;
+            _goRight = false;
+            _goLeft = false;
+            _goLeftAndRight = 0;
         }
 
 

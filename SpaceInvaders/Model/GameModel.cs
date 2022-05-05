@@ -18,7 +18,7 @@ namespace SpaceInvaders.Model
         #region Fields
         //network
         private NeuralNetwork _network;
-        private int _populationSize = 15;
+        private int _populationSize = 20;
         private int _hiddenNeuronSize = 25;
         //game param
         private int _enemysCount = 50;
@@ -537,10 +537,12 @@ namespace SpaceInvaders.Model
             if (_goLeft && _shipXPos > _windowBorder)
             {
                 _shipXPos -= _shipSpeed;
+                _network._goLeft = true;
             }
             else if (_goRight && _shipXPos + _shipWidth + _windowBorder + _shipSpeed < _windowWidth)
             {
                 _shipXPos += _shipSpeed;
+                _network._goRight = true;
             }
         }
 
@@ -676,7 +678,7 @@ namespace SpaceInvaders.Model
                 {
                     if (_enemys[i, j].Y() > max && _enemys[i, j].Alive)
                     {
-                        max = _enemys[i, j].X();
+                        max = _enemys[i, j].Y();
                         maxI = i;
                         maxJ = j;
                     }
@@ -798,7 +800,7 @@ namespace SpaceInvaders.Model
                 _win = false;
                 return true;
             }
-            if(_enemyButtomYPos >= _shipYPos)
+            if(_enemyButtomYPos > _shipYPos)
             {
                 _win = false;
                 return true;
