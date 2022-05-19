@@ -121,8 +121,8 @@ namespace SpaceInvaders
             }
             else
             {
-                _model.stopTimer();
-                _gameWindow.RoundOver();
+                //_model.stopTimer();
+                //_gameWindow.RoundOver();
             }
         }
         /// Nézet bezárásának eseménykezelője.
