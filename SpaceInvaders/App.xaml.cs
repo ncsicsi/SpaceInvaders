@@ -36,6 +36,7 @@ namespace SpaceInvaders
         private GameModel _model;
         private GameViewModel _viewModel;
         private MainWindow _view;
+        private GameWindow _gameWindow;
 
         #endregion
 
@@ -57,6 +58,7 @@ namespace SpaceInvaders
             //model letrehozasa
             _model = new GameModel(new GameFileDataAccess());
             _view = new MainWindow();
+            _gameWindow = new GameWindow();
             _viewModel = new GameViewModel(_model);
             _model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
             //_model.NetworkLoaded += new EventHandler<GameEventArgs>(Model_NetworkLoaded);
@@ -79,10 +81,12 @@ namespace SpaceInvaders
             // nézet létrehozása
             //_view = new MainWindow();
             _view.DataContext = _viewModel;
+            _gameWindow.DataContext = _viewModel;
 
-            _view.KeyIsDown_Event += new KeyEventHandler(View_KeyIsDown);
-            _view.KeyIsUp_Event += new KeyEventHandler(View_KeyIsUp);
+            _gameWindow.KeyIsDown_Event += new KeyEventHandler(View_KeyIsDown);
+            _gameWindow.KeyIsUp_Event += new KeyEventHandler(View_KeyIsUp);
             _model.NewGame();
+            _view.Navigate(_gameWindow);
 
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing); // eseménykezelés a bezáráshoz
             _view.Show();
@@ -104,17 +108,17 @@ namespace SpaceInvaders
             else
             {
                 _model.stopTimer();
-                _view.RoundOver();
+                _gameWindow.RoundOver();
             }
         }
         /// Nézet bezárásának eseménykezelője.
         private void View_GameAdvanced(object sender, GameEventArgs e)
         {
-            _view.View_GameAdvanced(e); 
+            _gameWindow.View_GameAdvanced(e); 
         }
         private void View_GameCreated(object sender, EnemyEventArgs e)
         {
-            _view.View_GameCreated(e); 
+            _gameWindow.View_GameCreated(e); 
         }
 
         // Gomb lenyomasanak esemenye
@@ -137,16 +141,16 @@ namespace SpaceInvaders
         // Uj jatek inditasanak esemenykezeloje
         private void ViewModel_NewGame(object sender, EventArgs e)
         {
-            _view.RoundOver();
+            _gameWindow.RoundOver();
             _model.NewGame();
         }
         //legugyesebb lejatszasa
         private void ViewModel_BestPlay(object sender, EventArgs e)
         {
-            _view.RoundOver();
+            _gameWindow.RoundOver();
             _model.NewGame();
             _model.BestPlay();
-            _view.NewGame();
+            _gameWindow.NewGame();
         }
         //nezet ki, be kapcsolasa
         private void ViewModel_TurnOffView(object sender, EventArgs e)
@@ -191,9 +195,9 @@ namespace SpaceInvaders
                 {
                     // játék betöltése
                     await _model.LoadNetworkAsync(openFileDialog.FileName);
-                    _view.RoundOver();
+                    _gameWindow.RoundOver();
                     _model.NewGame();
-                    _view.NewGame();
+                    _gameWindow.NewGame();
 
             }
             /*}
@@ -256,12 +260,12 @@ namespace SpaceInvaders
                     MessageBoxImage.Asterisk);
                 */
                 _model.NewRound();
-                _view.NewGame();
+                _gameWindow.NewGame();
             }
             else if (e.NetworkOn)
             {
                 _model.stopTimer();
-                _view.RoundOver();
+                _gameWindow.RoundOver();
                 _model.NewGame();
             }
             else
@@ -276,7 +280,7 @@ namespace SpaceInvaders
                 }
                 else
                 {
-                    _view.RoundOver();
+                    _gameWindow.RoundOver();
                     _model.NewGame();
                 }
             }
