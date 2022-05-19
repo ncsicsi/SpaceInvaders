@@ -37,6 +37,7 @@ namespace SpaceInvaders
         private GameViewModel _viewModel;
         private MainWindow _view;
         private GameWindow _gameWindow;
+        private MenuWindow _menuWindow;
 
         #endregion
 
@@ -59,6 +60,7 @@ namespace SpaceInvaders
             _model = new GameModel(new GameFileDataAccess());
             _view = new MainWindow();
             _gameWindow = new GameWindow();
+            _menuWindow = new MenuWindow();
             _viewModel = new GameViewModel(_model);
             _model.GameOver += new EventHandler<GameOverEventArgs>(Model_GameOver);
             //_model.NetworkLoaded += new EventHandler<GameEventArgs>(Model_NetworkLoaded);
@@ -87,6 +89,7 @@ namespace SpaceInvaders
             _gameWindow.KeyIsUp_Event += new KeyEventHandler(View_KeyIsUp);
             _model.NewGame();
             _view.Navigate(_gameWindow);
+
 
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing); // eseménykezelés a bezáráshoz
             _view.Show();

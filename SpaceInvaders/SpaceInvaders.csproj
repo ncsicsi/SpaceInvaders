@@ -11,6 +11,7 @@
     <None Remove="Images\invadier1.png" />
     <None Remove="Images\invadier2.png" />
     <None Remove="Images\invadier3.png" />
+    <None Remove="Images\logo.png" />
     <None Remove="Images\spaceShip.png" />
   </ItemGroup>
 
@@ -24,6 +25,7 @@
     <Resource Include="Images\invadier1.png" />
     <Resource Include="Images\invadier2.png" />
     <Resource Include="Images\invadier3.png" />
+    <Resource Include="Images\logo.png" />
     <Resource Include="Images\spaceShip.png" />
   </ItemGroup>
 
