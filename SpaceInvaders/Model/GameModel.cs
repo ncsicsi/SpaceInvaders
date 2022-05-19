@@ -449,11 +449,11 @@ namespace SpaceInvaders.Model
             {
                 _enemyBullet.IsNewBullet = false;
                 _enemyBullet.Y += _bulletspeed;
-                if (_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X>= _shipXPos && _enemyBullet.X <= _shipXPos  + _shipWidth )
+                if ((_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X >= _shipXPos && _enemyBullet.X <= _shipXPos  + _shipWidth) && _enemyBullet.Alive )
                 {
-                    _lives--;
+                      _lives--;
                     _enemyBullet.Alive = false;
-                }else if(_enemyBullet.Y + _bulletHight >= _windowHeight){
+                }else if(_enemyBullet.Y + _bulletHight +5 >= _windowHeight - 95){
                     _enemyBullet.Alive = false;
                     _network._avoidBullets++;
                 }
@@ -788,7 +788,7 @@ namespace SpaceInvaders.Model
             }
             if(_enemyButtomYPos > _shipYPos)
             {
-                _win = false;
+                 _win = false;
                 return true;
             }
             if (_enemysCount == 0)
