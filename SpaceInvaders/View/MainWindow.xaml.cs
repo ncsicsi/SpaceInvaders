@@ -214,9 +214,11 @@ namespace SpaceInvaders.View
             {
                 for (int j = 0; j < _enemyColumns; j++)
                 {
-                        Trace.WriteLine("Invoke start" + i + " " + j + " ");
+                    Trace.WriteLine("Invoke start" + i + " " + j + " ");
 
-                        ImageBrush enemySkin = new ImageBrush();
+                    ImageBrush enemySkin = new ImageBrush();
+                    if (_enemysRectangles[i, j] == null)
+                        {
                         _enemysRectangles[i, j] = new Rectangle
                         {
                             Tag = "enemy",
@@ -224,6 +226,7 @@ namespace SpaceInvaders.View
                             Width = _enemySize,
                             Fill = enemySkin
                         };
+                    }
                         Console.WriteLine("Currently modified ids are: " + i +" and " + j );
                         Canvas.SetTop(_enemysRectangles[i, j], enemies[i, j].Y());
                         Canvas.SetLeft(_enemysRectangles[i, j], enemies[i, j].X());
