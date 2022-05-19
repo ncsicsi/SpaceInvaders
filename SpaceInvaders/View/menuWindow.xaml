@@ -7,6 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#CC00FF00"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#CC00FF00"/>
         <Style x:Key="Button" TargetType="Button">
             <Setter Property="Foreground" Value="#CC00FF00"/>
             <Setter Property="BorderBrush" Value="Transparent"/>

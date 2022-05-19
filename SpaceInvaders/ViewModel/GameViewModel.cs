@@ -54,6 +54,8 @@ namespace SpaceInvaders.ViewModel
         public DelegateCommand NewGameManualViewCommand { get; private set; }
         public DelegateCommand NewGameAIViewCommand { get; private set; }
         public DelegateCommand LoadNetworkMenuCommand { get; private set; }
+        public DelegateCommand BackToTheMenuCommand { get; private set; }
+        public DelegateCommand SettingsViewCommand { get; private set; }
 
         // Eletek lekerdezese
         public Int32 GameLives { get {return _model.Lives;} }
@@ -90,6 +92,8 @@ namespace SpaceInvaders.ViewModel
         public event EventHandler NewGameAIView;
         public event EventHandler NewGameManualView;
         public event EventHandler NetworkLoadView;
+        public event EventHandler BackToTheMenu;
+        public event EventHandler SettingsView;
 
 
         #endregion
@@ -118,6 +122,9 @@ namespace SpaceInvaders.ViewModel
             NewGameManualViewCommand = new DelegateCommand(param => { OnNewGameManualView(); });
             NewGameAIViewCommand = new DelegateCommand(param => { OnNewGameAIView(); });
             LoadNetworkMenuCommand = new DelegateCommand(param => { OnLoadNetworkMenu(); });
+            BackToTheMenuCommand = new DelegateCommand(param => { OnBackToTheMenu(); });
+            SettingsViewCommand = new DelegateCommand(param => { OnSettingsView(); });
+            
             SetUpTable();
         }
         #endregion
@@ -320,6 +327,14 @@ namespace SpaceInvaders.ViewModel
             _model.NewGame();
             NetworkLoadView.Invoke(this, EventArgs.Empty);
 
+        }       
+        private void OnBackToTheMenu()
+        {
+            BackToTheMenu.Invoke(this, EventArgs.Empty);
+        }
+        private void OnSettingsView()
+        {
+            SettingsView.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
