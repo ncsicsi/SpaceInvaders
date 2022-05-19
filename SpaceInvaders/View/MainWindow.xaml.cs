@@ -24,16 +24,18 @@ namespace SpaceInvaders.View
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
         }
-
         public void Navigate(UserControl nextPage)
         {
             this.Content = nextPage;
         }
         /*
+=======
+>>>>>>> dcdb01f49d400842ce45779a31e730a96c56d077
         #region Fields
         Rectangle[,] _enemysRectangles; //enemy teglalapok, amik megjelennek
         Rectangle[] _bulletsRectangles;   //lovedek teglalapok
@@ -214,9 +216,11 @@ namespace SpaceInvaders.View
             {
                 for (int j = 0; j < _enemyColumns; j++)
                 {
-                        Trace.WriteLine("Invoke start" + i + " " + j + " ");
+                    Trace.WriteLine("Invoke start" + i + " " + j + " ");
 
-                        ImageBrush enemySkin = new ImageBrush();
+                    ImageBrush enemySkin = new ImageBrush();
+                    if (_enemysRectangles[i, j] == null)
+                        {
                         _enemysRectangles[i, j] = new Rectangle
                         {
                             Tag = "enemy",
@@ -224,6 +228,7 @@ namespace SpaceInvaders.View
                             Width = _enemySize,
                             Fill = enemySkin
                         };
+                    }
                         Console.WriteLine("Currently modified ids are: " + i +" and " + j );
                         Canvas.SetTop(_enemysRectangles[i, j], enemies[i, j].Y());
                         Canvas.SetLeft(_enemysRectangles[i, j], enemies[i, j].X());
