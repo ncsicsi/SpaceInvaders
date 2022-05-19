@@ -54,7 +54,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Style="{DynamicResource Button}"  x:Name="backToTheMenueButton" Command="{Binding BackToTheMenuCommand}" Content="Back" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5 5 5 5" Grid.Column="1"/>
-
+        <Button Grid.Row="0" Style="{DynamicResource Button}"  x:Name="backToTheMenueButton" Command="{Binding BackToTheMenuCommand}" Content="BACK" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 5 10 0" Grid.Column="1"/>
     </Grid>
 </UserControl>

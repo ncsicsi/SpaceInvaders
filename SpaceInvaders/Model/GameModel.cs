@@ -815,7 +815,7 @@ namespace SpaceInvaders.Model
         }
 
         //jatek vege
-        private void OnGameOver(bool win)
+        public void OnGameOver(bool win)
         {
             _timer.Stop();
             if (_network._networkOn) {

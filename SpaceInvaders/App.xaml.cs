@@ -48,7 +48,7 @@ namespace SpaceInvaders
         public App()
         {
             Startup += new StartupEventHandler(App_Startup);
-            
+
         }
 
         #endregion
@@ -81,6 +81,7 @@ namespace SpaceInvaders
             _viewModel.TurnOnView += new EventHandler(ViewModel_TurnOnView);
             _viewModel.TurnSimpleEvolution += new EventHandler(ViewModel_TurnSimpleEvolution);
             _viewModel.TurnRedQueenEvolution += new EventHandler(ViewModel_TurnRedQueenEvolution);
+            _viewModel.BackToTheMenu += new EventHandler(ViewModel_BackToTheMenu);
 
             // nézet létrehozása
             //_view = new MainWindow();
@@ -132,18 +133,18 @@ namespace SpaceInvaders
         /// Nézet bezárásának eseménykezelője.
         private void View_GameAdvanced(object sender, GameEventArgs e)
         {
-            _gameWindow.View_GameAdvanced(e); 
+            _gameWindow.View_GameAdvanced(e);
         }
         private void View_GameCreated(object sender, EnemyEventArgs e)
         {
-            _gameWindow.View_GameCreated(e); 
+            _gameWindow.View_GameCreated(e);
         }
 
         // Gomb lenyomasanak esemenye
         private void View_KeyIsDown(object sender, KeyEventArgs e)
         {
-            _viewModel.View_KeyIsDown(e); 
-            
+            _viewModel.View_KeyIsDown(e);
+
         }
         //gomb felengedsenek esemenye
         private void View_KeyIsUp(object sender, KeyEventArgs e)
@@ -174,22 +175,30 @@ namespace SpaceInvaders
         private void ViewModel_TurnOffView(object sender, EventArgs e)
         {
 
-        }       
+        }
         private void ViewModel_TurnOnView(object sender, EventArgs e)
         {
 
-        }        
+        }
         private void ViewModel_TurnSimpleEvolution(object sender, EventArgs e)
         {
             //_model.stopTimer();
             //_view.RoundOver();
-        }        
+        }
         private void ViewModel_TurnRedQueenEvolution(object sender, EventArgs e)
         {
             //_model.stopTimer();
             //_view.RoundOver();
         }
-
+        private void ViewModel_BackToTheMenu(object sender, EventArgs e)
+        {
+            if (_model._startGame)
+            {
+                _model.stopTimer();
+                _model._startGame = false;
+                _gameWindow.RoundOver();
+            }
+        }
 
 
 
