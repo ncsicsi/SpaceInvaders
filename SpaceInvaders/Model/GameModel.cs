@@ -58,6 +58,7 @@ namespace SpaceInvaders.Model
         private int _rounds;
         private int _score;
         private int _lives;
+        public bool _startGame = false;
 
         private static System.Timers.Timer _timer;
         private static System.Timers.Timer _timerOffView;
@@ -96,6 +97,7 @@ namespace SpaceInvaders.Model
         public GameModel(IGameDataAccess dataAccess)
         {
             _network = new NeuralNetwork(_hiddenNeuronSize,_populationSize);
+            _network._networkOn = false;
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
             _dataAccess = dataAccess;
@@ -105,18 +107,21 @@ namespace SpaceInvaders.Model
             _timer.Elapsed += _timer_Elapsed;
             _timer.AutoReset = true;
             _timer.Enabled = true;
+            _timer.Stop();
             _timerOffView = new System.Timers.Timer(1);
             _timerOffView.Elapsed += _timerOffView_Elapsed;
             _timerOffView.AutoReset = true;
             _timerOffView.Enabled = true;
             _timerOffView.Stop();
             _rounds = 0;
+            //OnGameCreated();
         }
         #endregion
 
         #region Public Methods
         public void NewGame()
         {
+            _startGame = true;
             _timer.Stop();
             _timerOffView.Stop();
             ReSetEnemyTable();
@@ -135,7 +140,6 @@ namespace SpaceInvaders.Model
             _bullet = false;
             _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
-            _network._networkOn = true;
             _rounds++;
             OnGameCreated();
             if (_viewOn)
@@ -180,12 +184,14 @@ namespace SpaceInvaders.Model
         // Jatek betoltese
         public async Task LoadNetworkAsync(String path)
         {
+            
             if (_dataAccess == null)
                 throw new InvalidOperationException("No data access is provided.");
 
             Data data = await _dataAccess.LoadAsync(path);
             _rounds = data._round;
             _populationSize = data._populationSize;
+            _network._networkOn = true;
             //_hiddenNeuronSize = data._weightsSize;
             _network.LoadNetwork(data);
             GameOver(this, new GameOverEventArgs(false, _network._networkOn));
@@ -236,6 +242,7 @@ namespace SpaceInvaders.Model
             _goLeft = false;
             _goRight = false;
             _bullet = false;
+            _network.ActiveIndividual = -1;
             NetworkOn = false;
         }
         public void ChangeAI()
@@ -243,6 +250,7 @@ namespace SpaceInvaders.Model
             _goLeft = false;
             _goRight = false;
             _bullet = false;
+            _network.ActiveIndividual = 0;
             NetworkOn = true;
         }
 
@@ -256,28 +264,6 @@ namespace SpaceInvaders.Model
             _timer.Stop();
             _viewOn = false;
             _timerOffView.Start();
-            /*while (!_viewOn)
-            {
-                NetworkAction();
-                ShipMove();
-                _enemyBulletTimeCounter++;
-                EnemyBulletMove();
-                if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
-                {
-                    _enemyBulletTimeCounter = 0;
-                    CreateEnemyBullet();
-                }
-                EnemyMove();
-                BulletMove();
-                CreateBullet();
-                //OnGameAdvanced();
-                _network.ElapsedTime += 0.02D;
-                if (GameOverIs())
-                {
-                    OnGameOver(_win);
-                }
-                System.Threading.Thread.Sleep(2000);
-            }*/
         }
 
         public void TurnOnView()
@@ -821,7 +807,7 @@ namespace SpaceInvaders.Model
                 GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
         }
         //enemy tabla letrehozasanak esemenye
-        private void OnGameCreated()
+        public void OnGameCreated()
         {
             if (GameCreated != null)
                 GameCreated(this, new EnemyEventArgs(_enemys, _enemyColumns, _enemyRows, _enemySize, _enemysCount, _maxBullet, _bullets));
@@ -832,7 +818,9 @@ namespace SpaceInvaders.Model
         private void OnGameOver(bool win)
         {
             _timer.Stop();
-            _network.GameOver(_score, win);
+            if (_network._networkOn) {
+                _network.GameOver(_score, win);
+            }
                 if (GameOver != null)
                 GameOver(this, new GameOverEventArgs(win, _network._networkOn));
         }

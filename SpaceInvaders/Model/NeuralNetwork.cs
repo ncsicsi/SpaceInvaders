@@ -131,10 +131,6 @@ namespace SpaceInvaders.Model
                         _hiddenNeurons[h] += _simpleIncommingNeurons[i] * _simpleWeights[_activeIndividual, i * _hiddenNeuronsCount + h];
                     }
                     _hiddenNeurons[h] = 1 / (1 + Math.Exp(-_hiddenNeurons[h]));
-                    if (_hiddenNeurons[h] == 1)
-                    {
-                        int bug = 1;
-                    }
                 }
                 //kimeneti neuronok szamitasa
                 int s = _incommingNeuronsCount * _hiddenNeuronsCount;

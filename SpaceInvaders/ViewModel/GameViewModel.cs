@@ -44,6 +44,16 @@ namespace SpaceInvaders.ViewModel
         public DelegateCommand TurnOnViewCommand { get; private set; }
         public DelegateCommand SimpleEvolutionCommand { get; private set; }
         public DelegateCommand RedQueenEvolutionCommand { get; private set; }
+        public DelegateCommand ChangeAICommand { get; private set; }
+        public DelegateCommand ChangeManualCommand { get; private set; }
+
+        //for navigation
+        /// <summary>
+        /// command for navigate to new game view
+        /// </summary>
+        public DelegateCommand NewGameManualViewCommand { get; private set; }
+        public DelegateCommand NewGameAIViewCommand { get; private set; }
+        public DelegateCommand LoadNetworkMenuCommand { get; private set; }
 
         // Eletek lekerdezese
         public Int32 GameLives { get {return _model.Lives;} }
@@ -74,6 +84,14 @@ namespace SpaceInvaders.ViewModel
         public event EventHandler<GameEventArgs> GameAdvanced;
         public event EventHandler<EnemyEventArgs> GameCreated;
         public event EventHandler<EnemyEventArgs> GameOver;
+
+
+        // For navigation
+        public event EventHandler NewGameAIView;
+        public event EventHandler NewGameManualView;
+        public event EventHandler NetworkLoadView;
+
+
         #endregion
 
         #region Constructor
@@ -94,7 +112,12 @@ namespace SpaceInvaders.ViewModel
             TurnOnViewCommand = new DelegateCommand(param => OnTurnOnView());
             SimpleEvolutionCommand = new DelegateCommand(param => OnTurnSimpleEvolution());
             RedQueenEvolutionCommand = new DelegateCommand(param => OnTurnRedQueenEvolution());
-
+            ChangeAICommand = new DelegateCommand(param => OnChangeAI());
+            ChangeManualCommand = new DelegateCommand(param => OnChangeManual());
+            // Navigalashoz commandok
+            NewGameManualViewCommand = new DelegateCommand(param => { OnNewGameManualView(); });
+            NewGameAIViewCommand = new DelegateCommand(param => { OnNewGameAIView(); });
+            LoadNetworkMenuCommand = new DelegateCommand(param => { OnLoadNetworkMenu(); });
             SetUpTable();
         }
         #endregion
@@ -201,6 +224,17 @@ namespace SpaceInvaders.ViewModel
             }
         }
 
+        /// Neuralis halo iranyitasara valtas
+        private void OnChangeAI()
+        {
+            _model.ChangeAI();
+        }
+        /// Manualis iranyitasara valtas
+        private void OnChangeManual()
+        {
+            _model.ChangeManual();
+        }
+
         /// Játékból való kilépés eseménykiváltása.
         private void OnExitGame()
         {
@@ -266,6 +300,26 @@ namespace SpaceInvaders.ViewModel
                 TurnRedQueenEvolution(this, EventArgs.Empty);
                 _model.TurnRedQueenEvolution();
             }
+        }
+        private void OnNewGameManualView()
+        {
+            _model.ChangeManual();
+            _model.NewGame();
+            NewGameManualView.Invoke(this, EventArgs.Empty);
+        }        
+        private void OnNewGameAIView()
+        {
+            _model.ChangeAI();
+            _model.NewGame();
+            NewGameAIView.Invoke(this, EventArgs.Empty);
+        }       
+        private void OnLoadNetworkMenu()
+        {
+            if (LoadNetwork != null)
+                LoadNetwork(this, EventArgs.Empty);
+            _model.NewGame();
+            NetworkLoadView.Invoke(this, EventArgs.Empty);
+
         }
 
         #endregion
