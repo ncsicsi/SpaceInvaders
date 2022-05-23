@@ -116,7 +116,7 @@ namespace SpaceInvaders
         private void View_Closing(object sender, CancelEventArgs e)
         {
             _model.stopTimer();
-            if (MessageBox.Show("Biztos, hogy ki akar lépni?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            if (MessageBox.Show("Are you sure about the exit?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
                 e.Cancel = true; // töröljük a bezárást
                 if (_model._startGame)
@@ -174,11 +174,32 @@ namespace SpaceInvaders
         //nezet ki, be kapcsolasa
         private void ViewModel_TurnOffView(object sender, EventArgs e)
         {
-
+            if (!_model.NetworkOn)
+            {
+                _model.stopTimer();
+                MessageBox.Show("Can't turn off view in manual mode","Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                _model.startTimer();
+            }else if (!_model._viewOn)
+            {
+                _model.stopTimer();
+                MessageBox.Show("Can't turn off view", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                _model.startTimer();
+            }
         }
         private void ViewModel_TurnOnView(object sender, EventArgs e)
         {
-
+            if (!_model.NetworkOn)
+            {
+                _model.stopTimer();
+                MessageBox.Show("Can't turn view in manual mode", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                _model.startTimer();
+            }
+            else if(_model._viewOn)
+            {
+                _model.stopTimer();
+                MessageBox.Show("Can't turn on view", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                _model.startTimer();
+            }
         }
         private void ViewModel_TurnSimpleEvolution(object sender, EventArgs e)
         {
@@ -212,8 +233,9 @@ namespace SpaceInvaders
         // network betöltésének eseménykezelője.
         private async void ViewModel_LoadNetwork(object sender, System.EventArgs e)
         {
-            /*try
-            {*/
+            try
+            {
+
                 _model.stopTimer();
                 OpenFileDialog openFileDialog = new OpenFileDialog(); // dialógusablak
                 openFileDialog.Title = "neuralis halok betöltése";
@@ -226,42 +248,51 @@ namespace SpaceInvaders
                     _model.NewGame();
                     _gameWindow.NewGame();
 
+                }
             }
-            /*}
             catch (GameDataException)
             {
-                MessageBox.Show("A fájl betöltése sikertelen!", "Sudoku", MessageBoxButton.OK, MessageBoxImage.Error);
-            }*/
+                MessageBox.Show("Population load failed!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
         }
 
         // neowork mentésének eseménykezelője.
         private async void ViewModel_SaveNetwork(object sender, EventArgs e)
         {
-
-            try
+            if (!_model.NetworkOn)
             {
                 _model.stopTimer();
-                SaveFileDialog saveFileDialog = new SaveFileDialog(); // dialógablak
-                saveFileDialog.Title = "neuralis hálok mentese";
-                saveFileDialog.Filter = "neurális hálók|*.stl";
-                if (saveFileDialog.ShowDialog() == true)
-                {
-                    
-                    try{
-                        // játéktábla mentése
-                        await _model.SaveNetworkAsync(saveFileDialog.FileName);
-                    }
-                    catch (GameDataException)
-                    {
-                        MessageBox.Show("Játék mentése sikertelen!" + Environment.NewLine + "Hibás az elérési út, vagy a könyvtár nem írható.", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                MessageBox.Show("Can't save population in manual mode", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
                 _model.startTimer();
             }
-            catch
+            else
             {
-                MessageBox.Show("A fájl mentése sikertelen!", "Invaders", MessageBoxButton.OK, MessageBoxImage.Error);
+                try
+                {
+                    _model.stopTimer();
+                    SaveFileDialog saveFileDialog = new SaveFileDialog(); // dialógablak
+                    saveFileDialog.Title = "population save";
+                    saveFileDialog.Filter = "population|*.stl";
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+
+                        try
+                        {
+                            // játéktábla mentése
+                            await _model.SaveNetworkAsync(saveFileDialog.FileName);
+                        }
+                        catch (GameDataException)
+                        {
+                            MessageBox.Show("Population save failed!" + Environment.NewLine + "The path is invalid or the directory cannot be written", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    _model.startTimer();
+                }
+                catch
+                {
+                    MessageBox.Show("Population save failed!", "Invaders", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

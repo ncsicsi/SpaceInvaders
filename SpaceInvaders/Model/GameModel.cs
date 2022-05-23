@@ -54,7 +54,7 @@ namespace SpaceInvaders.Model
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
-        private bool _viewOn;
+        public bool _viewOn;
         private int _rounds;
         private int _score;
         private int _lives;
@@ -261,9 +261,12 @@ namespace SpaceInvaders.Model
 
         public void TurnOffView()
         {
-            _timer.Stop();
-            _viewOn = false;
-            _timerOffView.Start();
+            if (NetworkOn)
+            {
+                _timer.Stop();
+                _viewOn = false;
+                _timerOffView.Start();
+            }
         }
 
         public void TurnOnView()

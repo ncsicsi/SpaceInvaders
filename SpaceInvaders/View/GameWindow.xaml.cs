@@ -154,7 +154,10 @@ namespace SpaceInvaders.View
             }
             else if (enemyBullet.Alive)
             {
-                Canvas.SetTop(_enemyBulletRectangle, enemyBullet.Y);
+                if (_enemyBulletRectangle != null)
+                {
+                    Canvas.SetTop(_enemyBulletRectangle, enemyBullet.Y);
+                }
             }
             else if (!enemyBullet.Alive)
             {
