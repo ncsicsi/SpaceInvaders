@@ -21,31 +21,24 @@ namespace SpaceInvaders.Model
         private int _populationSize = 20;
         private int _hiddenNeuronSize = 25;
         //game param
-        private int _enemysCount = 50;
         private static int _maxenemyCount=50;
         private static int _maxBullet = 120;
         private static int _windowWidth = 700;
         private static int _windowHeight = 700;
         private static int _windowBorder = 10;
-        private static int _shipWidth = 60;
-        private static int _shipSpeed = 5;
         private static int _enemySize = 45;
         private static int _enemyColumns = 10;
         private static int _enemyRows = 5;
         private static int _enemyDistance = 10;
+        private int _enemysCount = 50;
         private double _enemyBasicSpeed = 1;
         private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
         private int _bulletHight = 20;
         private int _bulletspeed = 5;
-        private int _shipYPos = 590;
         private EnemyStruct[,] _enemys;
         private Bullet[] _bullets;
         private Bullet _enemyBullet;
-        private int _shipXPos;
-        private bool _goLeft;
-        private bool _goRight;
-        private bool _bullet;
-        //private static int _shipHeight = 30;
+        private Player _player;
         private int _bulletCount;
         private double _enemySpeed;
         private int _enemyBulletTimeCounter;
@@ -56,8 +49,6 @@ namespace SpaceInvaders.Model
         private (int, int) _mostButtomEnemySerial;
         public bool _viewOn;
         private int _rounds;
-        private int _score;
-        private int _lives;
         public bool _startGame = false;
 
         private static System.Timers.Timer _timer;
@@ -74,20 +65,20 @@ namespace SpaceInvaders.Model
 
         #region Properties 
         //Pontszam lekerdezese
-        public Int32 Score { get { return _score; } }
+        public Int32 Score { get { return _player.Score; } }
         //eletek lekerdezese
-        public Int32 Lives { get { return _lives; } }
+        public Int32 Lives { get { return _player.Lives; } }
         public Int32 Rounds { get { return _rounds; } }
         public Int32 ActiveIndividual { get { return _network.ActiveIndividual; } }
         //jatek vege lekerdezese
-        public Boolean IsGameOver { get { return (_lives == 0); } }
+        public Boolean IsGameOver { get { return (_player.Lives == 0); } }
         //hajo y pos lekerdezese vege lekerdezese
-        public int XPos { get { return _shipXPos; } }
+        public int XPos { get { return _player.XPos; } }
         // irany beallitasa
-        public void GoLeft(bool goLeft) { _goLeft = goLeft; }
-        public void GoRight(bool goRight) { _goRight = goRight; }
+        public void GoLeft(bool goLeft) { _player.GoLeft = goLeft; }
+        public void GoRight(bool goRight) { _player.GoRight = goRight; }
         //bullet
-        public void BulletOn(bool bullet) { _bullet = bullet; }
+        public void BulletOn(bool bullet) { _player.Bullet = bullet; }
         public bool NetworkOn { get { return _network._networkOn; } set { _network._networkOn = value; } }
 
 
@@ -96,10 +87,11 @@ namespace SpaceInvaders.Model
         #region Constructor
         public GameModel(IGameDataAccess dataAccess)
         {
-            _network = new NeuralNetwork(_hiddenNeuronSize,_populationSize);
-            _network._networkOn = false;
             _enemys = new EnemyStruct[_enemyRows, _enemyColumns];
             _bullets = new Bullet[_maxBullet];
+            _player = new Player();
+            _network = new NeuralNetwork(_hiddenNeuronSize,_populationSize);
+            _network._networkOn = false;
             _dataAccess = dataAccess;
             _viewOn = true;
             ReSetBulletTable();
@@ -114,7 +106,6 @@ namespace SpaceInvaders.Model
             _timerOffView.Enabled = true;
             _timerOffView.Stop();
             _rounds = 0;
-            //OnGameCreated();
         }
         #endregion
 
@@ -126,18 +117,20 @@ namespace SpaceInvaders.Model
             _timerOffView.Stop();
             ReSetEnemyTable();
             ReSetBulletTable();
-            _score = 0;
-            _lives = 1;
-            _shipXPos = 312;
-            _bullet = false;
+            _player.XPos = 312;
+            _player.Score = 0;
+            _player.Lives = 1;
+            //_score = 0;
+            //_lives = 1;
+            //_shipXPos = 312;
+            _player.Bullet = false;
             _bulletCount = 0;
             _enemysCount = _maxenemyCount;
             _enemyBulletTimeCounter = 0;
             _enemyBullet.Alive = false;
             _enemyBullet.IsNewBullet = false;
-            _goLeft = false;
-            _goRight = false;
-            _bullet = false;
+            _player.GoLeft = false;
+            _player.GoRight = false;
             _enemySpeed = _enemyBasicSpeed;
             _direction= direction.RIGHT;
             _rounds++;
@@ -160,16 +153,16 @@ namespace SpaceInvaders.Model
             _timer.Stop();
             ReSetEnemyTable();
             ReSetBulletTable();
-            _shipXPos = 312;
-            _bullet = false;
+            _player.XPos = 312;
+            //_shipXPos = 312;
+            _player.Bullet = false;
             _bulletCount = 0;
             _enemysCount = _maxenemyCount;
             //_enemySpeed =_enemySpeed + 1;
             //_lives++;
             _direction = direction.RIGHT;
-            _goLeft = false;
-            _goRight = false;
-            _bullet = false;
+            _player.GoLeft = false;
+            _player.GoRight = false;
             OnGameCreated();
             if (_viewOn)
             {
@@ -196,7 +189,7 @@ namespace SpaceInvaders.Model
             _network.LoadNetwork(data);
             GameOver(this, new GameOverEventArgs(false, _network._networkOn));
             //NewGame();
-            NetworkLoaded?.Invoke(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
+            NetworkLoaded?.Invoke(this, new GameEventArgs(_player.Score, _player.Lives, _player.XPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
         }
 
         // neuralos halok mentese mentése
@@ -239,17 +232,17 @@ namespace SpaceInvaders.Model
         }
         public void ChangeManual()
         {
-            _goLeft = false;
-            _goRight = false;
-            _bullet = false;
+            _player.GoLeft = false;
+            _player.GoRight = false;
+            _player.Bullet = false;
             _network.ActiveIndividual = -1;
             NetworkOn = false;
         }
         public void ChangeAI()
         {
-            _goLeft = false;
-            _goRight = false;
-            _bullet = false;
+            _player.GoLeft = false;
+            _player.GoRight = false;
+            _player.Bullet = false;
             _network.ActiveIndividual = 0;
             NetworkOn = true;
         }
@@ -317,7 +310,7 @@ namespace SpaceInvaders.Model
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             NetworkAction();
-            ShipMove();
+            _player.Move(_windowBorder, _windowWidth);
             _enemyBulletTimeCounter++;
             EnemyBulletMove();
             if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
@@ -339,7 +332,7 @@ namespace SpaceInvaders.Model
         private void _timerOffView_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             NetworkAction();
-            ShipMove();
+            _player.Move(_windowBorder, _windowWidth);
             _enemyBulletTimeCounter++;
             EnemyBulletMove();
             if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
@@ -418,11 +411,11 @@ namespace SpaceInvaders.Model
 
         private void CreateBullet()
         {
-            if (_bullet == true)
+            if (_player.Bullet == true)
             {
-                _bullet = false;
-                _bullets[_bulletCount].X = _shipXPos + _shipWidth/2-2;
-                _bullets[_bulletCount].Y = _shipYPos - _bulletHight-6;
+                _player.Bullet = false;
+                _bullets[_bulletCount].X = _player.XPos + _player.Width/2-2;
+                _bullets[_bulletCount].Y = _player.YPos - _bulletHight-6;
                 _bullets[_bulletCount].Alive = true;
                 _bullets[_bulletCount].IsNewBullet = true;
                 if (_bulletCount < _maxBullet - 1)
@@ -441,7 +434,7 @@ namespace SpaceInvaders.Model
         {
             _enemyBullet.IsNewBullet = true;
             _enemyBullet.Alive = true;
-            _enemyBullet.X = _shipXPos+(_shipWidth/2)-2;
+            _enemyBullet.X = _player.XPos + (_player.Width / 2)-2;
             _enemyBullet.Y = _windowBorder + _bulletHight;
             //_enemyBullet.Y = _enemyButtomYPos-_enemySize;
         }
@@ -452,9 +445,9 @@ namespace SpaceInvaders.Model
             {
                 _enemyBullet.IsNewBullet = false;
                 _enemyBullet.Y += _bulletspeed;
-                if ((_enemyBullet.Y + _bulletHight >= _shipYPos && _enemyBullet.X >= _shipXPos && _enemyBullet.X <= _shipXPos  + _shipWidth) && _enemyBullet.Alive )
+                if ((_enemyBullet.Y + _bulletHight >= _player.YPos && _enemyBullet.X >= _player.XPos && _enemyBullet.X <= _player.XPos + _player.Width) && _enemyBullet.Alive )
                 {
-                      _lives--;
+                    _player.Lives--;
                     _enemyBullet.Alive = false;
                 }else if(_enemyBullet.Y + _bulletHight +5 >= _windowHeight - 95){
                     _enemyBullet.Alive = false;
@@ -491,13 +484,13 @@ namespace SpaceInvaders.Model
                                 switch (_enemys[j, z].Type)
                                 {
                                     case EnemyStruct.enyemyType.RED:
-                                        _score += 15;
+                                        _player.Score += 15;
                                         break;
                                     case EnemyStruct.enyemyType.ORANGE:
-                                        _score += 10;
+                                        _player.Score += 10;
                                         break;
                                     case EnemyStruct.enyemyType.BLUE:
-                                        _score += 5;
+                                        _player.Score += 5;
                                         break;
                                 }
                                 if ((j,z)==(_mostButtomEnemySerial))
@@ -519,19 +512,6 @@ namespace SpaceInvaders.Model
                 {
                     _bullets[i].Alive = false;
                 }
-            }
-        }
-        private void ShipMove()
-        {
-            if (_goLeft && _shipXPos > _windowBorder)
-            {
-                _shipXPos -= _shipSpeed;
-                _network._goLeft = true;
-            }
-            else if (_goRight && _shipXPos + _shipWidth + _windowBorder + _shipSpeed < _windowWidth)
-            {
-                _shipXPos += _shipSpeed;
-                _network._goRight = true;
             }
         }
 
@@ -684,17 +664,23 @@ namespace SpaceInvaders.Model
                 switch (nextAction)
                 {
                     case NeuralNetwork.action.GORIGHT:
-                        _goLeft = false;
-                        _goRight = true;
+                        _player.GoLeft = false;
+                        _player.GoRight = true;
+                        _network._goLeft = false;
+                        _network._goRight = true;
                         break;
                     case NeuralNetwork.action.GOLEFT:
-                        _goLeft = true;
-                        _goRight = false;
+                        _player.GoLeft = true;
+                        _player.GoRight = false;
+                        _network._goLeft = true;
+                        _network._goRight = false;
                         break;
                     case NeuralNetwork.action.SHOT:
-                        _goLeft = false;
-                        _goRight = false;
-                        _bullet = true;
+                        _player.GoLeft = false;
+                        _player.GoRight = false;
+                        _network._goLeft = false;
+                        _network._goRight = false;
+                        _player.Bullet = true;
                         break;
                 }
             }
@@ -703,7 +689,7 @@ namespace SpaceInvaders.Model
         {
             if (_enemyBullet.Alive)
             {
-                _network._bulletDistance = (_shipYPos - _enemyBullet.Y - _bulletHight)/700D; //enemy bullet tavolsaga
+                _network._bulletDistance = (_player.YPos - _enemyBullet.Y - _bulletHight)/700D; //enemy bullet tavolsaga
             }
             else
             {
@@ -711,17 +697,17 @@ namespace SpaceInvaders.Model
             }
             if(_enemyBullet.Alive)
             {
-                if(_enemyBullet.X >_shipXPos)
+                if(_enemyBullet.X > _player.XPos)
                 {
-                    _network._bulletXRightDistance = (_enemyBullet.X - _shipXPos - _shipWidth/2)/700D;
+                    _network._bulletXRightDistance = (_enemyBullet.X - _player.XPos - _player.Width / 2)/700D;
                 }
                 else
                 {
                     _network._bulletXRightDistance = 0;
                 }
-                if (_enemyBullet.X < _shipXPos)
+                if (_enemyBullet.X < _player.XPos)
                 {
-                    _network._bulletXLeftDistance =(_shipXPos - _enemyBullet.X +_shipWidth / 2)/700D;
+                    _network._bulletXLeftDistance =(_player.XPos - _enemyBullet.X + _player.Width / 2)/700D;
                 }
                 else
                 {
@@ -736,9 +722,9 @@ namespace SpaceInvaders.Model
             _network._enemyCount = _enemysCount/50D;
             int x, y; 
             (x,y)= _mostButtomEnemySerial;
-            _network._closestEnemyYDistance = (_shipYPos - _enemys[x,y].Y() - _enemySize)/580D;
-            _network._closestEnemyXDistance = Math.Abs( (_shipXPos + _shipWidth/2) - (_enemys[x, y].X() + _enemySize/2))/628D;
-            if(_network._closestEnemyXDistance == (_shipXPos + _shipWidth / 2) - (_enemys[x, y].X() + _enemySize / 2))
+            _network._closestEnemyYDistance = (_player.YPos - _enemys[x,y].Y() - _enemySize)/580D;
+            _network._closestEnemyXDistance = Math.Abs( (_player.XPos + _player.Width / 2) - (_enemys[x, y].X() + _enemySize/2))/628D;
+            if(_network._closestEnemyXDistance == (_player.XPos + _player.Width / 2) - (_enemys[x, y].X() + _enemySize / 2))
             {
                 _network._closestEnemyDirection = 0;
             }
@@ -746,9 +732,9 @@ namespace SpaceInvaders.Model
             {
                 _network._closestEnemyDirection = 1;
             }
-            _network._lives = _lives/2;
-            _network._leftDistanc = (_shipXPos-7)/628D;
-            _network._rightDistanc = (627-_shipXPos)/628D;
+            _network._lives = _player.Lives / 2;
+            _network._leftDistanc = (_player.XPos - 7)/628D;
+            _network._rightDistanc = (627- _player.XPos) /628D;
             _network._rightEnemyCount = RightEnemyCount()/50D;
             _network._leftEnemyCount = LeftEnemyCount()/50D;
 
@@ -760,7 +746,7 @@ namespace SpaceInvaders.Model
             {
                 for(int j=0; j < _enemyColumns; j++)
                 {
-                    if (_enemys[i,j].Alive && _enemys[i,j].X() > _shipXPos + _shipWidth / 2)
+                    if (_enemys[i,j].Alive && _enemys[i,j].X() > _player.XPos + _player.Width / 2)
                     {
                         count++;
                     }
@@ -775,7 +761,7 @@ namespace SpaceInvaders.Model
             {
                 for (int j = 0; j < _enemyColumns; j++)
                 {
-                    if (_enemys[i, j].Alive && _enemys[i, j].X() < _shipXPos+_shipWidth/2)
+                    if (_enemys[i, j].Alive && _enemys[i, j].X() < _player.XPos+ _player.Width / 2)
                     {
                         count++;
                     }
@@ -785,11 +771,11 @@ namespace SpaceInvaders.Model
         }
         private bool GameOverIs()
         {
-            if (_lives == 0) {
+            if (_player.Lives == 0) {
                 _win = false;
                 return true;
             }
-            if(_enemyButtomYPos > _shipYPos)
+            if(_enemyButtomYPos > _player.YPos)
             {
                  _win = false;
                 return true;
@@ -807,7 +793,7 @@ namespace SpaceInvaders.Model
         private void OnGameAdvanced()
         {
             if (GameAdvanced != null)
-                GameAdvanced(this, new GameEventArgs(_score, _lives, _shipXPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
+                GameAdvanced(this, new GameEventArgs(_player.Score, _player.Lives, _player.XPos, _bullets, _enemys, _enemyBullet, _network.ActiveIndividual));
         }
         //enemy tabla letrehozasanak esemenye
         public void OnGameCreated()
@@ -822,7 +808,7 @@ namespace SpaceInvaders.Model
         {
             _timer.Stop();
             if (_network._networkOn) {
-                _network.GameOver(_score, win);
+                _network.GameOver(_player.Score, win);
             }
                 if (GameOver != null)
                 GameOver(this, new GameOverEventArgs(win, _network._networkOn));
