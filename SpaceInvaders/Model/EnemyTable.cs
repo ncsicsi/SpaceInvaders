@@ -18,6 +18,7 @@ namespace SpaceInvaders.Model
         private int _count = 50;
         private double _basicSpeed = 1;
         private int _bulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
+        private int _bulletTimeCounter;
         private Bullet _bullet;
         private double _speed;
         private int _buttomYPos;   //legalso enemy helyzete x szerint
@@ -26,6 +27,19 @@ namespace SpaceInvaders.Model
         private (int, int) _mostButtomEnemySerial;
         private enum direction { RIGHT, LEFT, DOWN };
         private direction _direction;
+        #endregion
+
+        #region Property
+
+        public EnemyStruct [,] Enemies { get { return _enemys; } }
+        public double Speed { get { return _speed; } set { _speed = value; } } 
+        public Bullet Bullet { get { return _bullet; } set { _bullet = value; } } 
+        public int Size { get { return _size; } set { _size = value; } } 
+        public int Columns { get { return _columns; } set { _columns = value; } } 
+        public int Rows { get { return _rows; } set { _rows = value; } } 
+        public int Count { get { return _count; } set { _count = value; } } 
+        public int MaxCount { get { return _maxCount; } set { _maxCount = value; } } 
+
         #endregion
 
         #region Constructor
@@ -42,7 +56,13 @@ namespace SpaceInvaders.Model
 
         public void ReSetTable(int windowWidth)
         {
+            
+            _count = _maxCount;
+            _bullet.Alive = false;
+            _bullet.IsNewBullet = false;
+            _direction = direction.RIGHT;
             int enemyColumn = 0;
+            _bulletTimeCounter = 0;
             //int s = _windowWidth - ((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance));
             int border = windowWidth - (windowWidth - ((_columns * _size) + ((_columns - 1) * _distance))) / 2 - _size;
             int left = border;
@@ -88,7 +108,7 @@ namespace SpaceInvaders.Model
 
         }
 
-        public void CreateEnemyBullet(int playerXPos, int windowBorder, int playerWidth)
+        public void CreateBullet(int playerXPos, int windowBorder, int playerWidth)
         {
             _bullet.IsNewBullet = true;
             _bullet.Alive = true;
@@ -96,7 +116,7 @@ namespace SpaceInvaders.Model
             _bullet.Y = windowBorder + _bullet.Hight;
         }
 
-        public (bool,bool) EnemyBulletMove(int playerYPos, int playerXPos, int playerWidth, int windowHeight)
+        public (bool,bool) BulletMove(int playerYPos, int playerXPos, int playerWidth, int windowHeight)
         {
             bool _hit = false;
             bool avoid = false;
