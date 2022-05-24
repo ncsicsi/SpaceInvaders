@@ -39,6 +39,13 @@ namespace SpaceInvaders.Model
         public int Rows { get { return _rows; } set { _rows = value; } } 
         public int Count { get { return _count; } set { _count = value; } } 
         public int MaxCount { get { return _maxCount; } set { _maxCount = value; } } 
+        public double BasicSpeed { get { return _basicSpeed; } set { _basicSpeed = value; } } 
+        public int BulletTimeDistance { get { return _bulletTimeDistance; } set { _bulletTimeDistance = value; } } 
+        public int BulletTimeCounter { get { return _bulletTimeCounter; } set { _bulletTimeCounter = value; } } 
+        public int ButtomYPos { get { return _buttomYPos; } set { _buttomYPos = value; } } 
+        public (int,int) MostRightEnemySerial { get { return _mostRightEnemySerial; } set { _mostRightEnemySerial = value; } } 
+        public (int,int) MostLeftEnemySerial { get { return _mostLeftEnemySerial; } set { _mostLeftEnemySerial = value; } } 
+        public (int,int) MostButtomEnemySerial { get { return _mostButtomEnemySerial; } set { _mostButtomEnemySerial = value; } } 
 
         #endregion
 
@@ -110,6 +117,7 @@ namespace SpaceInvaders.Model
 
         public void CreateBullet(int playerXPos, int windowBorder, int playerWidth)
         {
+            _bulletTimeCounter = 0;
             _bullet.IsNewBullet = true;
             _bullet.Alive = true;
             _bullet.X = playerXPos + (playerWidth / 2) - 2;

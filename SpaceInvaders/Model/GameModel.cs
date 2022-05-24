@@ -31,8 +31,8 @@ namespace SpaceInvaders.Model
         //private static int _enemyRows = 5;
         //private static int _enemyDistance = 10;
         //private int _enemysCount = 50;
-        private double _enemyBasicSpeed = 1;
-        private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
+        //private double _enemyBasicSpeed = 1;
+        //private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
         private int _bulletHight = 20;
         private int _bulletspeed = 5;
         //private EnemyStruct[,] _enemys;
@@ -42,12 +42,12 @@ namespace SpaceInvaders.Model
         private Player _player;
         private int _bulletCount;
         //private double _enemySpeed;
-        private int _enemyBulletTimeCounter;
+        //private int _enemyBulletTimeCounter;
         private bool _win;
-        private int _enemyButtomYPos;   //legalso enemy helyzete x szerint
-        private (int, int) _mostRightEnemySerial;
-        private (int, int) _mostLeftEnemySerial;
-        private (int, int) _mostButtomEnemySerial;
+        //private int _enemyButtomYPos;   //legalso enemy helyzete x szerint
+        //private (int, int) _mostRightEnemySerial;
+        //private (int, int) _mostLeftEnemySerial;
+        //private (int, int) _mostButtomEnemySerial;
         public bool _viewOn;
         private int _rounds;
         public bool _startGame = false;
@@ -128,10 +128,10 @@ namespace SpaceInvaders.Model
             //_enemysCount = _maxenemyCount;
             //_enemyBullet.Alive = false;
             //_enemyBullet.IsNewBullet = false;
-            _enemyBulletTimeCounter = 0;
+            //_enemyBulletTimeCounter = 0;
             _player.GoLeft = false;
             _player.GoRight = false;
-            _enemyTable.Speed = _enemyBasicSpeed;
+            _enemyTable.Speed = _enemyTable.BasicSpeed;
             //_enemySpeed = _enemyBasicSpeed;
             //_direction= direction.RIGHT;
             _rounds++;
@@ -310,7 +310,7 @@ namespace SpaceInvaders.Model
         {
             NetworkAction();
             _player.Move(_windowBorder, _windowWidth);
-            _enemyBulletTimeCounter++;
+            _enemyTable.BulletTimeCounter++;
             bool hit = false;
             bool avoid = false;
             (hit, avoid) = _enemyTable.BulletMove(_player.YPos, _player.XPos, _player.Width, _windowHeight);
@@ -323,9 +323,8 @@ namespace SpaceInvaders.Model
                 _network._avoidBullets++;
             }
             //EnemyBulletMove();
-            if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
-            {
-                _enemyBulletTimeCounter = 0;
+            if (_enemyTable.BulletTimeCounter >= _enemyTable.BulletTimeDistance)
+            {;
                 _enemyTable.CreateBullet(_player.XPos, _windowBorder, _player.Width);
                 //CreateEnemyBullet();
             }
@@ -345,7 +344,7 @@ namespace SpaceInvaders.Model
         {
             NetworkAction();
             _player.Move(_windowBorder, _windowWidth);
-            _enemyBulletTimeCounter++;
+            _enemyTable.BulletTimeCounter++;
             bool hit = false;
             bool avoid = false;
             (hit, avoid) = _enemyTable.BulletMove(_player.YPos, _player.XPos, _player.Width, _windowHeight);
@@ -358,7 +357,7 @@ namespace SpaceInvaders.Model
                 _network._avoidBullets++;
             }
             //EnemyBulletMove();
-            if (_enemyBulletTimeCounter >= _enemyBulletTimeDistance)
+            if (_enemyTable.BulletTimeCounter >= _enemyTable.BulletTimeDistance)
             {
                 _enemyTable.CreateBullet(_player.XPos, _windowBorder, _player.Width);
                 //CreateEnemyBullet();
@@ -519,17 +518,17 @@ namespace SpaceInvaders.Model
                                         _player.Score += 5;
                                         break;
                                 }
-                                if ((j,z)==(_mostButtomEnemySerial))
+                                if ((j,z)==(_enemyTable.MostButtomEnemySerial))
                                 {
                                     _enemyTable.NewMostDown();
                                     //NewMostDown();
                                 }
-                                if ((j, z) == (_mostRightEnemySerial))
+                                if ((j, z) == (_enemyTable.MostRightEnemySerial))
                                 {
                                     _enemyTable.NewMostRight();
                                     //NewMostRight();
                                 }
-                                if ((j, z) == (_mostLeftEnemySerial))
+                                if ((j, z) == (_enemyTable.MostLeftEnemySerial))
                                 {
                                     _enemyTable.NewMostLeft();
                                     //NewMostLeft();
@@ -572,11 +571,11 @@ namespace SpaceInvaders.Model
             _enemyButtomYPos = _enemyTable.MostLeftDown()+_enemySize;
         }
         */
-
+        /*
         private double MostRightCoord()
         {
             int x; int y;
-            (x, y) = _mostRightEnemySerial;
+            (x, y) = _enemyTable.MostRightEnemySerial;
             double max = _enemyTable.Enemies[x, y].X();
             return max;
         }        
@@ -586,7 +585,7 @@ namespace SpaceInvaders.Model
             (x, y) = _mostLeftEnemySerial;
             double max = _enemyTable.Enemies[x, y].X();
             return (max);
-        }        
+        }  */      
         /*private int MostLeftDown()
         {
             int x; int y;
@@ -754,7 +753,7 @@ namespace SpaceInvaders.Model
             }
             _network._enemyCount = _enemyTable.Count / 50D;
             int x, y; 
-            (x,y)= _mostButtomEnemySerial;
+            (x,y)= _enemyTable.MostButtomEnemySerial;
             _network._closestEnemyYDistance = (_player.YPos - _enemyTable.Enemies[x,y].Y() - _enemyTable.Size)/580D;
             _network._closestEnemyXDistance = Math.Abs( (_player.XPos + _player.Width / 2) - (_enemyTable.Enemies[x, y].X() + _enemyTable.Size / 2))/628D;
             if(_network._closestEnemyXDistance == (_player.XPos + _player.Width / 2) - (_enemyTable.Enemies[x, y].X() + _enemyTable.Size / 2))
@@ -808,7 +807,7 @@ namespace SpaceInvaders.Model
                 _win = false;
                 return true;
             }
-            if(_enemyButtomYPos > _player.YPos)
+            if(_enemyTable.ButtomYPos > _player.YPos)
             {
                  _win = false;
                 return true;
