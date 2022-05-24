@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SpaceInvaders.Model
 {
-    internal class EnemyTable
+    public class EnemyTable
     {
         #region Fields
-        private EnemyStruct[] _enemys;
+        private EnemyStruct[,] _enemys ;
         private static int _maxCount = 50;
         private static int _size = 45;
         private static int _columns = 10;
@@ -24,8 +24,278 @@ namespace SpaceInvaders.Model
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
+        private enum direction { RIGHT, LEFT, DOWN };
+        private direction _direction;
+        #endregion
 
+        #region Constructor
+        public EnemyTable()
+        {
+            _enemys = new EnemyStruct[_rows, _columns];
+            _bullet = new Bullet();
+            _bullet.Hight = 20;
+            _bullet.Speed = 5;
+        }
+        #endregion
+
+        #region Public Methods
+
+        public void ReSetTable(int windowWidth)
+        {
+            int enemyColumn = 0;
+            //int s = _windowWidth - ((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance));
+            int border = windowWidth - (windowWidth - ((_columns * _size) + ((_columns - 1) * _distance))) / 2 - _size;
+            int left = border;
+            for (int i = 0; i < _enemys.Length; i++)
+            {
+                switch (i)
+                {
+                    case 10:
+                        enemyColumn = 0;
+                        left = border;
+                        break;
+                    case 20:
+                        enemyColumn = 0;
+                        left = border;
+                        break;
+                    case 30:
+                        enemyColumn = 0;
+                        left = border;
+                        break;
+                    case 40:
+                        enemyColumn = 0;
+                        left = border;
+                        break;
+                }
+                EnemyStruct.enyemyType type = EnemyStruct.enyemyType.RED;
+                if (i < 10) type = EnemyStruct.enyemyType.RED;
+                else if (i < 30) type = EnemyStruct.enyemyType.ORANGE;
+                else if (i < 50) type = EnemyStruct.enyemyType.BLUE;
+
+                _enemys[(i / _columns), enemyColumn].Alive = true;
+                _enemys[i / _columns, enemyColumn].Type = type;
+                _enemys[i / _columns, enemyColumn].Y(_distance + (i / _columns) * (_size + _distance));
+                _enemys[i / _columns, enemyColumn].X(left);
+
+                enemyColumn++;
+                left -= (_size + _distance);
+            }
+            _mostButtomEnemySerial = (_rows - 1, 0);
+            _mostRightEnemySerial = (0, 0);
+            _mostLeftEnemySerial = (0, _columns - 1);
+            _buttomYPos = _enemys[_rows - 1, 0].Y() + _size;
+
+
+        }
+
+        public void CreateEnemyBullet(int playerXPos, int windowBorder, int playerWidth)
+        {
+            _bullet.IsNewBullet = true;
+            _bullet.Alive = true;
+            _bullet.X = playerXPos + (playerWidth / 2) - 2;
+            _bullet.Y = windowBorder + _bullet.Hight;
+        }
+
+        public (bool,bool) EnemyBulletMove(int playerYPos, int playerXPos, int playerWidth, int windowHeight)
+        {
+            bool _hit = false;
+            bool avoid = false;
+            if (_bullet.Alive)
+            {
+                _bullet.IsNewBullet = false;
+                _bullet.Y += _bullet.Speed;
+                if ((_bullet.Y + _bullet.Hight >= playerYPos && _bullet.X >= playerXPos && _bullet.X <= playerXPos + playerWidth && _bullet.Alive))
+                {
+                    _hit = true;
+                    _bullet.Alive = false;
+                }
+                else if (_bullet.Y + _bullet.Hight + 5 >= windowHeight - 95)
+                {
+                    _bullet.Alive = false;
+                    avoid = true;
+                }
+            }
+            return (_hit, avoid);
+        }
+
+        public void Move(int windowBorder)
+        {
+            if (_direction == direction.RIGHT && MostRightCoord() < 625)
+            {
+                MoveRight();
+            }
+            else if (_direction == direction.RIGHT && MostRightCoord() >= 625)
+            {
+                _direction = direction.LEFT;
+            }
+            if (_direction == direction.LEFT && MostLeftCoord() > windowBorder)
+            {
+                MoveLeft();
+            }
+            else if (_direction == direction.LEFT && MostLeftCoord() <= windowBorder)
+            {
+                _direction = direction.DOWN;
+            }
+            else if (_direction == direction.DOWN)
+            {
+                MoveDown();
+                _direction = direction.RIGHT;
+            }
+            _buttomYPos = MostLeftDown() + _size;
+        }
+
+        public void NewMostRight()
+        {
+            double max = -1;
+            int maxI = 0;
+            int maxJ = 0;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    if (_enemys[i, j].X() > max && _enemys[i, j].Alive)
+                    {
+                        max = _enemys[i, j].X();
+                        maxI = i;
+                        maxJ = j;
+                    }
+                }
+            }
+            _mostRightEnemySerial = (maxI, maxJ);
+        }
+        public void NewMostLeft()
+        {
+            double min = 1000;
+            int minI = 0;
+            int minJ = 0;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    if (_enemys[i, j].X() < min && _enemys[i, j].Alive)
+                    {
+                        min = _enemys[i, j].X();
+                        minI = i;
+                        minJ = j;
+                    }
+                }
+            }
+            _mostLeftEnemySerial = (minI, minJ);
+        }
+        public void NewMostDown()
+        {
+            double max = 0;
+            int maxI = 0;
+            int maxJ = 0;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    if (_enemys[i, j].Y() > max && _enemys[i, j].Alive)
+                    {
+                        max = _enemys[i, j].Y();
+                        maxI = i;
+                        maxJ = j;
+                    }
+                }
+            }
+            _mostButtomEnemySerial = (maxI, maxJ);
+        }
+
+        public int RightEnemyCount(int playerXPos, int playerWidth)
+        {
+            int count = 0;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    if (_enemys[i, j].Alive && _enemys[i, j].X() > playerXPos + playerWidth / 2)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+        public int LeftEnemyCount(int playerXPos, int playerWidth)
+        {
+            int count = 0;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    if (_enemys[i, j].Alive && _enemys[i, j].X() < playerXPos + playerWidth / 2)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
 
         #endregion
+
+        #region Private Methods
+        private void MoveLeft()
+        {
+            double s;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    s = _enemys[i, j].X();
+                    _enemys[i, j].X(s - _speed);
+                }
+            }
+        }
+        private void MoveRight()
+        {
+            double s;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    s = _enemys[i, j].X();
+                    _enemys[i, j].X(s + _speed);
+                }
+            }
+        }
+        private void MoveDown()
+        {
+            int s;
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    s = _enemys[i, j].Y();
+                    _enemys[i, j].Y(s + _size);
+                }
+            }
+        }
+
+        private double MostRightCoord()
+        {
+            int x; int y;
+            (x, y) = _mostRightEnemySerial;
+            double max = _enemys[x, y].X();
+            return max;
+        }
+        private double MostLeftCoord()
+        {
+            int x; int y;
+            (x, y) = _mostLeftEnemySerial;
+            double max = _enemys[x, y].X();
+            return (max);
+        }
+        private int MostLeftDown()
+        {
+            int x; int y;
+            (x, y) = _mostButtomEnemySerial;
+            int max = _enemys[x, y].Y() + _size;
+            return (max);
+        }
+
+        #endregion
+
     }
 }
