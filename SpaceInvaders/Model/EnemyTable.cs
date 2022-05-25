@@ -25,7 +25,7 @@ namespace SpaceInvaders.Model
         private (int, int) _mostRightEnemySerial;
         private (int, int) _mostLeftEnemySerial;
         private (int, int) _mostButtomEnemySerial;
-        private enum direction { RIGHT, LEFT, DOWN };
+        public enum direction { RIGHT, LEFT, DOWN };
         private direction _direction;
         #endregion
 
@@ -46,6 +46,7 @@ namespace SpaceInvaders.Model
         public (int,int) MostRightEnemySerial { get { return _mostRightEnemySerial; } set { _mostRightEnemySerial = value; } } 
         public (int,int) MostLeftEnemySerial { get { return _mostLeftEnemySerial; } set { _mostLeftEnemySerial = value; } } 
         public (int,int) MostButtomEnemySerial { get { return _mostButtomEnemySerial; } set { _mostButtomEnemySerial = value; } } 
+        public EnemyTable.direction Direction { get { return _direction; } set { _direction = value; } } 
 
         #endregion
 

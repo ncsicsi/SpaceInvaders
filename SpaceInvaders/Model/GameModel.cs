@@ -769,6 +769,16 @@ namespace SpaceInvaders.Model
             _network._rightDistanc = (627- _player.XPos) /628D;
             _network._rightEnemyCount = RightEnemyCount()/50D;
             _network._leftEnemyCount = LeftEnemyCount()/50D;
+            if(_enemyTable.Direction == EnemyTable.direction.RIGHT)
+            {
+                _network._enemyMoveDirection = 1;
+            }
+            else
+            {
+                _network._enemyMoveDirection = 0;
+            }
+
+            _network._enemySpeed = _enemyTable.Speed / 100D;
 
         }
         private int RightEnemyCount()
