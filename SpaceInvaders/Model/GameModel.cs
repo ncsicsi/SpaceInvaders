@@ -196,7 +196,7 @@ namespace SpaceInvaders.Model
         {
             if (_dataAccess == null)
                 throw new InvalidOperationException("No data access is provided.");
-            if (_network.EvolutionType == NeuralNetwork.evolution.SIMPLE)
+            if (_network.EvolutionType == Network.evolution.SIMPLE)
             {
                 await _dataAccess.SaveAsync(path, 0, _rounds, _populationSize, _network.WeightsCount, _network.Weights, _network.IndividualFittnes, _network.LearningTime, _network.IndividualScore, _network.EvolutionParameters);
             }
@@ -269,7 +269,7 @@ namespace SpaceInvaders.Model
         }        
         public void TurnSimpleEvolution()
         {
-            if (_network.EvolutionType != NeuralNetwork.evolution.SIMPLE)
+            if (_network.EvolutionType != Network.evolution.SIMPLE)
             {
                 _network.TurnSimpleEvolution();
                 _rounds = _network.Round;
@@ -279,7 +279,7 @@ namespace SpaceInvaders.Model
         }
         public void TurnRedQueenEvolution()
         {
-            if (_network.EvolutionType != NeuralNetwork.evolution.REDQUEEN)
+            if (_network.EvolutionType != Network.evolution.REDQUEEN)
             {
                 _network.TurnRedQueenEvolution();
                 _rounds = _network.Round;

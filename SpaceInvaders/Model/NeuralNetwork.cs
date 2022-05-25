@@ -15,8 +15,8 @@ namespace SpaceInvaders.Model
         #region Fields
         //private IGameDataAccess _dataAccess; //adateleres
         //network
-        public enum evolution { SIMPLE, REDQUEEN};
-        public evolution _evolutionType = evolution.SIMPLE;
+        //public enum evolution { SIMPLE, REDQUEEN};
+        public Network.evolution _evolutionType = Network.evolution.SIMPLE;
         public bool _networkOn;
 
         private double _incomingBiasNeuron = 1;
@@ -86,7 +86,7 @@ namespace SpaceInvaders.Model
         #endregion
 
         #region Properties
-        public double[,] Weights { get { if (_evolutionType == evolution.SIMPLE) { return _simpleWeights; } else return _redQueenWeights; } }
+        public double[,] Weights { get { if (_evolutionType == Network.evolution.SIMPLE) { return _simpleWeights; } else return _redQueenWeights; } }
         public double[] IndividualFittnes { get {return _individualFittnes; } }
         public int WeightsCount { get {return (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount; } }
         //public double Score { get { return _score; } set { _score = value; } }
@@ -96,8 +96,8 @@ namespace SpaceInvaders.Model
         public int ActiveIndividual { get { return _activeIndividual; } set { _activeIndividual = value; } }
         public double LearningTime { get { return _learningTime; } set { _learningTime = value; } }
         public int[] IndividualScore { get { return _individualScore; } }
-        public evolution EvolutionType { get { return _evolutionType; } set { _evolutionType = value; } }
-        public int Round { get { if (_evolutionType == evolution.SIMPLE) { return _simpleRoundCounter; } else return _redQueenRoundCounter; } set { if (_evolutionType == evolution.SIMPLE) { _simpleRoundCounter = value;  } else _redQueenRoundCounter = value; } }
+        public Network.evolution EvolutionType { get { return _evolutionType; } set { _evolutionType = value; } }
+        public int Round { get { if (_evolutionType == Network.evolution.SIMPLE) { return _simpleRoundCounter; } else return _redQueenRoundCounter; } set { if (_evolutionType == Network.evolution.SIMPLE) { _simpleRoundCounter = value;  } else _redQueenRoundCounter = value; } }
         public double[] EvolutionParameters { get { return _evolutionParameters; } set { _evolutionParameters = value;  } }
         #endregion
 
@@ -122,7 +122,7 @@ namespace SpaceInvaders.Model
             RefreshIncomingNeurons();
             ReSetNeurons();
             //hidden neuronok szamitasa
-            if (_evolutionType == evolution.SIMPLE)
+            if (_evolutionType == Network.evolution.SIMPLE)
             {
                 for (int h = 0; h < _hiddenNeuronsCount; h++)
                 {
@@ -197,7 +197,7 @@ namespace SpaceInvaders.Model
             data._evolutionParameters[5] = _evolutionParameters[5] = _goLeftAndRightWeight;
             if (data._evolutionType == 0)
             {
-                _evolutionType = evolution.SIMPLE;
+                _evolutionType = Network.evolution.SIMPLE;
                 _incommingNeuronsCount = _simpleIncommingNeuronsCount;
                 _simpleRoundCounter = data._round;
                 for (int i = 0; i < _individualCount; i++)
@@ -211,7 +211,7 @@ namespace SpaceInvaders.Model
             }
             else
             {
-                _evolutionType = evolution.REDQUEEN;
+                _evolutionType = Network.evolution.REDQUEEN;
                 _incommingNeuronsCount = _redQueenIncommingNeuronsCount;
                 _redQueenRoundCounter = data._round;
                 for (int i = 0; i < _individualCount; i++)
@@ -238,7 +238,7 @@ namespace SpaceInvaders.Model
 
         public void TurnSimpleEvolution()
         {
-            EvolutionType = NeuralNetwork.evolution.SIMPLE;
+            EvolutionType = Network.evolution.SIMPLE;
             _redQueenLearningTime = _learningTime;
             LearningTime = _simpleLearningTime;
             ActiveIndividual = 0;
@@ -247,7 +247,7 @@ namespace SpaceInvaders.Model
         }        
         public void TurnRedQueenEvolution()
         {
-            EvolutionType = NeuralNetwork.evolution.REDQUEEN;
+            EvolutionType = Network.evolution.REDQUEEN;
             _simpleLearningTime = _learningTime;
             LearningTime = _redQueenLearningTime;
             ActiveIndividual = 0;
@@ -375,7 +375,7 @@ namespace SpaceInvaders.Model
 
         private void RefreshIncomingNeurons()
         {
-            if (_evolutionType == evolution.SIMPLE)
+            if (_evolutionType == Network.evolution.SIMPLE)
             {
                 _simpleIncommingNeurons[0] = _incomingBiasNeuron;
                 _simpleIncommingNeurons[1] = _bulletDistance;
@@ -424,7 +424,7 @@ namespace SpaceInvaders.Model
         //sulyok elsonek legyenek gauss szerint random szamok szamok
         private void ResetNetrowkWeights()
         {
-            if (_evolutionType == evolution.SIMPLE)
+            if (_evolutionType == Network.evolution.SIMPLE)
             {
                 int s = (_simpleIncommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
                 for (int i = 0; i < s; i++)
@@ -473,13 +473,13 @@ namespace SpaceInvaders.Model
                 _activeIndividual = i;
                 ResetNetrowkWeights();
             }
-            _evolutionType = evolution.REDQUEEN;
+            _evolutionType = Network.evolution.REDQUEEN;
             for (int i = 0; i < _individualCount; i++)
             {
                 _activeIndividual = i;
                 ResetNetrowkWeights();
             }
-            _evolutionType = evolution.SIMPLE;
+            _evolutionType = Network.evolution.SIMPLE;
             _activeIndividual = 0;
         }
 
@@ -523,7 +523,7 @@ namespace SpaceInvaders.Model
                 rd = random.Next(0, _individualCount-1);
             }
             _rdIndividual = rd;
-            if (_evolutionType == evolution.SIMPLE)
+            if (_evolutionType == Network.evolution.SIMPLE)
             {
                 for (int i = 0; i < weightCount; i++)
                 {
@@ -585,7 +585,7 @@ namespace SpaceInvaders.Model
             Random randomIndividual = new Random();
             int rd = randomIndividual.Next(0, _individualCount);
             int s = (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount;
-            if (_evolutionType == evolution.SIMPLE)
+            if (_evolutionType == Network.evolution.SIMPLE)
             {
                 for (int i = 0; i < s; i++)
                 {
@@ -641,7 +641,7 @@ namespace SpaceInvaders.Model
                 _score = score;
                 _individualScore[_activeIndividual] = score;
                 CalculateFittnes();
-                if (_evolutionType == evolution.SIMPLE)
+                if (_evolutionType == Network.evolution.SIMPLE)
                 {
                     if (_activeIndividual < _individualCount - 1 && _simpleRoundCounter < _individualCount - 1)
                     {
