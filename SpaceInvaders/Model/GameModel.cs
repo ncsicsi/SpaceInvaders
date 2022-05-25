@@ -57,8 +57,8 @@ namespace SpaceInvaders.Model
 
         private IGameDataAccess _dataAccess; //adateleres
 
-        private enum direction {RIGHT, LEFT, DOWN};
-        private direction _direction;
+        //private enum direction {RIGHT, LEFT, DOWN};
+        //private direction _direction;
 
 
 
@@ -159,7 +159,7 @@ namespace SpaceInvaders.Model
             _player.Bullet = false;
             _bulletCount = 0;
             //_enemysCount = _maxenemyCount;
-            _direction = direction.RIGHT;
+            //_direction = direction.RIGHT;
             _player.GoLeft = false;
             _player.GoRight = false;
             OnGameCreated();

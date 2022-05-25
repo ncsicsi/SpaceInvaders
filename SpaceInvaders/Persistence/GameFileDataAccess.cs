@@ -41,14 +41,14 @@ namespace SpaceInvaders.Persistence
         // fajl betoltese
         public async Task<Data> LoadAsync(String path)
         {
-            //try
-            //{
+            try
+            {
                 using (StreamReader reader = new StreamReader(path)) // fájl megnyitása
                 {
                     String line = await reader.ReadLineAsync(); //
                     String[] numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
                     int evolutionType;
-                    if(numbers[0]== "Simple")
+                    if (numbers[0] == "Simple")
                     {
                         evolutionType = 0;
                     }
@@ -75,7 +75,7 @@ namespace SpaceInvaders.Persistence
                     line = await reader.ReadLineAsync();
                     numbers = line.Split(' ');
                     int weightsSize = int.Parse(numbers[0]); // beolvassuk a sulyok szamat
-                    double[,] weights = new double[populationSize, weightsSize];    
+                    double[,] weights = new double[populationSize, weightsSize];
 
                     for (int i = 0; i < populationSize; i++)
                     {
@@ -88,11 +88,11 @@ namespace SpaceInvaders.Persistence
                         }
                     }
                     //fittnesek beolvasasa
-                    double[] individualFittnes = new double [populationSize];
+                    double[] individualFittnes = new double[populationSize];
                     line = await reader.ReadLineAsync();
                     numbers = line.Split(' ');
                     for (int i = 0; i < populationSize; i++)
-                    { 
+                    {
                         individualFittnes[i] = double.Parse(numbers[i]);
                     }
                     //pontszamok beolvasasa
@@ -103,21 +103,22 @@ namespace SpaceInvaders.Persistence
                     {
                         individualScore[i] = int.Parse(numbers[i]);
                     }
-                    Data data=new Data(evolutionType,round, populationSize,weightsSize,weights, individualFittnes, learningTime, individualScore, evolutionParameters);
+                    Data data = new Data(evolutionType, round, populationSize, weightsSize, weights, individualFittnes, learningTime, individualScore, evolutionParameters);
                     return data;
                 }
-            //}
-            //catch
-            //{
-                // throw new GameDataException();
-            //}
+            }
+            catch
+            {
+                throw new GameDataException();
+            }
+            
         }
 
         // Mentes
         public async Task SaveAsync(String path, int evolutionType, int round, int populationSize, int weightsSize, double[,] weights, double[] individualFittnes, double learningTime, int[] individualScore, double[] evolutionParameters)
         {
-            //try
-            //{
+            try
+            {
                 using (StreamWriter writer = new StreamWriter(path)) // fájl megnyitása
                 {
                     if (evolutionType == 0)
@@ -166,11 +167,11 @@ namespace SpaceInvaders.Persistence
                     }
 
                 }
-            //}
-            /*catch
+            }
+            catch
             {
                 throw new GameDataException();
-            }*/
+            }
         }
     }
 }
