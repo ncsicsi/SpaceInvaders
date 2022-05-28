@@ -104,6 +104,7 @@ namespace SpaceInvaders.Model
         #region Constructor
         public NeuralNetwork(int hiddenNeuronsCount, int individualCount)
         {
+            _networkOn = true;
             CreatePopulation(hiddenNeuronsCount, individualCount);
             _evolutionParameters = new double[_fittnesComponentCount];
             _evolutionParameters[0] = _mutation;

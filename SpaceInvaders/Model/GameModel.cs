@@ -13,7 +13,7 @@ using SpaceInvaders.Persistence;
 namespace SpaceInvaders.Model
 {
 
-    internal class GameModel
+    public class GameModel
     {
         #region Fields
         //network
@@ -26,41 +26,21 @@ namespace SpaceInvaders.Model
         private static int _windowWidth = 700;
         private static int _windowHeight = 700;
         private static int _windowBorder = 10;
-        //private static int _enemySize = 45;
-        //private static int _enemyColumns = 10;
-        //private static int _enemyRows = 5;
-        //private static int _enemyDistance = 10;
-        //private int _enemysCount = 50;
-        //private double _enemyBasicSpeed = 1;
-        //private int _enemyBulletTimeDistance = 300;   //milyen idokozonkent lonek az enemyk 300
         private int _bulletHight = 20;
         private int _bulletspeed = 5;
-        //private EnemyStruct[,] _enemys;
         private EnemyTable _enemyTable;
         private Bullet[] _bullets;
-        //private Bullet _enemyBullet;
         private Player _player;
         private int _bulletCount;
-        //private double _enemySpeed;
-        //private int _enemyBulletTimeCounter;
         private bool _win;
-        //private int _enemyButtomYPos;   //legalso enemy helyzete x szerint
-        //private (int, int) _mostRightEnemySerial;
-        //private (int, int) _mostLeftEnemySerial;
-        //private (int, int) _mostButtomEnemySerial;
         public bool _viewOn;
         private int _rounds;
         public bool _startGame = false;
 
-        private static System.Timers.Timer _timer;
+        private static  System.Timers.Timer _timer;
         private static System.Timers.Timer _timerOffView;
 
         private IGameDataAccess _dataAccess; //adateleres
-
-        //private enum direction {RIGHT, LEFT, DOWN};
-        //private direction _direction;
-
-
 
         #endregion
 
@@ -81,6 +61,7 @@ namespace SpaceInvaders.Model
         //bullet
         public void BulletOn(bool bullet) { _player.Bullet = bullet; }
         public bool NetworkOn { get { return _network._networkOn; } set { _network._networkOn = value; } }
+        public Network.evolution EvolutionType { get { return _network._evolutionType; } }
 
 
         #endregion
@@ -125,15 +106,9 @@ namespace SpaceInvaders.Model
             _player.Lives = 1;
             _player.Bullet = false;
             _bulletCount = 0;
-            //_enemysCount = _maxenemyCount;
-            //_enemyBullet.Alive = false;
-            //_enemyBullet.IsNewBullet = false;
-            //_enemyBulletTimeCounter = 0;
             _player.GoLeft = false;
             _player.GoRight = false;
             _enemyTable.Speed = _enemyTable.BasicSpeed;
-            //_enemySpeed = _enemyBasicSpeed;
-            //_direction= direction.RIGHT;
             _rounds++;
             OnGameCreated();
             if (_viewOn)
@@ -322,14 +297,11 @@ namespace SpaceInvaders.Model
             {
                 _network._avoidBullets++;
             }
-            //EnemyBulletMove();
             if (_enemyTable.BulletTimeCounter >= _enemyTable.BulletTimeDistance)
             {;
                 _enemyTable.CreateBullet(_player.XPos, _windowBorder, _player.Width);
-                //CreateEnemyBullet();
             }
             _enemyTable.Move(_windowBorder);
-            //EnemyMove();
             BulletMove();
             CreateBullet();
             OnGameAdvanced();
@@ -356,17 +328,13 @@ namespace SpaceInvaders.Model
             {
                 _network._avoidBullets++;
             }
-            //EnemyBulletMove();
             if (_enemyTable.BulletTimeCounter >= _enemyTable.BulletTimeDistance)
             {
                 _enemyTable.CreateBullet(_player.XPos, _windowBorder, _player.Width);
-                //CreateEnemyBullet();
             }
             _enemyTable.Move(_windowBorder);
-            //EnemyMove();
             BulletMove();
             CreateBullet();
-            //OnGameAdvanced();
             _network._elapsedTime += 0.02D;
             if (GameOverIs())
             {
@@ -383,55 +351,7 @@ namespace SpaceInvaders.Model
                 _bullets[i].IsNewBullet = false;
             }
         }
-        /*
-        private void ReSetEnemyTable()
-        {
-            int enemyColumn = 0;
-            //int s = _windowWidth - ((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance));
-            int border =_windowWidth - (_windowWidth-((_enemyColumns * _enemySize) + ((_enemyColumns - 1) * _enemyDistance))) / 2 - _enemySize;
-            int left = border;
-            for (int i = 0; i < _enemys.Length; i++)
-            {
-                switch (i)
-                {
-                    case 10:
-                        enemyColumn=0;
-                        left = border;
-                        break;
-                    case 20:
-                        enemyColumn=0;
-                        left = border;
-                        break;
-                    case 30:
-                        enemyColumn=0;
-                        left = border;
-                        break;
-                    case 40:
-                        enemyColumn=0;
-                        left = border;
-                        break;
-                }
-                EnemyStruct.enyemyType type =EnemyStruct.enyemyType.RED;
-                if (i < 10) type = EnemyStruct.enyemyType.RED;
-                else if(i < 30) type = EnemyStruct.enyemyType.ORANGE; 
-                else if(i < 50) type = EnemyStruct.enyemyType.BLUE;
 
-                _enemys[(i / _enemyColumns), enemyColumn].Alive = true;
-                    _enemys[i / _enemyColumns, enemyColumn].Type = type;
-                    _enemys[i / _enemyColumns, enemyColumn].Y(_enemyDistance+(i/ _enemyColumns) *(_enemySize+ _enemyDistance));
-                    _enemys[i / _enemyColumns, enemyColumn].X(left);
-
-                enemyColumn++;
-                left -= (_enemySize + _enemyDistance);
-            }
-            _mostButtomEnemySerial = (_enemyRows-1, 0);
-            _mostRightEnemySerial = (0,0);
-            _mostLeftEnemySerial = (0, _enemyColumns-1);
-            _enemyButtomYPos = _enemys[_enemyRows - 1, 0].Y() + _enemySize;
-            
-
-        }
-        */
         private void CreateBullet()
         {
             if (_player.Bullet == true)
@@ -452,34 +372,7 @@ namespace SpaceInvaders.Model
                 _network._usedBullets++;
             }
         }
-        /*
-        private void CreateEnemyBullet()
-        {
-            _enemyBullet.IsNewBullet = true;
-            _enemyBullet.Alive = true;
-            _enemyBullet.X = _player.XPos + (_player.Width / 2)-2;
-            _enemyBullet.Y = _windowBorder + _bulletHight;
-            //_enemyBullet.Y = _enemyButtomYPos-_enemySize;
-        }
-        */
-        /*
-        private void EnemyBulletMove()
-        {
-            if (_enemyBullet.Alive)
-            {
-                _enemyBullet.IsNewBullet = false;
-                _enemyBullet.Y += _bulletspeed;
-                if ((_enemyBullet.Y + _bulletHight >= _player.YPos && _enemyBullet.X >= _player.XPos && _enemyBullet.X <= _player.XPos + _player.Width) && _enemyBullet.Alive )
-                {
-                    _player.Lives--;
-                    _enemyBullet.Alive = false;
-                }else if(_enemyBullet.Y + _bulletHight +5 >= _windowHeight - 95){
-                    _enemyBullet.Alive = false;
-                    _network._avoidBullets++;
-                }
-            }
-        }
-        */
+
         private void BulletMove()
         {
             for (int i = 0; i < _maxBullet; i++)
@@ -542,151 +435,6 @@ namespace SpaceInvaders.Model
                 }
             }
         }
-
-        //enemy move methods
-        /*
-        private void EnemyMove()
-        {
-            if(_direction == direction.RIGHT && _enemyTable.MostRightCoord() < 625 )
-            {
-                _enemyTable.MoveRight();
-            }
-            else if(_direction == direction.RIGHT && _enemyTable.MostRightCoord() >= 625)
-            {
-                _direction = direction.LEFT;
-            }
-            if(_direction == direction.LEFT && _enemyTable.MostLeftCoord()> _windowBorder)
-            {
-                MoveLeft();
-            }
-            else if (_direction == direction.LEFT && _enemyTable.MostLeftCoord() <= _windowBorder)
-            {
-                _direction = direction.DOWN;
-            }
-            else if(_direction == direction.DOWN)
-            {
-                MoveDown();
-                _direction = direction.RIGHT;
-            }
-            _enemyButtomYPos = _enemyTable.MostLeftDown()+_enemySize;
-        }
-        */
-        /*
-        private double MostRightCoord()
-        {
-            int x; int y;
-            (x, y) = _enemyTable.MostRightEnemySerial;
-            double max = _enemyTable.Enemies[x, y].X();
-            return max;
-        }        
-        private double MostLeftCoord()
-        {
-            int x; int y;
-            (x, y) = _mostLeftEnemySerial;
-            double max = _enemyTable.Enemies[x, y].X();
-            return (max);
-        }  */      
-        /*private int MostLeftDown()
-        {
-            int x; int y;
-            (x,y) = _mostButtomEnemySerial;
-            int max = _enemyTable.Enemies[x, y].Y()+_enemySize;
-            return (max);
-        }
-        private void MoveLeft()
-        {
-            double s;
-            for (int i = 0; i < _enemyRows; i++)
-            {
-                for (int j = 0; j < _enemyColumns; j++)
-                {
-                    s = _enemyTable.Enemies[i, j].X();
-                    _enemyTable.Enemies[i, j].X(s - _enemyTable.Speed);
-                }
-            }
-        }
-        private void MoveRight()
-        {
-            double s;
-            for (int i = 0; i < _enemyRows; i++)
-            {
-                for (int j = 0; j < _enemyColumns; j++)
-                {
-                    s = _enemyTable.Enemies[i, j].X();
-                    _enemyTable.Enemies[i, j].X(s + _enemyTable.Speed);
-                }
-            }
-        }
-        private void MoveDown()
-        {
-            int s;
-            for (int i = 0; i < _enemyRows; i++)
-            {
-                for (int j = 0; j < _enemyColumns; j++)
-                {
-                    s = _enemyTable.Enemies[i, j].Y();
-                    _enemyTable.Enemies[i, j].Y(s + _enemySize);
-                }
-            }
-        }
-        /*
-        private void NewMostRight()
-        {
-            double max = -1;
-            int maxI = 0;
-            int maxJ = 0;
-            for(int i = 0; i < _enemyRows; i++)
-            {
-                for(int j = 0; j < _enemyColumns; j++)
-                {
-                    if (_enemyTable.Enemies[i, j].X() > max && _enemyTable.Enemies[i,j].Alive) {
-                        max = _enemyTable.Enemies[i, j].X();
-                        maxI = i;
-                        maxJ = j;
-                    }
-                }
-            }
-            _mostRightEnemySerial = (maxI,maxJ);
-        }*//*
-        private void NewMostLeft()
-        {
-            double min = 1000;
-            int minI = 0;
-            int minJ = 0;
-            for (int i = 0; i < _enemyRows; i++)
-            {
-                for (int j = 0; j < _enemyColumns; j++)
-                {
-                    if (_enemyTable.Enemies[i, j].X() < min && _enemyTable.Enemies[i, j].Alive)
-                    {
-                        min = _enemyTable.Enemies[i, j].X();
-                        minI = i;
-                        minJ = j;
-                    }
-                }
-            }
-            _mostLeftEnemySerial = (minI, minJ);
-        }
-        private void NewMostDown()
-        {
-            double max = 0;
-            int maxI = 0;
-            int maxJ = 0;
-            for (int i = 0; i < _enemyRows; i++)
-            {
-                for (int j = 0; j < _enemyColumns; j++)
-                {
-                    if (_enemyTable.Enemies[i, j].Y() > max && _enemyTable.Enemies[i, j].Alive)
-                    {
-                        max = _enemyTable.Enemies[i, j].Y();
-                        maxI = i;
-                        maxJ = j;
-                    }
-                }
-            }
-            _mostButtomEnemySerial = (maxI, maxJ);
-        }
-        */
         private void NetworkAction()
         {
             if (_network._networkOn)
@@ -855,6 +603,7 @@ namespace SpaceInvaders.Model
                 if (GameOver != null)
                 GameOver(this, new GameOverEventArgs(win, _network._networkOn));
         }
+
 
         #endregion
 
