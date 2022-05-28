@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceInvaders", "SpaceInvaders\SpaceInvaders.csproj", "{3FE0AE5E-DFC6-412D-96CF-E4009A856315}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceInvadersTest", "SpaceInvadersTest\SpaceInvadersTest.csproj", "{B5FFF926-E589-4553-A1BC-016204A6768E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceInvadersTest", "SpaceInvadersTest\SpaceInvadersTest.csproj", "{B5FFF926-E589-4553-A1BC-016204A6768E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
