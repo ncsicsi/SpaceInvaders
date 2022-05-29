@@ -101,6 +101,7 @@ namespace SpaceInvaders
 
             _gameWindow.KeyIsDown_Event += new KeyEventHandler(View_KeyIsDown);
             _gameWindow.KeyIsUp_Event += new KeyEventHandler(View_KeyIsUp);
+            _settingsWindow.Save_Event += new EventHandler<paramEventArgs> (Model_SaveParams);
             //_model.NewGame();
             _view.Navigate(_menuWindow);
             _view.Closing += new System.ComponentModel.CancelEventHandler(View_Closing); // eseménykezelés a bezáráshoz
@@ -150,6 +151,10 @@ namespace SpaceInvaders
         private void View_KeyIsUp(object sender, KeyEventArgs e)
         {
             _viewModel.View_KeyIsUp(e);
+        }       
+        private void Model_SaveParams(object sender, paramEventArgs e)
+        {
+            _model.Model_SaveParams(e);
         }
 
         #endregion

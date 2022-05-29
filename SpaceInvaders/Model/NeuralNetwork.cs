@@ -107,12 +107,7 @@ namespace SpaceInvaders.Model
             _networkOn = true;
             CreatePopulation(hiddenNeuronsCount, individualCount);
             _evolutionParameters = new double[_fittnesComponentCount];
-            _evolutionParameters[0] = _mutation;
-            _evolutionParameters[1] = _scoreWeight;
-            _evolutionParameters[2] = _elapsedTimeWeighht;
-            _evolutionParameters[3] = _avoidBulletsWeight;
-            _evolutionParameters[4] = _usedBulletssWeight;
-            _evolutionParameters[5] = _goLeftAndRightWeight;
+            SetParamsToTable();
         }
         #endregion
 
@@ -190,12 +185,13 @@ namespace SpaceInvaders.Model
         {
             //_hiddenNeuronsCount = data._weightsSize;
             _individualCount = data._populationSize;
-            data._evolutionParameters[0] = _evolutionParameters[0] = _mutation;
-            data._evolutionParameters[1] = _evolutionParameters[1] = _scoreWeight;
-            data._evolutionParameters[2] = _evolutionParameters[2] = _elapsedTimeWeighht;
-            data._evolutionParameters[3] = _evolutionParameters[3] = _avoidBulletsWeight;
-            data._evolutionParameters[4] = _evolutionParameters[4] = _usedBulletssWeight;
-            data._evolutionParameters[5] = _evolutionParameters[5] = _goLeftAndRightWeight;
+            data._evolutionParameters[0] = _mutation;
+            data._evolutionParameters[1] = _scoreWeight;
+            data._evolutionParameters[2] = _elapsedTimeWeighht;
+            data._evolutionParameters[3] = _avoidBulletsWeight;
+            data._evolutionParameters[4] = _usedBulletssWeight;
+            data._evolutionParameters[5] = _goLeftAndRightWeight;
+            SetParamsToTable();
             if (data._evolutionType == 0)
             {
                 _evolutionType = Network.evolution.SIMPLE;
@@ -237,6 +233,24 @@ namespace SpaceInvaders.Model
             ReSetFittnes();
         }
 
+        public void SetParams(double[] _evolutionParameters)
+        {
+            if (_evolutionParameters[0] == 0)
+            {
+                _evolutionType = Network.evolution.SIMPLE;
+            }
+            else
+            {
+                _evolutionType = Network.evolution.REDQUEEN;
+            }
+            _mutation = _evolutionParameters[1];
+            _scoreWeight = _evolutionParameters[2];
+            _elapsedTimeWeighht = _evolutionParameters[3];
+            _avoidBulletsWeight = _evolutionParameters[4];
+            _usedBulletssWeight = _evolutionParameters[5];
+            _goLeftAndRightWeight = _evolutionParameters[6];
+            SetParamsToTable();
+        }
         public void TurnSimpleEvolution()
         {
             EvolutionType = Network.evolution.SIMPLE;
@@ -484,6 +498,15 @@ namespace SpaceInvaders.Model
             _activeIndividual = 0;
         }
 
+        private void SetParamsToTable()
+        {
+            _evolutionParameters[0] = _mutation;
+            _evolutionParameters[1] = _scoreWeight;
+            _evolutionParameters[2] = _elapsedTimeWeighht;
+            _evolutionParameters[3] = _avoidBulletsWeight;
+            _evolutionParameters[4] = _usedBulletssWeight;
+            _evolutionParameters[5] = _goLeftAndRightWeight;
+        }
         private void RoundResults()
         {
             double maxFittnes = _individualFittnes[0];

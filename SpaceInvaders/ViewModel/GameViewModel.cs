@@ -24,7 +24,6 @@ namespace SpaceInvaders.ViewModel
     {
         #region fields
         private GameModel _model;
-        private double[] _eolutionParameters;
         #endregion
 
         #region Properties
@@ -57,7 +56,6 @@ namespace SpaceInvaders.ViewModel
         public DelegateCommand LoadNetworkMenuCommand { get; private set; }
         public DelegateCommand BackToTheMenuCommand { get; private set; }
         public DelegateCommand SettingsViewCommand { get; private set; }
-        public DelegateCommand SaveParametersCommand { get; private set; }
 
         // Eletek lekerdezese
         public Int32 GameLives { get {return _model.Lives;} }
@@ -232,6 +230,7 @@ namespace SpaceInvaders.ViewModel
                     break;
             }
         }
+
 
         /// Neuralis halo iranyitasara valtas
         private void OnChangeAI()

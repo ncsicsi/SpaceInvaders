@@ -266,6 +266,11 @@ namespace SpaceInvaders.Model
             _timer.Start();
             _viewOn = true;
         }
+
+        public void Model_SaveParams(paramEventArgs e)
+        {
+            _network.SetParams(e.EvolutionParams);
+        }
         public void TurnSimpleEvolution()
         {
             if (_network.EvolutionType != Network.evolution.SIMPLE & _network._networkOn)
