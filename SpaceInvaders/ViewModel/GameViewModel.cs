@@ -311,22 +311,21 @@ namespace SpaceInvaders.ViewModel
         private void OnNewGameManualView()
         {
             _model.ChangeManual();
-            _model.NewGame();
             NewGameManualView.Invoke(this, EventArgs.Empty);
         }        
         private void OnNewGameAIView()
         {
             _model.ChangeAI();
-            _model.NewGame();
             NewGameAIView.Invoke(this, EventArgs.Empty);
-        }       
+        }
         private void OnLoadNetworkMenu()
         {
-            if (LoadNetwork != null)
-                LoadNetwork(this, EventArgs.Empty);
-            _model.NewGame();
-            NetworkLoadView.Invoke(this, EventArgs.Empty);
-
+            if (LoadNetwork != null) { 
+            LoadNetwork(this, EventArgs.Empty);
+            //_model.NewGame();
+            //NetworkLoadView.Invoke(this, EventArgs.Empty);
+        }
+        
         }       
         private void OnBackToTheMenu()
         {
@@ -335,6 +334,12 @@ namespace SpaceInvaders.ViewModel
         private void OnSettingsView()
         {
             SettingsView.Invoke(this, EventArgs.Empty);
+        }
+        public void NavigateLoadNetwork()
+        {
+            if(!_model._startGame)_model.NewGame();
+
+            NetworkLoadView.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

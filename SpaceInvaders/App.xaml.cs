@@ -166,10 +166,19 @@ namespace SpaceInvaders
         //legugyesebb lejatszasa
         private void ViewModel_BestPlay(object sender, EventArgs e)
         {
-            _gameWindow.RoundOver();
-            _model.NewGame();
-            _model.BestPlay();
-            _gameWindow.NewGame();
+            if (!_model.NetworkOn)
+            {
+                _model.stopTimer();
+                MessageBox.Show("Can't play BestPlay in manual mode", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                _model.startTimer();
+            }
+            else
+            {
+                _gameWindow.RoundOver();
+                _model.NewGame();
+                _model.BestPlay();
+                _gameWindow.NewGame();
+            }
         }
         //nezet ki, be kapcsolasa
         private void ViewModel_TurnOffView(object sender, EventArgs e)
@@ -203,13 +212,21 @@ namespace SpaceInvaders
         }
         private void ViewModel_TurnSimpleEvolution(object sender, EventArgs e)
         {
-            //_model.stopTimer();
-            //_view.RoundOver();
+            if (!_model.NetworkOn)
+            {
+                _model.stopTimer();
+                MessageBox.Show("Can't change population in manual mode", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                _model.startTimer();
+            }
         }
         private void ViewModel_TurnRedQueenEvolution(object sender, EventArgs e)
         {
-            //_model.stopTimer();
-            //_view.RoundOver();
+            if (!_model.NetworkOn)
+            {
+                _model.stopTimer();
+                MessageBox.Show("Can't change population in manual mode", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                _model.startTimer();
+            }
         }
         private void ViewModel_BackToTheMenu(object sender, EventArgs e)
         {
@@ -242,12 +259,18 @@ namespace SpaceInvaders
                 openFileDialog.Filter = "neuralis halok|*.stl";
                 if (openFileDialog.ShowDialog() == true)
                 {
+                    _viewModel.NavigateLoadNetwork();
                     // játék betöltése
                     await _model.LoadNetworkAsync(openFileDialog.FileName);
                     _gameWindow.RoundOver();
                     _model.NewGame();
                     _gameWindow.NewGame();
+                    
 
+                }
+                else
+                {
+                    if (_model._startGame) _model.startTimer();
                 }
             }
             catch (GameDataException)

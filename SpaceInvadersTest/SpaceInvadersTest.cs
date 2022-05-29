@@ -5,6 +5,7 @@ using System.Threading;
 using SpaceInvaders.Model;
 using SpaceInvaders.Persistence;
 using Moq;
+using System.Reflection;
 
 namespace SpaceInvadersTest
 {
@@ -52,7 +53,7 @@ namespace SpaceInvadersTest
             _model.NewGame();
             Assert.AreEqual(_model.XPos, 312);
             Assert.AreEqual(_model.Score, 0);
-            Assert.AreEqual(_model.Rounds, 1);
+            Assert.AreEqual(_model.Rounds, 0);
             Assert.AreEqual(_model.Lives, 1);
         }
 
@@ -160,12 +161,16 @@ namespace SpaceInvadersTest
         {
             _model.ChangeManual();
             _model.NewGame();
-            Assert.AreEqual(_model.XPos,312);
+            Assert.AreEqual(_model.XPos, 312);
             _model.GoRight(true);
-            Thread.Sleep(35);
+            MethodInfo method = _model.GetType().GetMethod("GameModelAdvanced", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(_model, null);
             Assert.AreEqual(_model.XPos, 317);
-            Thread.Sleep(1500);
+            _model.XPos = 627;
             Assert.AreEqual(_model.XPos, 627);
+            method.Invoke(_model, null);
+            Assert.AreEqual(_model.XPos, 627);
+
         }
 
         [TestMethod]
@@ -175,11 +180,33 @@ namespace SpaceInvadersTest
             _model.NewGame();
             Assert.AreEqual(_model.XPos, 312);
             _model.GoLeft(true);
-            Thread.Sleep(35);
+            MethodInfo method = _model.GetType().GetMethod("GameModelAdvanced", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(_model, null);
             Assert.AreEqual(_model.XPos, 307);
-            Thread.Sleep(1500);
+            _model.XPos = 7;
+            Assert.AreEqual(_model.XPos, 7);
+            method.Invoke(_model, null);
             Assert.AreEqual(_model.XPos, 7);
         }
+
+        [TestMethod]
+        public void GoLeftAndRgihtTest()
+        {
+            _model.ChangeManual();
+            _model.NewGame();
+            Assert.AreEqual(_model.XPos, 312);
+            _model.GoLeft(true);
+            MethodInfo method = _model.GetType().GetMethod("GameModelAdvanced", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(_model, null);
+            Assert.AreEqual(_model.XPos, 307);
+            _model.GoLeft(false);
+            _model.GoRight(true);
+            method.Invoke(_model, null);
+            Assert.AreEqual(_model.XPos, 312);
+        }
+
+
+        /// <summar
         /// <summary>
         /// loves teszt
         /// </summary>
@@ -189,9 +216,41 @@ namespace SpaceInvadersTest
             _model.ChangeManual();
             _model.NewGame();
             _model.BulletOn(true);
-            Thread.Sleep(35);
+            MethodInfo method = _model.GetType().GetMethod("GameModelAdvanced", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(_model, null);
             Assert.AreEqual(_model.XPos, 312);
         }
+
+        [TestMethod]
+        public void AllActionTogetherTest()
+        {
+            _model.ChangeManual();
+            _model.NewGame();
+            _model.BulletOn(true);
+            MethodInfo method = _model.GetType().GetMethod("GameModelAdvanced", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(_model, null);
+            Assert.AreEqual(_model.XPos, 312);
+            _model.GoRight(true);
+            method.Invoke(_model, null);
+            Assert.AreEqual(_model.XPos, 317);
+            _model.GoRight(false);
+            _model.GoLeft(true);
+            method.Invoke(_model, null);
+            Assert.AreEqual(_model.XPos, 312);
+        }
+
+        /// <summary>
+        /// jatek vege teszt
+        /// </summary>
+        [TestMethod]
+        public void GameOverTest1()
+        {
+            _model.NewGame();
+            Assert.IsFalse(_model.IsGameOver);
+            _model.Lives--;
+            Assert.IsTrue(_model.IsGameOver);
+        }
+
     }
 
 }

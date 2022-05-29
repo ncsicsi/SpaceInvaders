@@ -64,10 +64,17 @@ namespace SpaceInvaders.View
         {
             for (int i = 0; i < _bulletsRectangles.Length; i++)
             {
-                if (_enemyBulletRectangle != null)
+                //if (_enemyBulletRectangle != null)
+                //{
+                try
                 {
                     GameCanvas.Children.Remove(_bulletsRectangles[i]);
                 }
+                catch
+                {
+
+                }
+                //}
             }
         }
         private void RemoveEnemyBullet()
