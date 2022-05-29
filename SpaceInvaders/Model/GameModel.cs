@@ -36,6 +36,7 @@ namespace SpaceInvaders.Model
         public bool _viewOn;
         private int _rounds;
         public bool _startGame = false;
+        public bool _inMenu = true;
 
         private static System.Timers.Timer _timer;
         private static System.Timers.Timer _timerOffView;

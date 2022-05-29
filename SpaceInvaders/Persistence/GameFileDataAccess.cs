@@ -45,9 +45,13 @@ namespace SpaceInvaders.Persistence
             {
                 using (StreamReader reader = new StreamReader(path)) // fájl megnyitása
                 {
-                    String line = await reader.ReadLineAsync(); //
+                    String line = "";
+                    line = await reader.ReadLineAsync(); //
+
+                    int evolutionType = 0;
+                    if(line == null) throw new GameDataException();
                     String[] numbers = line.Split(' '); // beolvasunk egy sort, és a szóköz mentén széttöredezzük
-                    int evolutionType;
+
                     if (numbers[0] == "Simple")
                     {
                         evolutionType = 0;
@@ -55,9 +59,10 @@ namespace SpaceInvaders.Persistence
                     else
                     {
                         evolutionType = 1;
-                    }
+                    } 
                     double[] evolutionParameters = new double[6];
                     line = await reader.ReadLineAsync();
+                    if (line == null) throw new GameDataException();
                     numbers = line.Split(' ');
                     for (int i = 0; i < 6; i++)
                     {

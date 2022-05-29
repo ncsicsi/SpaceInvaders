@@ -270,7 +270,7 @@ namespace SpaceInvaders
                     _gameWindow.RoundOver();
                     _model.NewGame();
                     _gameWindow.NewGame();
-                    
+                    _model._inMenu = false;
 
                 }
                 else
@@ -280,7 +280,20 @@ namespace SpaceInvaders
             }
             catch (GameDataException)
             {
+                if (!_model._startGame)
+                {
+                    _viewModel.OnBackToTheMenu();
+                }
+                else
+                {
+                    _model.startTimer();
+                }
+                if (_model._inMenu)
+                {
+                    _viewModel.OnBackToTheMenu();
+                }
                 MessageBox.Show("Population load failed!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
             }
 
         }

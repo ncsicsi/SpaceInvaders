@@ -313,11 +313,13 @@ namespace SpaceInvaders.ViewModel
         {
             _model.ChangeManual();
             NewGameManualView.Invoke(this, EventArgs.Empty);
+            _model._inMenu = false;
         }        
         private void OnNewGameAIView()
         {
             _model.ChangeAI();
             NewGameAIView.Invoke(this, EventArgs.Empty);
+            _model._inMenu = false;
         }
         private void OnLoadNetworkMenu()
         {
@@ -328,7 +330,7 @@ namespace SpaceInvaders.ViewModel
         }
         
         }       
-        private void OnBackToTheMenu()
+        public void OnBackToTheMenu()
         {
             BackToTheMenu.Invoke(this, EventArgs.Empty);
         }
@@ -338,8 +340,11 @@ namespace SpaceInvaders.ViewModel
         }
         public void NavigateLoadNetwork()
         {
-            if(!_model._startGame)_model.NewGame();
-
+            if (!_model._startGame)
+            {
+                _model.NewGame();
+                _model._inMenu = true;
+            }
             NetworkLoadView.Invoke(this, EventArgs.Empty);
         }
 
