@@ -13,9 +13,7 @@ namespace SpaceInvaders.Model
     public class NeuralNetwork
     {
         #region Fields
-        //private IGameDataAccess _dataAccess; //adateleres
-        //network
-        //public enum evolution { SIMPLE, REDQUEEN};
+
         public Network.evolution _evolutionType = Network.evolution.SIMPLE;
         public bool _networkOn;
 
@@ -89,10 +87,7 @@ namespace SpaceInvaders.Model
         public double[,] Weights { get { if (_evolutionType == Network.evolution.SIMPLE) { return _simpleWeights; } else return _redQueenWeights; } }
         public double[] IndividualFittnes { get {return _individualFittnes; } }
         public int WeightsCount { get {return (_incommingNeuronsCount + 1) * _hiddenNeuronsCount + (_hiddenNeuronsCount + 1) * _outcommingNeuronsCount; } }
-        //public double Score { get { return _score; } set { _score = value; } }
-        //public double ElapsedTime { get { return _elapsedTime; } set { _elapsedTime = value; } }
-        //public double AvoidBullets { get { return _avoidBullets; } set { _avoidBullets = value; } }
-        //public double UsedBullets { get { return _usedBullets; } set { _usedBullets = value; } }
+
         public int ActiveIndividual { get { return _activeIndividual; } set { _activeIndividual = value; } }
         public double LearningTime { get { return _learningTime; } set { _learningTime = value; } }
         public int[] IndividualScore { get { return _individualScore; } }
